@@ -26,3 +26,7 @@ html{
     background: rgb(73, 69, 69);
     transition: .3s;
 }
+
+input, select, option, label{
+    cursor: pointer;
+}
