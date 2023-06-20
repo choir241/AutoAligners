@@ -1,0 +1,28 @@
+html{
+    font-size: 62.5%;
+}
+
+.button{
+    letter-spacing: normal;
+    word-spacing: normal;
+    line-height: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    background: black;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    padding: .8rem 2rem;
+    margin: 1rem;
+    cursor: pointer;
+}
+
+.button:hover{
+    background: rgb(73, 69, 69);
+    transition: .3s;
+}
