@@ -1,7 +1,68 @@
-import React, {useState, useMemo} from "react"
+import React, {useState, useCallback, useMemo} from "react"
 import {Button} from "../components/Button"
 import {toast} from "react-toastify"
 import axios from "axios"
+
+export function SelectOptionsInput(defaultValue: string, options: React.JSX.Element[], onChange: (e:string)=>void):React.JSX.Element{
+    return(
+        <select onChange = {(e)=>onChange(e.target.value)}>
+            <option defaultValue = {`Select ${defaultValue}`}>Select {defaultValue}</option>
+            {options}
+        </select>
+    )
+};
+
+export function DateInput(onChange:(e:string)=>void):React.JSX.Element{
+    return(
+        <input
+            type = "datetime-local"
+            onChange = {(e)=>onChange(e.target.value)}
+        />
+    )
+};
+
+interface Car{
+    name: string
+};
+
+export async function GetCarData(onMakeSelect:(e:React.JSX.Element[])=>void, onModelSelect:(e:React.JSX.Element[])=>void, onYearSelect: (e:React.JSX.Element[])=>void, carMake:string, carModel:string){
+        try{
+            //sets form options to all car makes
+            const [dataResponse] = await Promise.all([
+                axios.get(`https://public.opendatasoft.com/api/records/1.0/search/?dataset=all-vehicles-model&q=&facet=make&facet=model&facet=year`)
+            ])
+
+            const carOptions:React.JSX.Element[] = dataResponse?.data?.facet_groups[0]?.facets?.map((make:Car,i:number)=><option key = {i}>{make.name}</option>);
+            const makeSelect = ()=>onMakeSelect(carOptions)
+            makeSelect();
+
+            if(carMake){
+                //sets form options to all car models available for car make
+                const [carDataResponse] = await Promise.all([
+                    axios.get(`https://public.opendatasoft.com/api/records/1.0/search/?dataset=all-vehicles-model&q=&facet=make&facet=model&facet=year&refine.make=${carMake}`)              
+                ]);
+
+                const carOptions:React.JSX.Element[] = carDataResponse?.data?.facet_groups[1]?.facets?.map(function(model:Car,i:number){return <option key = {i}>{model.name}</option>});
+            const modelSelect = ()=>onModelSelect(carOptions)
+            modelSelect();
+            }
+
+            if(carMake && carModel){
+                //sets form options to all car years available for car make and car models
+                const [carDataResponse] = await Promise.all([
+                    axios.get(`https://public.opendatasoft.com/api/records/1.0/search/?dataset=all-vehicles-model&q=&facet=make&facet=model&facet=year&refine.make=${carMake}&refine.model=${carModel}`)              
+                ]);
+
+                const carOptions:React.JSX.Element[] = carDataResponse?.data?.facet_groups[2]?.facets?.map((year:Car,i:number)=><option key = {i}>{year.name}</option>);
+            const yearSelect = ()=>onYearSelect(carOptions)
+            yearSelect();
+            }
+
+        }catch(err){
+            console.error(err);
+            toast.error(`${err}`);
+        }
+}
 
 export default function Reservation(){
 
@@ -29,49 +90,57 @@ export default function Reservation(){
 
     const [carMakeOptions, setCarMakeOptions] = useState<React.JSX.Element[]>([]);
     const [carModelOptions, setCarModelOptions] = useState<React.JSX.Element[]>([]);
-    const [carYearOptions, setCarYearOptions] = useState<React.JSX.Element[]>([]);
+    const [carYearOptions, setCarYearOptions] = useState<React.JSX.Element[]>([]);    
+
+    // interface Car{
+    //     name: string
+    // };
+
+    // useMemo(()=>{
+    //     async function getCarData():Promise<void>{
+    //     try{
+    //         //sets form options to all car makes
+    //         const [dataResponse] = await Promise.all([
+    //             axios.get(`https://public.opendatasoft.com/api/records/1.0/search/?dataset=all-vehicles-model&q=&facet=make&facet=model&facet=year`)
+    //         ])
+
+    //         const carOptions:React.JSX.Element[] = dataResponse?.data?.facet_groups[0]?.facets?.map((make:Car,i:number)=><option key = {i}>{make.name}</option>);
+    //         setCarMakeOptions(carOptions);
+
+    //         if(carMake){
+    //             //sets form options to all car models available for car make
+    //             const [carDataResponse] = await Promise.all([
+    //                 axios.get(`https://public.opendatasoft.com/api/records/1.0/search/?dataset=all-vehicles-model&q=&facet=make&facet=model&facet=year&refine.make=${carMake}`)              
+    //             ]);
+
+    //             const carOptions:React.JSX.Element[] = carDataResponse?.data?.facet_groups[1]?.facets?.map(function(model:Car,i:number){return <option key = {i}>{model.name}</option>});
+    //             setCarModelOptions(carOptions);
+    //         }
+
+    //         if(carMake && carModel){
+    //             //sets form options to all car years available for car make and car models
+    //             const [carDataResponse] = await Promise.all([
+    //                 axios.get(`https://public.opendatasoft.com/api/records/1.0/search/?dataset=all-vehicles-model&q=&facet=make&facet=model&facet=year&refine.make=${carMake}&refine.model=${carModel}`)              
+    //             ]);
+
+    //             const carOptions:React.JSX.Element[] = carDataResponse?.data?.facet_groups[2]?.facets?.map((year:Car,i:number)=><option key = {i}>{year.name}</option>);
+    //             setCarYearOptions(carOptions);
+    //         }
+
+    //     }catch(err){
+    //         console.error(err);
+    //         toast.error(`${err}`);
+    //     }
+    //     }
+
+    //     getCarData();
+
+    // },[carMake, carModel])
 
     useMemo(()=>{
-        async function getCarData():Promise<void>{
-            try{
-                //sets form options to all car makes
-                const [dataResponse] = await Promise.all([
-                    axios.get(`https://public.opendatasoft.com/api/records/1.0/search/?dataset=all-vehicles-model&q=&facet=make&facet=model&facet=year`)
-                ])
-
-                const carOptions:React.JSX.Element[] = dataResponse.data.facet_groups[0].facets?.map((make:any,i:number)=><option key = {i}>{make.name}</option>);
-                setCarMakeOptions(carOptions);
-
-                if(carMake){
-                //sets form options to all car models available for car make
-                const [carDataResponse] = await Promise.all([
-                    axios.get(`https://public.opendatasoft.com/api/records/1.0/search/?dataset=all-vehicles-model&q=&facet=make&facet=model&facet=year&refine.make=${carMake}`)              
-                ]);
-                
-                const carOptions:React.JSX.Element[] = carDataResponse.data.facet_groups[1].facets?.map((model:any,i:number)=><option key = {i}>{model.name}</option>);
-                setCarModelOptions(carOptions);
-                }
-
-                if(carMake && carModel){
-                //sets form options to all car years available for car make and car models
-                    const [carDataResponse] = await Promise.all([
-                        axios.get(`https://public.opendatasoft.com/api/records/1.0/search/?dataset=all-vehicles-model&q=&facet=make&facet=model&facet=year&refine.make=${carMake}&refine.model=${carModel}`)              
-                    ]);
-
-                const carOptions:React.JSX.Element[] = carDataResponse.data.facet_groups[2].facets?.map((year:any,i:number)=><option key = {i}>{year.name}</option>);
-                setCarYearOptions(carOptions);
-                    
-                }
-
-            }catch(err){
-                console.error(err);
-                toast.error(`${err}`);
-            }
-        }
-
-        getCarData();
-
-    },[carMake, carModel])
+        GetCarData(setCarMakeOptions, setCarModelOptions, setCarYearOptions, carMake, carModel);
+    },[carMake, carModel]);
+    
 
     function checkAppointmentDateTime():void{
 
@@ -103,8 +172,7 @@ export default function Reservation(){
             return;
         }
 
-        //Checking for hours of operation
-
+        //Checking for hours of operation and make sure appointment day/time matches hours of operation
         // 7am - 5pm m - f, 7am -  3pm sat, sun closed
 
         const appointmentDayoFWeek = new Date(date);
@@ -128,7 +196,9 @@ export default function Reservation(){
     function handleCreateAppointment(){
         checkAppointmentDateTime();
 
-        if(!carMake){
+        if(!date){
+            return;
+        }else if(!carMake){
             toast.error("Please select a proper car make");
             return;
         }else if(!carModel){
@@ -139,37 +209,46 @@ export default function Reservation(){
             return;
         }
 
-        alert("Appointment Created")
+        alert("Appointment Made!");
     }
 
     return(
         <main>
             <h1>Make Reservation</h1>
+
             <form>
-                <input
-                type = "datetime-local"
-                onChange = {(e)=>setDate(e.target.value)}
-                />
+                {/*
+                    <input type = "datetime-local" onChange = {(e)=>setDate(e.target.value)}/>
 
-                <select onChange = {(e)=>setCarMake(e.target.value)}>
-                    <option defaultValue = "Select Car Make">Select Car Make</option>
-                    {carMakeOptions}
-                </select>
+                    <select onChange = {(e)=>setCarMake(e.target.value)}>
+                        <option defaultValue = "Select Car Make">Select Car Make</option>
+                        {carMakeOptions}
+                    </select> 
 
-                <select onChange = {(e)=>setCarModel(e.target.value)}>
-                <option defaultValue = "Select Car Model">Select Car Model</option>
-                    {carModelOptions}
-                </select>
+                      <select onChange = {(e)=>setCarModel(e.target.value)}>
+                    <option defaultValue = "Select Car Model">Select Car Model</option>
+                        {carModelOptions}
+                    </select>
 
-                <select onChange = {(e)=>setCarYear(e.target.value)}>
-                <option defaultValue = "Select Car Year">Select Car Year</option>
-                    {carYearOptions}
-                </select>
+                    <select onChange = {(e)=>setCarYear(e.target.value)}>
+                    <option defaultValue = "Select Car Year">Select Car Year</option>
+                        {carYearOptions}
+                    </select>*/}
+
+                {DateInput((e:string)=>setDate(e))}
+
+                {SelectOptionsInput("Car Make", carMakeOptions, (e:string)=>setCarMake(e))}
+
+                {SelectOptionsInput("Car Model", carModelOptions, (e:string)=>setCarModel(e))}
+
+                {SelectOptionsInput("Car Year", carYearOptions, (e:string)=>setCarYear(e))}
 
             </form>
+
             <Button
             text = "Reserve Appointment"
             handleButtonClick={()=> handleCreateAppointment()}/>
+
         </main>
     )
 }
