@@ -30,3 +30,7 @@ html{
 input, select, option, label{
     cursor: pointer;
 }
+
+textarea{
+    resize: none;
+}

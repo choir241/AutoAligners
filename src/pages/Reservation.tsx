@@ -27,26 +27,48 @@
         carModel: string
     }
 
-    export function SelectOptionsInput(props: SelectOptions):React.JSX.Element{
+    interface TextBox{
+        height: number,
+        width: number,
+        onChange:(e:string)=>void,
+        placeholder: string
+    }
 
-        const [previousCarModel, setPreviousCarModel] = useState<string>(props.carModel)
+    interface GeneralInput{
+        type: string,
+        onChange: (e:string)=>void,
+        placeholder?: string,
+        minlength?: number,
+        maxlength?: number
+    }
+
+    export function TextBoxInput(props: TextBox):React.JSX.Element{
+        return(
+            <textarea rows = {props.height} cols = {props.width} spellCheck = {true} wrap = "hard" onChange={(e)=>props.onChange(e.target.value)} placeholder={props.placeholder} />
+        )
+    }
+
+    export function SelectCarMakeInput(props: SelectOptions):React.JSX.Element{
         const [previousCarMake, setPreviousCarMake] = useState<string>(props.carMake)
-        const [previousCarYear, setPreviousCarYear] = useState<string>(props.carYear)
 
         return(
             <select onChange = {(e)=>{
                 props.onChange(e.target.value)
 
+                //checks for empty string value for previousCarMake state
                 if(!previousCarMake){
-                    setPreviousCarMake(e.target.value)
+                    setPreviousCarMake(e.target.value);
                 }
 
-                if(previousCarModel !== e.target.value){
-                    setPreviousCarModel(e.target.value)
-                }else if(previousCarMake !== e.target.value){
-                    setPreviousCarMake(e.target.value)
-                }else if(previousCarYear !== e.target.value){
-                    setPreviousCarYear(e.target.value)
+                //checks if the previousCarMake value is not the same as the current value selected (checks if user changes carMake value)
+                if(previousCarMake !== e.target.value){
+                    //resets model and year values to account for changed carMake value
+                    props.resetModel("");
+                    props.resetYear("");
+                    //we don't want to reset make, as that would defeat the purpose of selecting new values
+
+                    //set previous previousCarMake value to the new current value selected
+                    setPreviousCarMake(e.target.value);
                 }
 
                 }}>
@@ -54,25 +76,66 @@
                 {props.options}
             </select>
         )
-    };
+    }
 
-    export function Input(type:string,onChange:(e:string)=>void,placeholder?:string, minlength?:number, maxlength?:number):React.JSX.Element{
+    export function SelectCarModelInput(props: SelectOptions):React.JSX.Element{
+        const [previousCarModel, setPreviousCarModel] = useState<string>(props.carModel)
+
+        return(
+            <select onChange = {(e)=>{
+                props.onChange(e.target.value)
+
+                //checks for empty string value for previousCarModel state
+                if(!previousCarModel){
+                    setPreviousCarModel(e.target.value);
+                }
+      
+                //checks if the previousCarModel value is not the same as the current value selected (checks if user changes carModel value)
+                if(previousCarModel !== e.target.value){
+                    //resets year value to account for changed carModel value
+                    props.resetYear("");
+                    //we don't want to reset model/make, as that would defeat the purpose of selecting new values
+                    setPreviousCarModel(e.target.value)
+                }
+
+                }}>
+                <option defaultValue = "default">Select {props.defaultValue}</option>
+                {props.options}
+            </select>
+        )
+    }
+
+    export function SelectCarYearInput(props: SelectOptions):React.JSX.Element{
+        return(
+            //changing year value does not directly effect carMake and/or carModel, so there is no need to check if value has changed
+            <select onChange = {(e)=>props.onChange(e.target.value)}>
+                <option defaultValue = "default">Select {props.defaultValue}</option>
+                {props.options}
+            </select>
+        )
+
+    }
+
+    export function Input(props: GeneralInput):React.JSX.Element{
         return(
             <input
-                type = {type}
-                onChange = {(e)=>onChange(e.target.value)}
-                placeholder = {placeholder}
-                minLength = {minlength}
-                maxLength = {maxlength}
+                type = {props.type}
+                onChange = {(e)=>props.onChange(e.target.value)}
+                placeholder = {props.placeholder}
+                minLength = {props.minlength}
+                maxLength = {props.maxlength}
             />
         )
     };
 
-    export function ChooseInput(text: string, onChange:(e:string)=>void){
+    export function ChooseTwoInput(text1: string, text2:string, name: string, onChange:(e:string)=>void){
         return(
             <div>
-                <input type = "radio" value = {text} onChange = {(e)=>onChange(e.target.value)}/>
-                <label>{text}</label>
+                <input type = "radio" value = {text1} name = {name} onChange = {(e)=>onChange(e.target.value)}/>
+                <label>{text1}</label> 
+
+                <input type = "radio" value = {text2} name = {name} onChange = {(e)=>onChange(e.target.value)}/>
+                <label>{text2}</label> 
             </div>
         )
     };
@@ -166,6 +229,7 @@
         const [phone, setPhone] = useState<string>("");
         const [zipCode, setZipCode] = useState<string>("");
         const [contact, setContact] = useState<string>("");
+        const [comment, setComment] = useState<string>("");
 
         const [carMakeOptions, setCarMakeOptions] = useState<React.JSX.Element[]>([]);
         const [carModelOptions, setCarModelOptions] = useState<React.JSX.Element[]>([]);
@@ -229,57 +293,81 @@
             setDate(`${date}D${daysOfWeek[getAppointmentDayoFWeek]}`);
         }
 
-        function handleCreateAppointment(){
-            checkAppointmentDateTime();
-
+        function checkInputValidation():false|undefined{
             if(!date){
-                return;
+                return false;
             }else if(!carMake || carMake === "Select Car Make"){
                 toast.error("Please select a proper car make");
-                return;
+                return false;
             }else if(!carModel || carModel === "Select Car Model"){
                 toast.error("Please select a proper car model");
-                return;
+                return false;
             }else if(!carYear || carYear === "Select Car Year"){
                 toast.error("Please select a proper car year");
-                return;
+                return false;
             }else if(!stayLeave){
                 toast.error("Please pick between dropping off your car and waiting for it");
-                return;
+                return false;
             }else if(!service || service === "Choose Service For Your Car"){
                 toast.error("Please Pick a valid Car Service");
-                return;
+                return false;
             }else if(!firstName || !lastName){
                 toast.error("Please input your name");
-                return;
+                return false;
             }else if(!email){
                 toast.error("Please input your email");
-                return;
+                return false;
             }else if(!phone){
                 toast.error("Please input your phone number");
-                return;
+                return false;
             }else if(!zipCode){
                 toast.error("Please input your zip code!");
-                return;
+                return false;
             }else if(!contact){
                 toast.error("Please choose preferred contact method");
-                return;
+                return false;
+            }
+
+            const name = /^[A-Za-z]+$/;
+            const mail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            if(!name.test(firstName) || !name.test(lastName)){
+                toast.error("Please input a valid name");
+                return false;
+            }else if(!mail.test(email)){
+                toast.error('Please input a valid email');
+                return false;
             }
 
             alert("Appointment Made!");
 
-            console.log(date)
-            console.log(carMake)
-            console.log(carModel)
-            console.log(carYear) 
-            console.log(stayLeave)
-            console.log(service)
-            console.log(firstName)
-            console.log(lastName)
-            console.log(email)
-            console.log(phone)
-            console.log(zipCode)
-            console.log(contact)
+            handleSubmitData();
+        }
+
+
+        function handleSubmitData():void{
+             //testing
+             console.log(date)
+             console.log(carMake)
+             console.log(carModel)
+             console.log(carYear) 
+             console.log(stayLeave)
+             console.log(service)
+             console.log(firstName)
+             console.log(lastName)
+             console.log(email)
+             console.log(phone)
+             console.log(zipCode)
+             console.log(contact)
+             console.log(comment)
+        }
+
+        function handleCreateAppointment():void{
+            checkAppointmentDateTime();
+
+            if(!checkInputValidation()){
+                return;
+            }
         }
 
         return(
@@ -288,27 +376,27 @@
 
                 <form>
 
-                    {Input("datetime-local",(e:string)=>setDate(e))}
+                    {Input({type: "datetime-local", onChange: (e:string)=>setDate(e)})}
 
-                    {SelectOptionsInput({defaultValue: "Car Make", options: carMakeOptions, onChange: (e:string)=>setCarMake(e), carMake: carMake, carYear: carYear, carModel: carModel, resetModel: (e:string)=>setCarModel(e), resetYear:(e:string)=>setCarYear(e), resetMake:(e:string)=>setCarMake(e)})}
-                    {SelectOptionsInput({defaultValue: "Car Model", options: carModelOptions, onChange: (e:string)=>setCarModel(e), carMake: carMake, carModel: carModel, carYear: carYear, resetModel:(e:string)=>setCarModel(e), resetYear: (e:string)=>setCarYear(e), resetMake:(e:string)=>setCarMake})}
-                    {SelectOptionsInput({defaultValue: "Car Year", options: carYearOptions, onChange: (e:string)=>setCarYear(e), carMake: carMake, carModel: carModel, carYear: carYear, resetModel:(e:string)=>setCarModel(e),resetYear:(e:string)=>setCarYear(e),resetMake:(e:string)=>setCarMake(e)})}
+                    {SelectCarMakeInput({defaultValue: "Car Make", options: carMakeOptions, onChange: (e:string)=>setCarMake(e), carMake: carMake, carYear: carYear, carModel: carModel, resetModel: (e:string)=>setCarModel(e), resetYear:(e:string)=>setCarYear(e), resetMake:(e:string)=>setCarMake(e)})}
+                    {SelectCarModelInput({defaultValue: "Car Model", options: carModelOptions, onChange: (e:string)=>setCarModel(e), carMake: carMake, carModel: carModel, carYear: carYear, resetModel:(e:string)=>setCarModel(e), resetYear: (e:string)=>setCarYear(e), resetMake:(e:string)=>setCarMake})}
+                    {SelectCarYearInput({defaultValue: "Car Year", options: carYearOptions, onChange: (e:string)=>setCarYear(e), carMake: carMake, carModel: carModel, carYear: carYear, resetModel:(e:string)=>setCarModel(e),resetYear:(e:string)=>setCarYear(e),resetMake:(e:string)=>setCarMake(e)})}
 
-                    {ChooseInput("Drop off car", (e:string)=>setStay_Leave(e))}
-                    {ChooseInput("Wait for car", (e:string)=>setStay_Leave(e))}
+                    {ChooseTwoInput("Drop off car", "Wait for car", "stayLeave", (e:string)=>setStay_Leave(e))}
 
                     {ChooseCarService((e:string)=>setService(e))}
 
-                    {Input("text",(e:string)=>setFirstName(e),"First Name")}
-                    {Input("text",(e:string)=>setLastName(e),"Last Name")}
-                    {Input("text",(e:string)=>setEmail(e),"Email Address")}
-                    {Input("tel",(e:string)=>setPhone(e),"###-###-####", 10, 10)}
-                    {Input("text",(e:string)=>setZipCode(e),"Postal/Zip Code")}
+                    {Input({type: "text",onChange: (e:string)=>setFirstName(e),placeholder: "First Name"})}
+                    {Input({type: "text",onChange: (e:string)=>setLastName(e),placeholder: "Last Name"})}
+                    {Input({type: "text",onChange: (e:string)=>setEmail(e),placeholder: "Email Address"})}
+                    {Input({type: "tel",onChange: (e:string)=>setPhone(e),placeholder: "###-###-####", minlength: 10, maxlength: 10})}
+                    {Input({type: "text",onChange: (e:string)=>setZipCode(e),placeholder: "Postal/Zip Code", minlength: 5, maxlength: 5})}
 
                     Preferred Contact Method
 
-                    {ChooseInput("Email", (e:string)=>setContact(e))}
-                    {ChooseInput("Phone", (e:string)=>setContact(e))}
+                    {ChooseTwoInput("Email", "Phone", "contact" ,(e:string)=>setContact(e))}
+
+                    {TextBoxInput({width: 50, height: 10, onChange: (e:string)=>setComment(e), placeholder: "Additional Comments"})}
 
                 </form>
 
