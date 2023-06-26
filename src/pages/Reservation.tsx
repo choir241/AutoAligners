@@ -42,6 +42,22 @@
         maxlength?: number
     }
 
+    interface Appointment{
+        date: string,
+        carModel: string,
+        carMake: string,
+        carYear: string,
+        firstName: string,
+        lastName: string,
+        email: string,
+        phone: string,
+        zipCode: string,
+        contact: string,
+        comment: string,
+        stayLeave: string,
+        service: string
+    }
+
     export function TextBoxInput(props: TextBox):React.JSX.Element{
         return(
             <textarea rows = {props.height} cols = {props.width} spellCheck = {true} wrap = "hard" onChange={(e)=>props.onChange(e.target.value)} placeholder={props.placeholder} />
@@ -344,22 +360,42 @@
             handleSubmitData();
         }
 
+        async function handleSubmitData():Promise<void>{
 
-        function handleSubmitData():void{
-             //testing
-             console.log(date)
-             console.log(carMake)
-             console.log(carModel)
-             console.log(carYear) 
-             console.log(stayLeave)
-             console.log(service)
-             console.log(firstName)
-             console.log(lastName)
-             console.log(email)
-             console.log(phone)
-             console.log(zipCode)
-             console.log(contact)
-             console.log(comment)
+            const dataResponse = await axios.get("http://localhost:8000/api/appt");
+            // "2023-06-23T17:01"
+
+            const checkExistingAppt:[] = dataResponse.data.find((appt:Appointment)=>{
+                console.log(date)
+                console.log(appt.date)
+            })
+            console.log(checkExistingAppt);
+             
+
+            const formData = new URLSearchParams();
+
+            formData.append("date", date);
+            formData.append("carMake", carMake);
+            formData.append("carModel", carModel);
+            formData.append("carYear", carYear);
+            formData.append("stayLeave", stayLeave);
+            formData.append("service", service);
+            formData.append("firstName", firstName);
+            formData.append("lastName", lastName);
+            formData.append("email", email);
+            formData.append("phone", phone);
+            formData.append("zipCode", zipCode);
+            formData.append("contact", contact);
+            formData.append("comment", comment);
+
+            await axios.post("http://localhost:8000/createAppt", formData, {})
+                .then(res=>{
+                    console.log(res);
+                })
+                .catch((err:string)=>{
+                    console.error(`${err}`);
+                })
+
         }
 
         function handleCreateAppointment():void{
@@ -368,11 +404,14 @@
             if(!checkInputValidation()){
                 return;
             }
+
+            handleSubmitData();
         }
 
         return(
             <main>
                 <h1>Make Reservation</h1>
+
 
                 <form>
 

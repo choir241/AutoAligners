@@ -8,12 +8,14 @@ const App = () => {
 
     const Home = lazy(()=>import("./pages/Home.tsx"));
     const Reservation = lazy(()=>import("./pages/Reservation.tsx"));
+    const Login = lazy(()=>import("./pages/Login.tsx"));
 
     return(
         <Suspense fallback = {<h1>loading...</h1>}>
             <BrowserRouter>
                 <Routes>
                   <Route exact path = "/" element = {<Home/>}/>
+                  <Route path = "/login" element = {<Login/>}/>
                   <Route path = "/reservation" element = {<Reservation/>}/>
                 </Routes>
             </BrowserRouter>
