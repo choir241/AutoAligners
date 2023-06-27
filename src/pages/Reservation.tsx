@@ -2,6 +2,21 @@
     import {Button} from "../components/Button"
     import {toast} from "react-toastify"
     import axios from "axios"
+    import api from "../api/api"
+    import { Permission, Role } from "appwrite"
+
+
+    declare global {
+        namespace NodeJS {
+          interface ProcessEnv {
+            REACT_APP_COLLECTION_ID: string;
+            REACT_APP_DATABASE_ID: string;
+            NODE_ENV: 'development' | 'production';
+            PORT?: string;
+            PWD: string;
+          }
+        }
+      }
 
     interface Car{
         name: string
@@ -258,16 +273,16 @@
         },[carMake, carModel]);
         
 
-        function checkAppointmentDateTime():void{
+        function checkAppointmentDateTime(e:string):string | void{
 
-            if(!date){
+            if(!e){
                 toast.error("Pick a valid date");
                 return;
             }
 
-            const arrayOfDateAppt = date.split("T")[0].split("-");
+            const arrayOfDateAppt = e.split("T")[0].split("-");
             //military time
-            const arrayOfTimeAppt = date.split("T")[1].split(":");
+            const arrayOfTimeAppt = e.split("T")[1].split(":");
 
             const currentDate = new Date();
 
@@ -291,7 +306,7 @@
             //Checking for hours of operation and make sure appointment day/time matches hours of operation
             // 7am - 5pm m - f, 7am -  3pm sat, sun closed
 
-            const appointmentDayoFWeek = new Date(date);
+            const appointmentDayoFWeek = new Date(e);
             const daysOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
             const getAppointmentDayoFWeek = appointmentDayoFWeek.getDay();
 
@@ -305,9 +320,9 @@
                 toast.error("We are not open during those times");
                 return;
             }
-        
-            setDate(`${date}D${daysOfWeek[getAppointmentDayoFWeek]}`);
-        }
+
+            setDate(`${date}D${daysOfWeek[getAppointmentDayoFWeek]}`)
+                }
 
         function checkInputValidation():false|undefined{
             if(!date){
@@ -360,47 +375,31 @@
             handleSubmitData();
         }
 
-        async function handleSubmitData():Promise<void>{
+        async function handleSubmitData():Promise<void>{             
 
-            const dataResponse = await axios.get("http://localhost:8000/api/appt");
-            // "2023-06-23T17:01"
+            const formData = {
+                "date":date,
+                "carMake":carMake,
+                "carYear":carYear,
+                "carModel":carModel,
+                "stayLeave":stayLeave,
+                "service":service,
+                "firstName":firstName,
+                "lastName":lastName,
+                "email":email,
+                "phone":phone,
+                "zipCode":zipCode,
+                "contact":contact,
+                "comment":comment
+            }
 
-            const checkExistingAppt:[] = dataResponse.data.find((appt:Appointment)=>{
-                console.log(date)
-                console.log(appt.date)
-            })
-            console.log(checkExistingAppt);
-             
 
-            const formData = new URLSearchParams();
-
-            formData.append("date", date);
-            formData.append("carMake", carMake);
-            formData.append("carModel", carModel);
-            formData.append("carYear", carYear);
-            formData.append("stayLeave", stayLeave);
-            formData.append("service", service);
-            formData.append("firstName", firstName);
-            formData.append("lastName", lastName);
-            formData.append("email", email);
-            formData.append("phone", phone);
-            formData.append("zipCode", zipCode);
-            formData.append("contact", contact);
-            formData.append("comment", comment);
-
-            await axios.post("http://localhost:8000/createAppt", formData, {})
-                .then(res=>{
-                    console.log(res);
-                })
-                .catch((err:string)=>{
-                    console.error(`${err}`);
-                })
+            await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID, formData,   [
+                Permission.read(Role.any())])
 
         }
 
         function handleCreateAppointment():void{
-            checkAppointmentDateTime();
-
             if(!checkInputValidation()){
                 return;
             }
@@ -408,14 +407,31 @@
             handleSubmitData();
         }
 
+        async function getData(){
+            try{
+                const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID)
+
+                console.log(data.documents)
+                const checkExistingAppt:[] = data.documents.find((appt:Appointment)=>{
+                    console.log(date)
+                    console.log(appt.date)
+                })
+                console.log(checkExistingAppt);
+    
+            }catch(err){    
+                console.error(err);
+            }
+        }
+
         return(
             <main>
                 <h1>Make Reservation</h1>
 
+                <button onClick = {()=>getData()}>getData</button>
 
                 <form>
-
                     {Input({type: "datetime-local", onChange: (e:string)=>setDate(e)})}
+
 
                     {SelectCarMakeInput({defaultValue: "Car Make", options: carMakeOptions, onChange: (e:string)=>setCarMake(e), carMake: carMake, carYear: carYear, carModel: carModel, resetModel: (e:string)=>setCarModel(e), resetYear:(e:string)=>setCarYear(e), resetMake:(e:string)=>setCarMake(e)})}
                     {SelectCarModelInput({defaultValue: "Car Model", options: carModelOptions, onChange: (e:string)=>setCarModel(e), carMake: carMake, carModel: carModel, carYear: carYear, resetModel:(e:string)=>setCarModel(e), resetYear: (e:string)=>setCarYear(e), resetMake:(e:string)=>setCarMake})}

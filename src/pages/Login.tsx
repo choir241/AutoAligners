@@ -118,6 +118,24 @@ export default function Login(){
     }
   }
 
+
+  async function getAccount(){
+    try{
+      const account = await api.getAccount();
+      console.log(account)
+    }catch(err){
+      console.error(err)
+    }
+  }
+
+  async function handleLogout(){
+    try{
+      const user = api.deleteCurrentSession();
+      console.log(user);
+    }catch(err){
+      console.error(err);
+    }
+  }
   
   return(
     <main>
@@ -125,6 +143,8 @@ export default function Login(){
       
       <button onClick = {()=>handleLogin()}>Login</button>
       <button onClick = {()=>handleSignUp()}>SignUp</button>
+      <button onClick = {()=>getAccount()}>Get Account</button>
+      <button onClick = {()=>handleLogout()}>Logout</button>
 
       <Input type = "string" onChange = {(e)=>setEmail(e)} placeholder = "Your Email"/>
       <Input type = "string" onChange = {(e)=>setName(e)} placeholder = "Your Full Name"/>
