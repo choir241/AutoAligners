@@ -6,9 +6,27 @@ interface ButtonProps{
     handleButtonClick: ()=>void,
 }
 
+interface ButtonSubmitProps{
+    text: string,
+    handleButtonClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>void,
+}
+
 interface ButtonLinkProps{
     domain: string,
     text: string
+}
+
+export function ButtonSubmit (props: ButtonSubmitProps) {
+    return(
+        <button 
+        className = {`button`}
+        onClick = {(e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
+            e.preventDefault();
+            props.handleButtonClick(e)}}
+        >
+            {props.text}
+        </button>
+    )
 }
 
 export function Button (props: ButtonProps) {

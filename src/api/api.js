@@ -1,57 +1,57 @@
-import { Client as Appwrite, Databases, Account } from "appwrite";
+  import { Client as Appwrite, Databases, Account, Client} from "appwrite";
 
-let api = {
-  sdk: null,
+  let api = {
+    sdk: null,
 
-  provider: () => {
-    if (api.sdk) {
+    provider: () => {
+      if (api.sdk) {
+        return api.sdk;
+      }
+      let appwrite = new Appwrite();
+      appwrite.setEndpoint(process.env.REACT_APP_ENDPOINT).setProject(process.env.REACT_APP_PROJECT);
+      const account = new Account(appwrite);
+      const database = new Databases(appwrite);
+      const client = new Client(appwrite)
+      api.sdk = { database, account, client};
       return api.sdk;
-    }
-    let appwrite = new Appwrite();
-    appwrite.setEndpoint(process.env.REACT_APP_ENDPOINT).setProject(process.env.REACT_APP_PROJECT);
-    const account = new Account(appwrite);
-    const database = new Databases(appwrite);
+    },
+    
+    createAccount: (email, password, name) => {
+      return api.provider().account.create("unique()", email, password, name);
+    },
 
-    api.sdk = { database, account };
-    return api.sdk;
-  },
+    getAccount: () => {
+      let account = api.provider().account;
+      return account.get();
+    },
 
-  createAccount: (email, password, name) => {
-    return api.provider().account.create("unique()", email, password, name);
-  },
+    createSession: (email, password) => {
+      return api.provider().account.createEmailSession(email, password);
+    },
 
-  getAccount: () => {
-    let account = api.provider().account;
-    return account.get();
-  },
+    deleteCurrentSession: () => {
+      return api.provider().account.deleteSession("current");
+    },
 
-  createSession: (email, password) => {
-    return api.provider().account.createEmailSession(email, password);
-  },
+    createDocument: (databaseId, collectionId, data, permissions) => {
+      return api
+        .provider()
+        .database.createDocument(databaseId, collectionId, 'unique()', data, permissions);
+    },
 
-  deleteCurrentSession: () => {
-    return api.provider().account.deleteSession("current");
-  },
+    listDocuments: (databaseId, collectionId) => {
+      return api.provider().database.listDocuments(databaseId, collectionId);
+    },
 
-  createDocument: (databaseId, collectionId, data, permissions) => {
-    return api
-      .provider()
-      .database.createDocument(databaseId, collectionId, 'unique()', data, permissions);
-  },
+    updateDocument: (databaseId, collectionId, documentId, data) => {
+      return api
+        .provider()
+        .database.updateDocument(databaseId, collectionId, documentId, data);
+    },
 
-  listDocuments: (databaseId, collectionId) => {
-    return api.provider().database.listDocuments(databaseId, collectionId);
-  },
+    deleteDocument: (databaseId, collectionId, documentId) => {
+      return api.provider().database.deleteDocument(databaseId, collectionId, documentId);
+    },
+  };
 
-  updateDocument: (databaseId, collectionId, documentId, data) => {
-    return api
-      .provider()
-      .database.updateDocument(databaseId, collectionId, documentId, data);
-  },
-
-  deleteDocument: (databaseId, collectionId, documentId) => {
-    return api.provider().database.deleteDocument(databaseId, collectionId, documentId);
-  },
-};
-
-export default api;
+  export default api;

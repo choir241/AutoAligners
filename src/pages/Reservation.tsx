@@ -399,7 +399,7 @@
 
         }
 
-        function handleCreateAppointment():void{
+        function handleCreateAppointment():void{            
             if(!checkInputValidation()){
                 return;
             }
@@ -430,7 +430,7 @@
                 <button onClick = {()=>getData()}>getData</button>
 
                 <form>
-                    {Input({type: "datetime-local", onChange: (e:string)=>setDate(e)})}
+                    {Input({type: "datetime-local", onChange: (e:string)=>{setDate(e)}})}
 
 
                     {SelectCarMakeInput({defaultValue: "Car Make", options: carMakeOptions, onChange: (e:string)=>setCarMake(e), carMake: carMake, carYear: carYear, carModel: carModel, resetModel: (e:string)=>setCarModel(e), resetYear:(e:string)=>setCarYear(e), resetMake:(e:string)=>setCarMake(e)})}
