@@ -4,8 +4,8 @@
     import axios from "axios"
     import api from "../api/api"
     import { Permission, Role } from "appwrite"
-
-
+    import Nav from "../components/Nav"
+    
     declare global {
         namespace NodeJS {
           interface ProcessEnv {
@@ -229,6 +229,7 @@
             toast.error(`${err}`);
         }
     }
+    
 
 
     export default function Reservation(){
@@ -411,11 +412,7 @@
             try{
                 const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID)
 
-                console.log(data.documents)
-                const checkExistingAppt:[] = data.documents.find((appt:Appointment)=>{
-                    console.log(date)
-                    console.log(appt.date)
-                })
+                const checkExistingAppt:[] = data.documents.find((appt:Appointment)=>date === appt.date)
                 console.log(checkExistingAppt);
     
             }catch(err){    
@@ -425,6 +422,8 @@
 
         return(
             <main>
+                <Nav/>
+
                 <h1>Make Reservation</h1>
 
                 <button onClick = {()=>getData()}>getData</button>

@@ -1,9 +1,10 @@
-import React, {useState, useEffect, useMemo, ReactNode} from "react"
+import React, {useState, useEffect, useMemo} from "react"
 import {Client, Account, ID} from "appwrite"
 import {toast} from "react-toastify"
 import axios from "axios"
 import api from "../api/api"
 import {ButtonSubmit} from "../components/Button"
+import Nav from "../components/Nav"
 
 declare global {
   namespace NodeJS {
@@ -22,7 +23,7 @@ interface InputTypes{
   placeholder: string
 }
 
-interface User{
+export interface User{
   $createdAt: string, 
   $id: string,
   $updatedAt: string,
@@ -63,17 +64,44 @@ export async function GetUsers(setListOfUsers: (e:User[])=>void){
   }
 }
 
-export function DisplayUsers(listOfUsers: User[]){
-  return listOfUsers.map((user:User)=>{
-    return(
-    <ul>
-      <li>{user.email}</li>
-      <li>{user.$createdAt}</li>
-      <li>{user.$updatedAt? user.$updatedAt : ""}</li>
-      <li>{user.name}</li>
-    </ul>
-    )
-  })
+
+async function handleDelete(userId: string){
+  try{
+    const response = await axios.delete(`http://localhost:8000/${userId}`)
+    console.log(response)
+  }catch(err){
+    console.error(err)
+  }
+
+  
+}
+
+export function DisplayUsers(listOfUsers: User[], currentUser: User){
+  if(currentUser.$id === "649c8a408d41d5c02f5c"){
+    return listOfUsers.map((user:User)=>{
+      return(
+        <ul key = {user.$id}>
+          {user.$id === "649c8a408d41d5c02f5c" ? "" : <li className = "fa-sharp fa-solid fa-trash button" onClick = {()=>handleDelete(user.$id)}></li>}
+          <li>{user.email}</li>
+          <li>{user.$createdAt}</li>
+          <li>{user.$updatedAt? user.$updatedAt : ""}</li>
+          <li>{user.name}</li>
+        </ul> 
+      )
+    })
+  }else{
+    return listOfUsers.map((user:User)=>{
+      return(
+        <ul key = {user.$id}>
+          <li>{user.email}</li>
+          <li>{user.$createdAt}</li>
+          <li>{user.$updatedAt? user.$updatedAt : ""}</li>
+          <li>{user.name}</li>
+        </ul> 
+      )
+    })
+  }
+    
 }
 
 export default function Login(){
@@ -194,6 +222,8 @@ export default function Login(){
 
   return(
     <main>
+        <Nav/>
+
         {user? <h1>Welcome {user.name}</h1> : <h1>Login</h1>}
 
         {user ? 
@@ -205,9 +235,9 @@ export default function Login(){
           {ButtonSubmit({handleButtonClick: (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handleSignUp(), text: "SignUp"})}
           {/* <Button handleButtonClick = {()=>getAccount()} text = {"Get Account"}/> */}
         
-          {Input({type: "string", onChange: (e)=>setEmail(e), placeholder: "Your Email"})}
-          {Input({type: "string", onChange: (e)=>setName(e), placeholder: "Your Full Name"})}
-          {Input({type: "string", onChange: (e)=>setPassword(e), placeholder: "Your Password"})}
+          {Input({type: "email", onChange: (e)=>setEmail(e), placeholder: "Your Email"})}
+          {Input({type: "text", onChange: (e)=>setName(e), placeholder: "Your Full Name"})}
+          {Input({type: "password", onChange: (e)=>setPassword(e), placeholder: "Your Password"})}
         </form>
         }
 
@@ -216,7 +246,7 @@ export default function Login(){
       user?.$id === "649c8a408d41d5c02f5c" ? 
         <section>
           <h3>Admin Hub</h3>
-          {DisplayUsers(listOfUsers)}
+          {DisplayUsers(listOfUsers, user)}
         </section>
       :
         <section>

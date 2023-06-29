@@ -40,11 +40,11 @@ export function Button (props: ButtonProps) {
     )
 }
 
-export function ButtonLink (props: ButtonLinkProps){
+export function ButtonLink (props: ButtonLinkProps):React.JSX.Element{
     return(
        <Link 
        className = {`button`}
-       to = {`/${props.domain}`}>
+       to = {`${props.domain}`}>
             {props.text}
        </Link>
     )
