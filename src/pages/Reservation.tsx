@@ -1,236 +1,54 @@
-    import React, {useState, useMemo} from "react"
-    import {Button} from "../components/Button"
+    import React, {useState, useEffect} from "react"
+    import {Button, ButtonSubmit} from "../components/Button"
     import {toast} from "react-toastify"
-    import axios from "axios"
     import api from "../api/api"
     import { Permission, Role } from "appwrite"
     import Nav from "../components/Nav"
-    
-    declare global {
-        namespace NodeJS {
-          interface ProcessEnv {
-            REACT_APP_COLLECTION_ID: string;
-            REACT_APP_DATABASE_ID: string;
-            NODE_ENV: 'development' | 'production';
-            PORT?: string;
-            PWD: string;
-          }
-        }
-      }
+    import {GetCarData, DateInput, SelectCarMakeInput, SelectCarModelInput, ChooseTwoInput, SelectCarYearInput, ChooseCarService, Input, TextBoxInput} from "../hooks/ReservationHooks"
 
-    interface Car{
-        name: string
-    };
-
-    interface CarSelectData{
-        onMakeSelect:(e:React.JSX.Element[])=>void,
-        onModelSelect:(e:React.JSX.Element[])=>void,
-        onYearSelect:(e:React.JSX.Element[])=>void,
-        carMake: string,
-        carModel: string,
+    export function Test(e:React.MouseEvent<HTMLButtonElement, MouseEvent>, time:string){
+        e.preventDefault();
+        console.log(time)
     }
 
-    interface SelectOptions{
-        defaultValue:string,
-        options:React.JSX.Element[],
-        onChange: (e:string)=>void,
-        resetModel: (e:string)=>void,
-        resetYear: (e:string)=>void,
-        resetMake: (e:string)=>void,
-        carYear:string,
-        carMake: string,
-        carModel: string
-    }
+    export function DisplayTimeAppointments():React.JSX.Element{
+            // 7am - 3pm sat 
+            // 7am - 5pm mon-fri
 
-    interface TextBox{
-        height: number,
-        width: number,
-        onChange:(e:string)=>void,
-        placeholder: string
-    }
+            let jsx = []
 
-    interface GeneralInput{
-        type: string,
-        onChange: (e:string)=>void,
-        placeholder?: string,
-        minlength?: number,
-        maxlength?: number
-    }
+            let minutes = 0;
 
-    interface Appointment{
-        date: string,
-        carModel: string,
-        carMake: string,
-        carYear: string,
-        firstName: string,
-        lastName: string,
-        email: string,
-        phone: string,
-        zipCode: string,
-        contact: string,
-        comment: string,
-        stayLeave: string,
-        service: string
-    }
-
-    export function TextBoxInput(props: TextBox):React.JSX.Element{
-        return(
-            <textarea rows = {props.height} cols = {props.width} spellCheck = {true} wrap = "hard" onChange={(e)=>props.onChange(e.target.value)} placeholder={props.placeholder} />
-        )
-    }
-
-    export function SelectCarMakeInput(props: SelectOptions):React.JSX.Element{
-        const [previousCarMake, setPreviousCarMake] = useState<string>(props.carMake)
-
-        return(
-            <select onChange = {(e)=>{
-                props.onChange(e.target.value)
-
-                //checks for empty string value for previousCarMake state
-                if(!previousCarMake){
-                    setPreviousCarMake(e.target.value);
-                }
-
-                //checks if the previousCarMake value is not the same as the current value selected (checks if user changes carMake value)
-                if(previousCarMake !== e.target.value){
-                    //resets model and year values to account for changed carMake value
-                    props.resetModel("");
-                    props.resetYear("");
-                    //we don't want to reset make, as that would defeat the purpose of selecting new values
-
-                    //set previous previousCarMake value to the new current value selected
-                    setPreviousCarMake(e.target.value);
-                }
-
-                }}>
-                <option defaultValue = "default">Select {props.defaultValue}</option>
-                {props.options}
-            </select>
-        )
-    }
-
-    export function SelectCarModelInput(props: SelectOptions):React.JSX.Element{
-        const [previousCarModel, setPreviousCarModel] = useState<string>(props.carModel)
-
-        return(
-            <select onChange = {(e)=>{
-                props.onChange(e.target.value)
-
-                //checks for empty string value for previousCarModel state
-                if(!previousCarModel){
-                    setPreviousCarModel(e.target.value);
-                }
-      
-                //checks if the previousCarModel value is not the same as the current value selected (checks if user changes carModel value)
-                if(previousCarModel !== e.target.value){
-                    //resets year value to account for changed carModel value
-                    props.resetYear("");
-                    //we don't want to reset model/make, as that would defeat the purpose of selecting new values
-                    setPreviousCarModel(e.target.value)
-                }
-
-                }}>
-                <option defaultValue = "default">Select {props.defaultValue}</option>
-                {props.options}
-            </select>
-        )
-    }
-
-    export function SelectCarYearInput(props: SelectOptions):React.JSX.Element{
-        return(
-            //changing year value does not directly effect carMake and/or carModel, so there is no need to check if value has changed
-            <select onChange = {(e)=>props.onChange(e.target.value)}>
-                <option defaultValue = "default">Select {props.defaultValue}</option>
-                {props.options}
-            </select>
-        )
-
-    }
-
-    export function Input(props: GeneralInput):React.JSX.Element{
-        return(
-            <input
-                type = {props.type}
-                onChange = {(e)=>props.onChange(e.target.value)}
-                placeholder = {props.placeholder}
-                minLength = {props.minlength}
-                maxLength = {props.maxlength}
-            />
-        )
-    };
-
-    export function ChooseTwoInput(text1: string, text2:string, name: string, onChange:(e:string)=>void){
-        return(
-            <div>
-                <input type = "radio" value = {text1} name = {name} onChange = {(e)=>onChange(e.target.value)}/>
-                <label>{text1}</label> 
-
-                <input type = "radio" value = {text2} name = {name} onChange = {(e)=>onChange(e.target.value)}/>
-                <label>{text2}</label> 
-            </div>
-        )
-    };
-
-
-    export async function GetCarData(props:CarSelectData){
-        try{
-            //sets form options to all car makes
-            const [dataResponse] = await Promise.all([
-                axios.get(`https://public.opendatasoft.com/api/records/1.0/search/?dataset=all-vehicles-model&q=&facet=make&facet=model&facet=year`)
-            ])
-
-            const carOptions:React.JSX.Element[] = dataResponse?.data?.facet_groups[0]?.facets?.map((make:Car,i:number)=><option key = {i}>{make.name}</option>);
-            const makeSelect = ()=>props.onMakeSelect(carOptions)
-            makeSelect();
-
-            if(props.carMake && props.carMake !== "Select Car Make"){
-                //sets form options to all car models available for car make
-                const [carDataResponse] = await Promise.all([
-                    axios.get(`https://public.opendatasoft.com/api/records/1.0/search/?dataset=all-vehicles-model&q=&facet=make&facet=model&facet=year&refine.make=${props.carMake}`)              
-                ]);
-
-                const carOptions:React.JSX.Element[] = carDataResponse?.data?.facet_groups[1]?.facets?.map(function(model:Car,i:number){return <option key = {i}>{model.name}</option>});
-            const modelSelect = ()=>props.onModelSelect(carOptions)
-            modelSelect();
+            for(let time = 7; time <= 17; time++){
+                let hourString:string = time.toString()
+                let minuteString:string = minutes.toString()
+                jsx.push(hourString += ":" + minuteString + "0");
             }
 
-            if(props.carMake && props.carModel && (props.carMake !== "Select Car Make") && (props.carModel !== "Select Car Model")){
-                //sets form options to all car years available for car make and car models
-                const [carDataResponse] = await Promise.all([
-                    axios.get(`https://public.opendatasoft.com/api/records/1.0/search/?dataset=all-vehicles-model&q=&facet=make&facet=model&facet=year&refine.make=${props.carMake}&refine.model=${props.carModel}`)              
-                ]);
+            for(let time = 7; time <= 17; time++){
+                const min = 30
+                    let hourString:string = time.toString()
+                    let minuteString:string = min.toString()
+                    jsx.push(hourString += ":" + minuteString);
+            }   
 
-                const carOptions:React.JSX.Element[] = carDataResponse?.data?.facet_groups[2]?.facets?.map((year:Car,i:number)=><option key = {i}>{year.name}</option>);
-            const yearSelect = ()=>props.onYearSelect(carOptions)
-            yearSelect();
-            }
+            const sortedJSX = jsx.sort((a,b)=>parseInt(a)-parseInt(b));
 
-        }catch(err){
-            console.error(err);
-            toast.error(`${err}`);
-            return;
-        }
-    };
+            const finalJSX = sortedJSX.map((jsx,i)=>{return(
+                <div key = {i}>
+                    <ButtonSubmit text = {jsx} handleButtonClick ={(e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>Test(e, jsx)}/>
+                </div>
+            )
+        })
 
-    export function ChooseCarService(onChange:(e:string)=>void){
-        try{
-            const services = ["Oil Change","Brakes","Tire Purchase/Installation","Tire Services","Vehicle Inspection","Check Engine Light","Air Conditioning","Batteries Starting & Charging","Belts & Hoses","Engine","Exhaust","Fuel Systems","Heating & Cooling","Routine Maintenance","Steering Suspension Alignment","Transmission","Other"];
-
-            const serviceOptions = services.map((service:string,i:number)=><option key = {i}>{service}</option>);
 
             return(
-                <select onChange = {(e)=>onChange(e.target.value)}>
-                    <option defaultValue = "default">Choose Service For Your Car</option>
-                    {serviceOptions}
-                </select>
+                <div>
+                    {finalJSX}
+                </div>
             )
-        }catch(err){
-            console.error(err);
-            toast.error(`${err}`);
-        }
+  
     }
-    
-
 
     export default function Reservation(){
 
@@ -269,21 +87,20 @@
         const [stayLeave, setStay_Leave] = useState<string>("");
         const [service, setService] = useState<string>("");
 
-        useMemo(()=>{
+        useEffect(()=>{
             GetCarData({onMakeSelect: setCarMakeOptions, onModelSelect: setCarModelOptions, onYearSelect: setCarYearOptions, carMake: carMake, carModel:carModel});
         },[carMake, carModel]);
         
 
-        function checkAppointmentDateTime(e:string):string | void{
+        function checkAppointmentDateTime(date: string):string | void{
 
-            if(!e){
+            if(!date){
                 toast.error("Pick a valid date");
                 return;
             }
 
-            const arrayOfDateAppt = e.split("T")[0].split("-");
+            const arrayOfDateAppt = date.split("T")[0].split("-");
             //military time
-            const arrayOfTimeAppt = e.split("T")[1].split(":");
 
             const currentDate = new Date();
 
@@ -295,29 +112,19 @@
 
             const checkForSameDay = (parseInt(arrayOfDateAppt[2]) === currentDate.getDate() && parseInt(arrayOfDateAppt[1]) === currentDate.getMonth()+1 && parseInt(arrayOfDateAppt[0]) === currentDate.getFullYear())
 
-            //Checks if time of appointment is current/future time
-            if(parseInt(arrayOfTimeAppt[0]) < currentDate.getHours() && checkForSameDay){
-                toast.error("Choose a current time or a time in the future.");
-                return;
-            }else if(parseInt(arrayOfTimeAppt[1])< currentDate.getMinutes() && checkForSameDay){
+            if(checkForSameDay){
                 toast.error("Choose a current time or a time in the future.");
                 return;
             }
 
-            //Checking for hours of operation and make sure appointment day/time matches hours of operation
-            // 7am - 5pm m - f, 7am -  3pm sat, sun closed
-
-            const appointmentDayoFWeek = new Date(e);
+            const appointmentDayoFWeek = new Date(date);
             const daysOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
             const getAppointmentDayoFWeek = appointmentDayoFWeek.getDay();
 
-            if(getAppointmentDayoFWeek === 0){
+            if(getAppointmentDayoFWeek === 6){
                 toast.error("We are closed on Sundays");
                 return;
-            }else if((getAppointmentDayoFWeek >0 && getAppointmentDayoFWeek < 6) && (parseInt(arrayOfTimeAppt[0]) < 7 || parseInt(arrayOfTimeAppt[0]) > 17) && (parseInt(arrayOfTimeAppt[0]) >= 17 && parseInt(arrayOfTimeAppt[1])>=0)){
-                toast.error("We are not open during those times");
-                return;
-            }else if(getAppointmentDayoFWeek === 6 && (parseInt(arrayOfTimeAppt[0]) < 7 || parseInt(arrayOfTimeAppt[0]) > 15) && (parseInt(arrayOfTimeAppt[0]) >= 15 && parseInt(arrayOfTimeAppt[1])>=0)){
+            }else if(getAppointmentDayoFWeek === 5){
                 toast.error("We are not open during those times");
                 return;
             }
@@ -408,17 +215,21 @@
             handleSubmitData();
         }
 
-        async function getData(){
-            try{
-                const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID)
+        // async function getData(){
+        //     try{
+        //         const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID)
 
-                const checkExistingAppt:[] = data.documents.find((appt:Appointment)=>date === appt.date)
-                console.log(checkExistingAppt);
+        //         const checkExistingAppt:[] = data.documents.find((appt:Appointment)=>date === appt.date)
+
+        //         if(checkExistingAppt){
+        //             console.log("appointment already exists")
+        //         }
+        //         console.log(checkExistingAppt);
     
-            }catch(err){    
-                console.error(err);
-            }
-        }
+        //     }catch(err){    
+        //         console.error(err);
+        //     }
+        // }
 
         return(
             <main>
@@ -426,11 +237,12 @@
 
                 <h1>Make Reservation</h1>
 
-                <button onClick = {()=>getData()}>getData</button>
-
                 <form>
-                    {Input({type: "datetime-local", onChange: (e:string)=>{setDate(e)}})}
-
+                    {DateInput({type: "date", onChange: (e:React.ChangeEvent<HTMLInputElement>)=>{
+                        const value:string = e.target.value
+                        checkAppointmentDateTime(value)}})}
+    
+                    {DisplayTimeAppointments()}
 
                     {SelectCarMakeInput({defaultValue: "Car Make", options: carMakeOptions, onChange: (e:string)=>setCarMake(e), carMake: carMake, carYear: carYear, carModel: carModel, resetModel: (e:string)=>setCarModel(e), resetYear:(e:string)=>setCarYear(e), resetMake:(e:string)=>setCarMake(e)})}
                     {SelectCarModelInput({defaultValue: "Car Model", options: carModelOptions, onChange: (e:string)=>setCarModel(e), carMake: carMake, carModel: carModel, carYear: carYear, resetModel:(e:string)=>setCarModel(e), resetYear: (e:string)=>setCarYear(e), resetMake:(e:string)=>setCarMake})}
