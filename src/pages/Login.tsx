@@ -6,17 +6,6 @@ import api from "../api/api"
 import {ButtonSubmit} from "../components/Button"
 import Nav from "../components/Nav"
 
-declare global {
-  namespace NodeJS {
-    interface ProcessEnv {
-      REACT_APP_PROJECT: string;
-      NODE_ENV: 'development' | 'production';
-      PORT?: string;
-      PWD: string;
-    }
-  }
-}
-
 interface InputTypes{
   type: string,
   onChange: (e:string)=>void,

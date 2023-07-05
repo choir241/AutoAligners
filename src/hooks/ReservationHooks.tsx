@@ -1,13 +1,14 @@
 import React, {useState} from "react"
-import axios from "axios"
 import {toast} from "react-toastify"
-import {makes} from "../api/data"
+import {carData} from "../api/data"
 
 declare global {
     namespace NodeJS {
       export interface ProcessEnv {
         REACT_APP_COLLECTION_ID: string;
         REACT_APP_DATABASE_ID: string;
+        REACT_APP_PROJECT: string;
+        REACT_APP_CAR_API_KEY: string;
         NODE_ENV: 'development' | 'production';
         PORT?: string;
         PWD: string;
@@ -15,8 +16,13 @@ declare global {
     }
   }
 
+
 export interface Car{
-    name: string
+    id_: number,
+    manufacturer: string,
+    model: string,
+    year: number,
+    vin: string
 };
 
 export interface CarSelectData{
@@ -184,38 +190,41 @@ export function ChooseTwoInput(text1: string, text2:string, name: string, onChan
     )
 };
 
-
 export async function GetCarData(props:CarSelectData){
         try{
-            //sets form options to all car makes
+            // sets form options to all car makes
     
-
-            console.log(makes)
-
-
-
-            const carOptions:React.JSX.Element[] = makes.map((make:Car,i:number)=><option key = {i}>{make.name}</option>);
+            const carOptions:React.JSX.Element[] = carData.map((car:Car,i:number)=><option key = {i}>{car.manufacturer}</option>);
             const makeSelect = ()=>props.onMakeSelect(carOptions)
             makeSelect();
 
             if(props.carMake && props.carMake !== "Select Car Make"){
                 //sets form options to all car models available for car make
-                const [carDataResponse] = await Promise.all([
-                    axios.get(`https://public.opendatasoft.com/api/records/1.0/search/?dataset=all-vehicles-model&q=&facet=make&facet=model&facet=year&refine.make=${props.carMake}`)              
-                ]);
 
-                const carOptions:React.JSX.Element[] = carDataResponse?.data?.facet_groups[1]?.facets?.map(function(model:Car,i:number){return <option key = {i}>{model.name}</option>});
+                const response = carData.filter((car:Car, i:number)=>{
+                    let model = ""
+                    if(car.manufacturer === props.carMake){
+                        model = car.model
+                    }
+                    return model
+                })
+
+                const carOptions:React.JSX.Element[] = response.map(function(car:Car,i:number){return <option key = {i}>{car.model}</option>});
             const modelSelect = ()=>props.onModelSelect(carOptions)
             modelSelect();
             }
 
             if(props.carMake && props.carModel && (props.carMake !== "Select Car Make") && (props.carModel !== "Select Car Model")){
                 //sets form options to all car years available for car make and car models
-                const [carDataResponse] = await Promise.all([
-                    axios.get(`https://public.opendatasoft.com/api/records/1.0/search/?dataset=all-vehicles-model&q=&facet=make&facet=model&facet=year&refine.make=${props.carMake}&refine.model=${props.carModel}`)              
-                ]);
+                const response = carData.filter((car:Car, i:number)=>{
+                    let year = 0
+                    if(car.manufacturer === props.carMake && car.model === props.carModel){
+                        year = car.year
+                    }
+                    return year
+                })
 
-                const carOptions:React.JSX.Element[] = carDataResponse?.data?.facet_groups[2]?.facets?.map((year:Car,i:number)=><option key = {i}>{year.name}</option>);
+                const carOptions:React.JSX.Element[] = response.map((car:Car,i:number)=><option key = {i}>{car.year}</option>);
             const yearSelect = ()=>props.onYearSelect(carOptions)
             yearSelect();
             }
