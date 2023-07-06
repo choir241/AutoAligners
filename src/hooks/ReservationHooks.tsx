@@ -151,20 +151,6 @@ export function SelectCarYearInput(props: SelectOptions):React.JSX.Element{
 
 }
 
-interface Date{
-    type: string,
-    onChange: (e:React.ChangeEvent<HTMLInputElement>) => void
-}
-
-export function DateInput(props: Date):React.JSX.Element{
-    return(
-        <input
-            type = {props.type}
-            onChange = {(e)=>props.onChange(e)}
-        />
-    )
-}
-
 export function Input(props: GeneralInput):React.JSX.Element{
     return(
         <input
@@ -254,3 +240,167 @@ export function ChooseCarService(onChange:(e:string)=>void){
     }
 }
 
+
+function handleChangeTime(e:React.MouseEvent<HTMLButtonElement, MouseEvent>, time:string, setTime: (e:string)=>void){
+    e.preventDefault();
+    setTime(time)
+}
+
+export function DisplayTimeAppointments(setTime: (e:string)=>void):React.JSX.Element{
+        // 7am - 3pm sat 
+        // 7am - 5pm mon-fri
+
+        let jsx = []
+
+        let minutes = 0;
+
+        //times at :00 mark
+        for(let time = 7; time <= 17; time++){
+                let hourString:string = time.toString()
+                let minuteString:string = minutes.toString()
+                jsx.push(hourString + ":" + minuteString + "0");
+      
+        }
+
+
+        //times at :30 mark
+        for(let time = 7; time < 17; time++){
+            const min = 30
+                let hourString:string = time.toString()
+                let minuteString:string = min.toString()
+                jsx.push(hourString += ":" + minuteString)
+        }   
+
+        const sortedJSX = jsx.sort((a,b)=>parseInt(a)-parseInt(b));
+        const miliaryTimeConversion = sortedJSX.map(ele=>{
+            if(parseInt(ele)>12){
+                const hours = ele.split(":")[0];
+                const minutes = ele.split(":")[1];
+                return (parseInt(hours) - 12).toString() + ":" + minutes + "PM"
+            }else if(parseInt(ele) === 12){
+                const hours = ele.split(":")[0];
+                const minutes = ele.split(":")[1];
+                return (parseInt(hours)).toString() + ":" + minutes + "PM"
+            }else{
+                const hours = ele.split(":")[0];
+                const minutes = ele.split(":")[1];
+                return (parseInt(hours)).toString() + ":" + minutes + "AM"
+            }
+        })
+
+        const finalJSX = miliaryTimeConversion.map((jsx,i)=>{return(
+                   <button 
+                         className = {`clearButton t-${i} time`} key = {i}
+                         onClick = {(e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
+                             e.preventDefault();
+                             handleChangeTime(e, jsx, (e:string)=>setTime(e))
+                            
+                             document.querySelectorAll(".time").forEach(ele=>{
+                                ele.classList.remove("clicked")
+                            });
+    
+                            document.querySelector(`.t-${i}`)?.classList.add("clicked");
+                            }}>
+                             {jsx}
+                    </button>
+        )
+    })
+
+
+        return(
+            <section className = "appointmentTimes flex">
+                {finalJSX}
+            </section>
+        )
+
+}
+
+export function Calendar(setDate: (e:string)=>void){
+    const date = new Date();
+    let month:number = date.getMonth()+1;
+    let dayOfWeek:number = date.getDay();
+    let year:number = date.getFullYear();
+    let day:number = date.getDate();
+
+    const daysOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+    const appt:React.JSX.Element[] = [];
+
+    for(let i = 0; i < 8; i++){
+
+        let currentMonth = month;
+        let currentDay = day;
+        let currentYear =year;
+        let currentDayOfWeek = dayOfWeek
+
+        switch(month){
+            case 1:
+            case 3:
+            case 5:
+            case 7:
+            case 8:
+            case 10:
+                if(currentDay > 31){
+                    currentDay = 1;
+                    currentMonth += 1;
+                }
+                break;
+            case 4:
+            case 6:
+            case 9:
+            case 11:
+                if(currentDay > 30){
+                    currentDay = 1;
+                    currentMonth += 1;
+                }
+                break;
+            case 2:
+                if(currentDay > 28){
+                    currentDay = 1;
+                    currentMonth += 1;
+                }
+                break;
+            case 12:
+                if(currentDay > 31){
+                    currentDay = 1;
+                    currentMonth = 1;
+                    currentYear += 1;
+                }
+                break;
+        }
+
+        
+
+        if(currentDayOfWeek > 6){
+            dayOfWeek = 0;
+            currentDayOfWeek = 0
+        }
+
+                  
+        appt.push(
+            <div className = {`calendar clearButton c-${i}`} key = {`c-${i}`} onClick = {()=>{
+                const date = `${currentMonth}/${currentDay}/${currentYear}D${daysOfWeek[currentDayOfWeek]}`
+                setDate(date);
+                    document.querySelectorAll(".calendar").forEach(ele=>{
+                        ele.classList.remove("clicked")
+                    });
+
+                    document.querySelector(`.c-${i}`)?.classList.add("clicked");
+            }}>
+                <h3>{daysOfWeek[currentDayOfWeek]}</h3>
+                <h3>{`${month}/${day}/${year}`}</h3>
+            </div>
+        )
+
+        day++;
+        dayOfWeek++;
+
+    }
+
+
+    return(
+        <section className = "calendarHub flex">
+            {appt}
+        </section>
+        )
+}

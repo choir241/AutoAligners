@@ -4,132 +4,7 @@
     import api from "../api/api"
     import { Permission, Role } from "appwrite"
     import Nav from "../components/Nav"
-    import {GetCarData, SelectCarMakeInput, SelectCarModelInput, ChooseTwoInput, SelectCarYearInput, ChooseCarService, Input, TextBoxInput} from "../hooks/ReservationHooks"
-
-    function handleChangeTime(e:React.MouseEvent<HTMLButtonElement, MouseEvent>, time:string, setTime: (e:string)=>void){
-        e.preventDefault();
-        setTime(time)
-    }
-
-    export function DisplayTimeAppointments(setTime: (e:string)=>void):React.JSX.Element{
-            // 7am - 3pm sat 
-            // 7am - 5pm mon-fri
-
-            let jsx = []
-
-            let minutes = 0;
-
-            for(let time = 7; time <= 17; time++){
-                let hourString:string = time.toString()
-                let minuteString:string = minutes.toString()
-                jsx.push(hourString += ":" + minuteString + "0");
-            }
-
-            for(let time = 7; time <= 17; time++){
-                const min = 30
-                    let hourString:string = time.toString()
-                    let minuteString:string = min.toString()
-                    jsx.push(hourString += ":" + minuteString);
-            }   
-
-            const sortedJSX = jsx.sort((a,b)=>parseInt(a)-parseInt(b));
-
-            const finalJSX = sortedJSX.map((jsx,i)=>{return(
-                <div key = {i}>
-                       <button 
-                             className = "clearButton"
-                             onClick = {(e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
-                                 e.preventDefault();
-                                 handleChangeTime(e, jsx, (e:string)=>setTime(e))}}
-                             >
-                                 {jsx}
-                        </button>
-                </div>
-            )
-        })
-
-
-            return(
-                <section className = "appointmentTimes flex">
-                    {finalJSX}
-                </section>
-            )
-  
-    }
-
-    export function Calendar(){
-        const date = new Date();
-        let month:number = date.getMonth()+1;
-        let dayOfWeek:number = date.getDay();
-        let year:number = date.getFullYear();
-        let day:number = date.getDate();
-
-        const daysOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-
-        const appt:React.JSX.Element[] = [];
-
-        for(let i = 0; i < 21; i++){
-
-            switch(month){
-                case 1:
-                case 3:
-                case 5:
-                case 7:
-                case 8:
-                case 10:
-                    if(day > 31){
-                        day = 1;
-                        month += 1;
-                    }
-                    break;
-                case 4:
-                case 6:
-                case 9:
-                case 11:
-                    if(day > 30){
-                        day = 1;
-                        month += 1;
-                    }
-                    break;
-                case 2:
-                    if(day > 28){
-                        day = 1;
-                        month += 1;
-                    }
-                    break;
-                case 12:
-                    if(day > 31){
-                        day = 1;
-                        month = 1;
-                        year += 1;
-                    }
-                    break;
-            }
-
-            if(dayOfWeek > 6){
-                dayOfWeek = 0;
-            }
-
-          
-            appt.push(
-                <div className = "calendar clearButton" key = {`c-${i}`}>
-                    <h3>{daysOfWeek[dayOfWeek]}</h3>
-                    <h3>{`${month}/${day}/${year}`}</h3>
-                </div>
-            )
-
-            day++;
-            dayOfWeek++;
-
-        }
-
-
-        return(
-            <section className = "calendarHub flex">
-                {appt}
-            </section>
-            )
-    }
+    import {Calendar, DisplayTimeAppointments, GetCarData, SelectCarMakeInput, SelectCarModelInput, ChooseTwoInput, SelectCarYearInput, ChooseCarService, Input, TextBoxInput} from "../hooks/ReservationHooks"
 
     export default function Reservation(){
 
@@ -174,15 +49,18 @@
         },[carMake, carModel]);
         
 
-        function checkAppointmentDate(date: string):string | void{
+        function checkAppointmentDate():string | void{
 
             if(!date){
                 toast.error("Pick a valid date");
                 return;
             }
 
-            const arrayOfDateAppt = date.split("T")[0].split("-");
+            const arrayOfDateAppt = date.split("D")[0].split("/");
             const arrayOfTimeAppt = time.split(":");
+
+            console.log(arrayOfTimeAppt)
+            console.log(arrayOfDateAppt)
 
             //military time
 
@@ -296,12 +174,14 @@
         }
 
         function handleCreateAppointment():void{    
-            
-            // if(!checkInputValidation()){
-            //     return;
-            // }
 
-            // handleSubmitData();
+            checkAppointmentDate()
+            
+            if(!checkInputValidation()){
+                return;
+            }
+
+            handleSubmitData();
         }
 
         // async function getData(){
@@ -320,7 +200,6 @@
         //     }
         // }
 
-
         return(
             <main>
                 <Nav/>
@@ -328,11 +207,8 @@
                 <h1>Make Reservation</h1>
 
                 <form>
-                    {/* {DateInput({type: "date", onChange: (e:React.ChangeEvent<HTMLInputElement>)=>{
-                        const value:string = e.target.value
-                        checkAppointmentDate(value)}})} */}
-
-                    {Calendar()}
+        
+                    {Calendar((e:string)=>setDate(e))}
     
                     {DisplayTimeAppointments((e:string)=>setTime(e))}
 

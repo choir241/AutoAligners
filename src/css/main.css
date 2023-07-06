@@ -83,3 +83,8 @@ textarea{
     padding: 2rem;
     overflow-y: scroll;
 }
+
+.clicked, .clicked button{
+    background: black;
+    color: white;
+}
