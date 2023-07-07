@@ -1,6 +1,8 @@
 import React, {useState} from "react"
 import {toast} from "react-toastify"
 import {carData} from "../api/data"
+import api from "../api/api"
+import { Permission, Role } from "appwrite"
 
 declare global {
     namespace NodeJS {
@@ -63,6 +65,7 @@ export interface GeneralInput{
 
 export interface Appointment{
     date: string,
+    time: string,
     carModel: string,
     carMake: string,
     carYear: string,
@@ -246,45 +249,155 @@ function handleChangeTime(e:React.MouseEvent<HTMLButtonElement, MouseEvent>, tim
     setTime(time)
 }
 
-export function DisplayTimeAppointments(setTime: (e:string)=>void):React.JSX.Element{
+export function DisplayTimeAppointments(setTime: (e:string)=>void, appointments: Appointment[], setDate: (e:string)=>void):React.JSX.Element{
+
+    const date = new Date();
+    let month:number = date.getMonth()+1;
+    let dayOfWeek:number = date.getDay();
+    let year:number = date.getFullYear();
+    let day:number = date.getDate();
+    
+
+    const daysOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+    const appt:React.JSX.Element[] = [];
+
+    let appointmentDays = appointments.reduce((
+        acc: {
+            [date: string]: {
+                time?: string | undefined;
+            };
+        }, 
+        appointment:Appointment)=>{
+            const appointmentDate = appointment.date;
+            const appointmentTime = appointment.time;
+
+            if(!(appointmentDate in acc)){
+                acc[appointmentDate] = {};
+            }
+
+            acc[appointmentDate]["time"] = appointmentTime;
+
+            return acc;
+    }, {} as {[date: string]: {time?: string}})
+
+
+    for(let i = 0; i < 8; i++){
+
+        let currentMonth = month;
+        let currentDay = day;
+        let currentYear =year;
+        let currentDayOfWeek = dayOfWeek
+
+        switch(month){
+            case 1:
+            case 3:
+            case 5:
+            case 7:
+            case 8:
+            case 10:
+                if(currentDay > 31){
+                    currentDay = 1;
+                    currentMonth += 1;
+                }
+                break;
+            case 4:
+            case 6:
+            case 9:
+            case 11:
+                if(currentDay > 30){
+                    currentDay = 1;
+                    currentMonth += 1;
+                }
+                break;
+            case 2:
+                if(currentDay > 28){
+                    currentDay = 1;
+                    currentMonth += 1;
+                }
+                break;
+            case 12:
+                if(currentDay > 31){
+                    currentDay = 1;
+                    currentMonth = 1;
+                    currentYear += 1;
+                }
+                break;
+        }
+
+
+        if(currentDayOfWeek > 6){
+            dayOfWeek = 0;
+            currentDayOfWeek = 0
+        }
+
+        appt.push(
+            <div className = {`calendar clearButton c-${i}`} key = {`c-${i}`} onClick = {()=>{
+                const date = `${currentMonth}/${currentDay}/${currentYear}D${daysOfWeek[currentDayOfWeek]}`
+                setDate(date);
+                    document.querySelectorAll(".calendar").forEach(ele=>{
+                        ele.classList.remove("clicked")
+                    });
+
+                    document.querySelector(`.c-${i}`)?.classList.add("clicked");
+            }}>
+                <h3>{daysOfWeek[currentDayOfWeek]}</h3>
+                <h3>{`${month}/${day}/${year}`}</h3>
+            </div>
+        )
+
+        day++;
+        dayOfWeek++;
+
+    }
+    
         // 7am - 3pm sat 
         // 7am - 5pm mon-fri
+
+
+        //go through all objects in appointments array
+        //check if appointments[index].time exists, if it does, remove that time ONLY if it matches that specific date
+
 
         let jsx = []
 
         let minutes = 0;
+     
 
         //times at :00 mark
         for(let time = 7; time <= 17; time++){
+            
                 let hourString:string = time.toString()
                 let minuteString:string = minutes.toString()
-                jsx.push(hourString + ":" + minuteString + "0");
-      
+
+                for(let keys in appointmentDays){
+                    // console.log(keys)
+
+                    if(appointmentDays[keys].time?.split(":")[0] === time.toString()){
+                        // console.log(time)
+                        break;
+                    }else{
+                        jsx.push(hourString + ":" + minuteString + "0");
+                        break;
+                    }
+                }
         }
 
-
-        //times at :30 mark
-        for(let time = 7; time < 17; time++){
-            const min = 30
-                let hourString:string = time.toString()
-                let minuteString:string = min.toString()
-                jsx.push(hourString += ":" + minuteString)
-        }   
 
         const sortedJSX = jsx.sort((a,b)=>parseInt(a)-parseInt(b));
         const miliaryTimeConversion = sortedJSX.map(ele=>{
             if(parseInt(ele)>12){
                 const hours = ele.split(":")[0];
                 const minutes = ele.split(":")[1];
-                return (parseInt(hours) - 12).toString() + ":" + minutes + "PM"
+                return [(parseInt(hours) - 12).toString() + ":" + minutes + "PM", ele]
             }else if(parseInt(ele) === 12){
                 const hours = ele.split(":")[0];
                 const minutes = ele.split(":")[1];
-                return (parseInt(hours)).toString() + ":" + minutes + "PM"
+                return [(parseInt(hours)).toString() + ":" + minutes + "PM", ele]
             }else{
                 const hours = ele.split(":")[0];
                 const minutes = ele.split(":")[1];
-                return (parseInt(hours)).toString() + ":" + minutes + "AM"
+                return [(parseInt(hours)).toString() + ":" + minutes + "AM", ele]
             }
         })
 
@@ -293,7 +406,7 @@ export function DisplayTimeAppointments(setTime: (e:string)=>void):React.JSX.Ele
                          className = {`clearButton t-${i} time`} key = {i}
                          onClick = {(e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
                              e.preventDefault();
-                             handleChangeTime(e, jsx, (e:string)=>setTime(e))
+                             handleChangeTime(e, jsx[1], (e:string)=>setTime(e))
                             
                              document.querySelectorAll(".time").forEach(ele=>{
                                 ele.classList.remove("clicked")
@@ -301,15 +414,22 @@ export function DisplayTimeAppointments(setTime: (e:string)=>void):React.JSX.Ele
     
                             document.querySelector(`.t-${i}`)?.classList.add("clicked");
                             }}>
-                             {jsx}
+                             {jsx[0]}
                     </button>
         )
     })
 
 
         return(
-            <section className = "appointmentTimes flex">
-                {finalJSX}
+            <section>
+                
+                <section className = "calendarHub flex">
+                    {appt}
+                </section>
+
+                <section className = "appointmentTimes flex">
+                    {finalJSX}
+                </section>
             </section>
         )
 
@@ -403,4 +523,169 @@ export function Calendar(setDate: (e:string)=>void){
             {appt}
         </section>
         )
+}
+
+
+export function checkAppointmentDate(date: string, time: string, setDate: (e:string)=>void):string | void{
+
+    if(!date){
+        toast.error("Pick a valid date");
+        return;
+    }
+
+    if(!time){
+        toast.error('Pick a valid time');
+        return;
+    }
+
+    console.log(date)
+
+    const arrayOfDateAppt = date.split("D")[0].split("/");
+    let arrayOfTimeAppt = time.split(":");
+
+    let militaryTime:string = arrayOfTimeAppt[0];
+
+    if(arrayOfTimeAppt[1].includes("PM") && !arrayOfTimeAppt[0].includes("12")){
+        militaryTime = (parseInt(arrayOfTimeAppt[0]) + 12).toString();
+    }
+
+    //military time
+
+    const currentDate = new Date();
+
+    //Checks if month/date/year of appointment is current/future date
+    if(parseInt(arrayOfDateAppt[1]) < currentDate.getDate() || parseInt(arrayOfDateAppt[0]) < currentDate.getMonth()+1 || parseInt(arrayOfDateAppt[2]) < currentDate.getFullYear()){
+        toast.error("Choose a current date or a date in the future.");
+        return;
+    }   
+
+    //check if current month matches appointment month
+    //check if current day matches appointment day
+    //check if current year matches appointment year
+
+    //check if appointment hours is less than the current hours value
+    //check if current time has minutes, and if it does WHILE having the hours be less than the current hours value
+
+    const checkForSameDay = ((currentDate.getMinutes() && parseInt(militaryTime) <= currentDate.getHours()) &&(parseInt(arrayOfDateAppt[1]) === currentDate.getDate()) && (parseInt(arrayOfDateAppt[0]) === currentDate.getMonth()+1) && (parseInt(arrayOfDateAppt[2]) === currentDate.getFullYear()))
+
+    if(checkForSameDay){
+        toast.error("Choose a current time or a time in the future.");
+        return; 
+    }
+
+
+    const appointmentDayoFWeek = new Date(parseInt(date.split("/")[2]),parseInt(date.split("/")[0]),parseInt(date.split("/")[1]));
+    const daysOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    const getAppointmentDayoFWeek = appointmentDayoFWeek.getDay();
+
+    console.log(appointmentDayoFWeek)
+    console.log(getAppointmentDayoFWeek)
+
+    // if(getAppointmentDayoFWeek === 6){
+    //     toast.error("We are closed on Sundays");
+    //     return;
+    // }else if(getAppointmentDayoFWeek === 5){
+    //     toast.error("We are not open during those times");
+    //     return;
+    // }
+
+    if(!daysOfWeek.includes(date.split("D")[1])){
+        setDate(`${date}D${daysOfWeek[getAppointmentDayoFWeek]}`)
+    }
+
+}
+
+
+export async function handleSubmitData(props: Appointment):Promise<void>{         
+    
+        console.log(props.date)
+
+            const formData = {
+                "date":props.date,
+                "time":props.time,
+                "carMake":props.carMake,
+                "carYear":props.carYear,
+                "carModel":props.carModel,
+                "stayLeave":props.stayLeave,
+                "service":props.service,
+                "firstName":props.firstName,
+                "lastName":props.lastName,
+                "email":props.email,
+                "phone":props.phone,
+                "zipCode":props.zipCode,
+                "contact":props.contact,
+                "comment":props.comment
+            }
+
+
+            await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID, formData, [Permission.read(Role.any())])
+
+            window.location.reload();   
+        }
+
+
+export function checkInputValidation(props: Appointment):false|undefined{
+            if(!props.date){
+                toast.error("Please select a proper date");
+                return false;
+            }else if(!props.time){            
+                toast.error("Please select an available time");
+                return false;
+            }else if(!props.carMake || props.carMake === "Select Car Make"){
+                toast.error("Please select a proper car make");
+                return false;
+            }else if(!props.carModel || props.carModel === "Select Car Model"){
+                toast.error("Please select a proper car model");
+                return false;
+            }else if(!props.carYear || props.carYear === "Select Car Year"){
+                toast.error("Please select a proper car year");
+                return false;
+            }else if(!props.stayLeave){
+                toast.error("Please pick between dropping off your car and waiting for it");
+                return false;
+            }else if(!props.service || props.service === "Choose Service For Your Car"){
+                toast.error("Please Pick a valid Car Service");
+                return false;
+            }else if(!props.firstName || !props.lastName){
+                toast.error("Please input your name");
+                return false;
+            }else if(!props.email){
+                toast.error("Please input your email");
+                return false;
+            }else if(!props.phone){
+                toast.error("Please input your phone number");
+                return false;
+            }else if(!props.zipCode){
+                toast.error("Please input your zip code!");
+                return false;
+            }else if(!props.contact){
+                toast.error("Please choose preferred contact method");
+                return false;
+            }
+
+            const name = /^[A-Za-z]+$/;
+            const mail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            if(!name.test(props.firstName) || !name.test(props.lastName)){
+                toast.error("Please input a valid name");
+                return false;
+            }else if(!mail.test(props.email)){
+                toast.error('Please input a valid email');
+                return false;
+            }
+
+            alert("Appointment Made!");
+
+            handleSubmitData({service: props.service, firstName: props.firstName, lastName: props.lastName, date: props.date, time: props.time, carModel: props.carModel, carMake: props.carMake, carYear: props.carYear, email: props.email, phone: props.phone, zipCode: props.zipCode, contact: props.contact, comment: props.comment, stayLeave:props.stayLeave});
+ }
+
+
+export async function getAppointmentData(setAppointments: (e:Appointment[])=>void){
+    try{
+        const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID)
+        setAppointments(data.documents);
+    }catch(err){
+        console.error(err);
+        toast.error(`${err}`);
+    }
 }
