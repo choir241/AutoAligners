@@ -4,6 +4,7 @@ import {carData} from "../api/data"
 import api from "../api/api"
 import { Permission, Role } from "appwrite"
 
+//globally accessible env variables
 declare global {
     namespace NodeJS {
       export interface ProcessEnv {
@@ -11,14 +12,15 @@ declare global {
         REACT_APP_DATABASE_ID: string;
         REACT_APP_PROJECT: string;
         REACT_APP_CAR_API_KEY: string;
-        NODE_ENV: 'development' | 'production';
+        REACT_APP_ENDPOINT: string;
+        NODE_ENV: "development" | "production";
         PORT?: string;
         PWD: string;
       }
     }
-  }
+}
 
-
+//interface type for Car type
 export interface Car{
     id_: number,
     manufacturer: string,
@@ -27,17 +29,19 @@ export interface Car{
     vin: string
 };
 
+//interface type for selecting car data (model, year, make)
 export interface CarSelectData{
-    onMakeSelect:(e:React.JSX.Element[])=>void,
-    onModelSelect:(e:React.JSX.Element[])=>void,
-    onYearSelect:(e:React.JSX.Element[])=>void,
+    onMakeSelect: (e:React.JSX.Element[])=>void,
+    onModelSelect: (e:React.JSX.Element[])=>void,
+    onYearSelect: (e:React.JSX.Element[])=>void,
     carMake: string,
-    carModel: string,
+    carModel: string
 }
 
+//interface type for resetting car make/car year/and car model values
 export interface SelectOptions{
-    defaultValue:string,
-    options:React.JSX.Element[],
+    defaultValue: string,
+    options: React.JSX.Element[],
     onChange: (e:string)=>void,
     resetModel: (e:string)=>void,
     resetYear: (e:string)=>void,
@@ -47,13 +51,15 @@ export interface SelectOptions{
     carModel: string
 }
 
+//interface type for comment input
 export interface TextBox{
     height: number,
     width: number,
-    onChange:(e:string)=>void,
+    onChange: (e:string)=>void,
     placeholder: string
 }
 
+//interface type for general inputs
 export interface GeneralInput{
     type: string,
     onChange: (e:string)=>void,
@@ -63,6 +69,14 @@ export interface GeneralInput{
     value?: string
 }
 
+export interface ChooseTwoInput{
+    text1: string, 
+    text2:string, 
+    name: string, 
+    onChange:(e:string)=>void
+}
+
+//interface type for appointments
 export interface Appointment{
     date: string,
     time: string,
@@ -82,34 +96,43 @@ export interface Appointment{
 
 export function TextBoxInput(props: TextBox):React.JSX.Element{
     return(
-        <textarea rows = {props.height} cols = {props.width} spellCheck = {true} wrap = "hard" onChange={(e)=>props.onChange(e.target.value)} placeholder={props.placeholder} />
+        <textarea 
+            rows = {props.height} 
+            cols = {props.width} 
+            spellCheck = {true} 
+            wrap = "hard" 
+            onChange={(e)=>props.onChange(e.target.value)} 
+            placeholder={props.placeholder} 
+        />
     )
 }
 
 export function SelectCarMakeInput(props: SelectOptions):React.JSX.Element{
-    const [previousCarMake, setPreviousCarMake] = useState<string>(props.carMake)
+
+    //sets value for previously selected car make 
+    const [previousCarMake, setPreviousCarMake] = useState<string>(props.carMake);
 
     return(
         <select onChange = {(e)=>{
-            props.onChange(e.target.value)
+            props.onChange(e.target.value);
 
             //checks for empty string value for previousCarMake state
             if(!previousCarMake){
                 setPreviousCarMake(e.target.value);
-            }
+            };
 
             //checks if the previousCarMake value is not the same as the current value selected (checks if user changes carMake value)
             if(previousCarMake !== e.target.value){
                 //resets model and year values to account for changed carMake value
+                //we don't want to reset make, as that would defeat the purpose of selecting new values
                 props.resetModel("");
                 props.resetYear("");
-                //we don't want to reset make, as that would defeat the purpose of selecting new values
 
                 //set previous previousCarMake value to the new current value selected
                 setPreviousCarMake(e.target.value);
             }
 
-            }}>
+        }}>
             <option defaultValue = "default">Select {props.defaultValue}</option>
             {props.options}
         </select>
@@ -117,7 +140,9 @@ export function SelectCarMakeInput(props: SelectOptions):React.JSX.Element{
 }
 
 export function SelectCarModelInput(props: SelectOptions):React.JSX.Element{
-    const [previousCarModel, setPreviousCarModel] = useState<string>(props.carModel)
+
+    //sets value for previously selected car model
+    const [previousCarModel, setPreviousCarModel] = useState<string>(props.carModel);
 
     return(
         <select onChange = {(e)=>{
@@ -135,8 +160,7 @@ export function SelectCarModelInput(props: SelectOptions):React.JSX.Element{
                 //we don't want to reset model/make, as that would defeat the purpose of selecting new values
                 setPreviousCarModel(e.target.value)
             }
-
-            }}>
+        }}>
             <option defaultValue = "default">Select {props.defaultValue}</option>
             {props.options}
         </select>
@@ -165,32 +189,33 @@ export function Input(props: GeneralInput):React.JSX.Element{
             maxLength = {props.maxlength}
         />
     )
-};
+}
 
-export function ChooseTwoInput(text1: string, text2:string, name: string, onChange:(e:string)=>void){
+export function ChooseTwoInput(props: ChooseTwoInput){
     return(
         <div>
-            <input type = "radio" value = {text1} name = {name} onChange = {(e)=>onChange(e.target.value)}/>
-            <label>{text1}</label> 
+            <input type = "radio" value = {props.text1} name = {props.name} onChange = {(e)=>props.onChange(e.target.value)}/>
+            <label>{props.text1}</label> 
 
-            <input type = "radio" value = {text2} name = {name} onChange = {(e)=>onChange(e.target.value)}/>
-            <label>{text2}</label> 
+            <input type = "radio" value = {props.text2} name = {props.name} onChange = {(e)=>props.onChange(e.target.value)}/>
+            <label>{props.text2}</label> 
         </div>
     )
 };
 
 export async function GetCarData(props:CarSelectData){
         try{
+
             // sets form options to all car makes
-    
             const carOptions:React.JSX.Element[] = carData.map((car:Car,i:number)=><option key = {i}>{car.manufacturer}</option>);
-            const makeSelect = ()=>props.onMakeSelect(carOptions)
+            //onMakeSelect is a setState() here, so we make it a separate function here to prevent re-rendering
+            const makeSelect = ()=>props.onMakeSelect(carOptions);
             makeSelect();
 
             if(props.carMake && props.carMake !== "Select Car Make"){
-                //sets form options to all car models available for car make
 
-                const response = carData.filter((car:Car, i:number)=>{
+                //sets form options to all car models available for selected car make value
+                const response = carData.filter((car:Car)=>{
                     let model = ""
                     if(car.manufacturer === props.carMake){
                         model = car.model
@@ -198,9 +223,10 @@ export async function GetCarData(props:CarSelectData){
                     return model
                 })
 
+                //returns a new array of react jsx element with new car model values that are respective to selected car make value
                 const carOptions:React.JSX.Element[] = response.map(function(car:Car,i:number){return <option key = {i}>{car.model}</option>});
-            const modelSelect = ()=>props.onModelSelect(carOptions)
-            modelSelect();
+                const modelSelect = ()=>props.onModelSelect(carOptions)
+                modelSelect();
             }
 
             if(props.carMake && props.carModel && (props.carMake !== "Select Car Make") && (props.carModel !== "Select Car Model")){
@@ -213,22 +239,24 @@ export async function GetCarData(props:CarSelectData){
                     return year
                 })
 
+                //returns a new array of react jsx element with new car year values that are respective to selected car make & model value
                 const carOptions:React.JSX.Element[] = response.map((car:Car,i:number)=><option key = {i}>{car.year}</option>);
-            const yearSelect = ()=>props.onYearSelect(carOptions)
-            yearSelect();
+                const yearSelect = ()=>props.onYearSelect(carOptions);
+                yearSelect();
             }
 
         }catch(err){
             console.error(err);
             toast.error(`${err}`);
-            return;
         }
-};
+}
 
 export function ChooseCarService(onChange:(e:string)=>void){
     try{
+        //list of all available car services
         const services = ["Oil Change","Brakes","Tire Purchase/Installation","Tire Services","Vehicle Inspection","Check Engine Light","Air Conditioning","Batteries Starting & Charging","Belts & Hoses","Engine","Exhaust","Fuel Systems","Heating & Cooling","Routine Maintenance","Steering Suspension Alignment","Transmission","Other"];
 
+        //returns a new array of react jsx elements with all available car services
         const serviceOptions = services.map((service:string,i:number)=><option key = {i}>{service}</option>);
 
         return(
@@ -252,34 +280,28 @@ function handleChangeTime(e:React.MouseEvent<HTMLButtonElement, MouseEvent>, tim
 export function DisplayTimeAppointments(setTime: (e:string)=>void, appointments: Appointment[], setDate: (e:string)=>void):React.JSX.Element{
 
     const date = new Date();
+    //+1 because Date.prototype.getMonth() starts at 0 to represent index
     let month:number = date.getMonth()+1;
     let dayOfWeek:number = date.getDay();
     let year:number = date.getFullYear();
     let day:number = date.getDate();
     
-
+    //list of days in a week
     const daysOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
     const appt:React.JSX.Element[] = [];
 
-    let appointmentDays = appointments.reduce((
-        acc: {
-            [date: string]: {
-                time?: string | undefined;
-            };
-        }, 
-        appointment:Appointment)=>{
+    // const object:{date: string, [time: string]} = {}
+
+    //takes the appointments array of objects, and converts it into an object where 
+    let appointmentDays = appointments.map((appointment:Appointment)=>{
             const appointmentDate = appointment.date;
             const appointmentTime = appointment.time;
 
-            if(!(appointmentDate in acc)){
-                acc[appointmentDate] = {};
-            }
+            // object[appointmentDate] = {["time"] = appointmentTime}
+          
 
-            acc[appointmentDate]["time"] = appointmentTime;
-
-            return acc;
-    }, {} as {[date: string]: {time?: string}})
+    })
 
 
     for(let i = 0; i < 8; i++){
@@ -369,18 +391,8 @@ export function DisplayTimeAppointments(setTime: (e:string)=>void, appointments:
             
                 let hourString:string = time.toString()
                 let minuteString:string = minutes.toString()
-
-                for(let keys in appointmentDays){
-                    // console.log(keys)
-
-                    if(appointmentDays[keys].time?.split(":")[0] === time.toString()){
-                        // console.log(time)
-                        break;
-                    }else{
-                        jsx.push(hourString + ":" + minuteString + "0");
-                        break;
-                    }
-                }
+                jsx.push(hourString + ":" + minuteString + "0");
+         
         }
 
 

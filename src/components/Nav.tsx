@@ -2,9 +2,8 @@ import React from "react"
 import {ButtonLink,ButtonSubmit} from "../components/Button"
 import api from "../api/api"
 
-
-
 export default function Nav(){
+  
     const user = localStorage.getItem("id");
 
     async function handleLogout(): Promise<void>{

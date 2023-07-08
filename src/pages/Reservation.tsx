@@ -28,11 +28,10 @@
 
         useEffect(()=>{
             GetCarData({onMakeSelect: setCarMakeOptions, onModelSelect: setCarModelOptions, onYearSelect: setCarYearOptions, carMake: carMake, carModel:carModel});
-        },[carMake, carModel]);
 
-        useEffect(()=>{
             getAppointmentData((e:Appointment[])=>setAppointments(e))
-        },[])
+
+        },[carMake, carModel]);
         
 
         function handleCreateAppointment():void{    
@@ -60,28 +59,28 @@
                     {SelectCarModelInput({defaultValue: "Car Model", options: carModelOptions, onChange: (e:string)=>setCarModel(e), carMake: carMake, carModel: carModel, carYear: carYear, resetModel:(e:string)=>setCarModel(e), resetYear: (e:string)=>setCarYear(e), resetMake:(e:string)=>setCarMake})}
                     {SelectCarYearInput({defaultValue: "Car Year", options: carYearOptions, onChange: (e:string)=>setCarYear(e), carMake: carMake, carModel: carModel, carYear: carYear, resetModel:(e:string)=>setCarModel(e),resetYear:(e:string)=>setCarYear(e),resetMake:(e:string)=>setCarMake(e)})}
 
-                    {ChooseTwoInput("Drop off car", "Wait for car", "stayLeave", (e:string)=>setStay_Leave(e))}
+                    {ChooseTwoInput({text1: "Drop off car",text2: "Wait for car",name: "stayLeave",onChange: (e:string)=>setStay_Leave(e)})}
 
                     {ChooseCarService((e:string)=>setService(e))}
 
-                    {Input({type: "text",onChange: (e:string)=>setFirstName(e),placeholder: "First Name"})}
-                    {Input({type: "text",onChange: (e:string)=>setLastName(e),placeholder: "Last Name"})}
-                    {Input({type: "text",onChange: (e:string)=>setEmail(e),placeholder: "Email Address"})}
-                    {Input({type: "tel",onChange: (e:string)=>setPhone(e),placeholder: "###-###-####", minlength: 10, maxlength: 10})}
-                    {Input({type: "text",onChange: (e:string)=>setZipCode(e),placeholder: "Postal/Zip Code", minlength: 5, maxlength: 5})}
+                    {Input({type: "text", onChange: (e:string)=>setFirstName(e), placeholder: "First Name"})}
+                    {Input({type: "text", onChange: (e:string)=>setLastName(e), placeholder: "Last Name"})}
+                    {Input({type: "text", onChange: (e:string)=>setEmail(e), placeholder: "Email Address"})}
+                    {Input({type: "tel", onChange: (e:string)=>setPhone(e), placeholder: "###-###-####", minlength: 10, maxlength: 10})}
+                    {Input({type: "text", onChange: (e:string)=>setZipCode(e), placeholder: "Postal/Zip Code", minlength: 5, maxlength: 5})}
 
-                    Preferred Contact Method
+                    <h2>Preferred Contact Method</h2>
 
-                    {ChooseTwoInput("Email", "Phone", "contact" ,(e:string)=>setContact(e))}
+                    {ChooseTwoInput({text1:"Email",text2: "Phone",name: "contact" ,onChange: (e:string)=>setContact(e)})}
 
                     {TextBoxInput({width: 50, height: 10, onChange: (e:string)=>setComment(e), placeholder: "Additional Comments"})}
 
                 </form>
 
                 
-                    <Button
-                    text = "Reserve Appointment"
-                    handleButtonClick={()=> handleCreateAppointment()}/>
+                <Button
+                text = "Reserve Appointment"
+                handleButtonClick={()=> handleCreateAppointment()}/>
 
             </main>
         )
