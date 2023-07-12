@@ -1,7 +1,7 @@
     import React, {useState, useEffect} from "react"
     import {Button} from "../components/Button"
     import Nav from "../components/Nav"
-    import {getAppointmentData, Appointment, checkAppointmentDate, DisplayTimeAppointments, GetCarData, SelectCarMakeInput, SelectCarModelInput, ChooseTwoInput, SelectCarYearInput, ChooseCarService, Input, TextBoxInput, checkInputValidation} from "../hooks/ReservationHooks"
+    import {getAppointmentData, Appointment, checkAppointmentDate, DisplayTimeDateAppointments, GetCarData, SelectCarMakeInput, SelectCarModelInput, ChooseTwoInput, SelectCarYearInput, ChooseCarService, Input, TextBoxInput, checkInputValidation} from "../hooks/ReservationHooks"
 
     export default function Reservation(){
         
@@ -53,7 +53,7 @@
 
                 <form>
             
-                    {DisplayTimeAppointments((e:string)=>setTime(e),appointments, (e:string)=>setDate(e))}
+                    {DisplayTimeDateAppointments((e:string)=>setTime(e),appointments, (e:string)=>setDate(e))}
 
                     {SelectCarMakeInput({defaultValue: "Car Make", options: carMakeOptions, onChange: (e:string)=>setCarMake(e), carMake: carMake, carYear: carYear, carModel: carModel, resetModel: (e:string)=>setCarModel(e), resetYear:(e:string)=>setCarYear(e), resetMake:(e:string)=>setCarMake(e)})}
                     {SelectCarModelInput({defaultValue: "Car Model", options: carModelOptions, onChange: (e:string)=>setCarModel(e), carMake: carMake, carModel: carModel, carYear: carYear, resetModel:(e:string)=>setCarModel(e), resetYear: (e:string)=>setCarYear(e), resetMake:(e:string)=>setCarMake})}

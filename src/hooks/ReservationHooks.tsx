@@ -69,7 +69,7 @@ export interface GeneralInput{
     value?: string
 }
 
-export interface ChooseTwoInput{
+export interface ChooseInput{
     text1: string, 
     text2:string, 
     name: string, 
@@ -92,6 +92,16 @@ export interface Appointment{
     comment: string,
     stayLeave: string,
     service: string
+}
+
+export interface RenderCalendar{
+    currentMonth: number,
+    currentDay: number,
+    currentYear: number,
+    daysOfWeek: string[],
+    currentDayOfWeek: number,
+    setDate: (e:string) => void,
+    i:number
 }
 
 export function TextBoxInput(props: TextBox):React.JSX.Element{
@@ -191,7 +201,7 @@ export function Input(props: GeneralInput):React.JSX.Element{
     )
 }
 
-export function ChooseTwoInput(props: ChooseTwoInput){
+export function ChooseTwoInput(props: ChooseInput){
     return(
         <div>
             <input type = "radio" value = {props.text1} name = {props.name} onChange = {(e)=>props.onChange(e.target.value)}/>
@@ -271,13 +281,28 @@ export function ChooseCarService(onChange:(e:string)=>void){
     }
 }
 
-
-function handleChangeTime(e:React.MouseEvent<HTMLButtonElement, MouseEvent>, time:string, setTime: (e:string)=>void){
+function handleChangeTime(i:number,e:React.MouseEvent<HTMLButtonElement, MouseEvent>, time:string, setTime: (e:string)=>void){
     e.preventDefault();
     setTime(time)
+            
+    document.querySelectorAll(".time").forEach(ele=>{
+        ele.classList.remove("clicked")
+    });
+
+    document.querySelector(`.t-${i}`)?.classList.add("clicked");
 }
 
-export function DisplayTimeAppointments(setTime: (e:string)=>void, appointments: Appointment[], setDate: (e:string)=>void):React.JSX.Element{
+export function handleRenderCalendar(props: RenderCalendar){
+    const date = `${props.currentMonth}/${props.currentDay}/${props.currentYear}D${props.daysOfWeek[props.currentDayOfWeek]}`
+    props.setDate(date);
+        document.querySelectorAll(".calendar").forEach(ele=>{
+            ele.classList.remove("clicked")
+        });
+
+        document.querySelector(`.c-${props.i}`)?.classList.add("clicked");
+}
+
+export function DisplayTimeDateAppointments(setTime: (e:string)=>void, appointments: Appointment[], setDate: (e:string)=>void):React.JSX.Element{
 
     const date = new Date();
     //+1 because Date.prototype.getMonth() starts at 0 to represent index
@@ -291,24 +316,11 @@ export function DisplayTimeAppointments(setTime: (e:string)=>void, appointments:
 
     const appt:React.JSX.Element[] = [];
 
-    // const object:{date: string, [time: string]} = {}
-
-    //takes the appointments array of objects, and converts it into an object where 
-    let appointmentDays = appointments.map((appointment:Appointment)=>{
-            const appointmentDate = appointment.date;
-            const appointmentTime = appointment.time;
-
-            // object[appointmentDate] = {["time"] = appointmentTime}
-          
-
-    })
-
-
     for(let i = 0; i < 8; i++){
 
         let currentMonth = month;
         let currentDay = day;
-        let currentYear =year;
+        let currentYear = year;
         let currentDayOfWeek = dayOfWeek
 
         switch(month){
@@ -320,7 +332,7 @@ export function DisplayTimeAppointments(setTime: (e:string)=>void, appointments:
             case 10:
                 if(currentDay > 31){
                     currentDay = 1;
-                    currentMonth += 1;
+                    currentMonth ++;
                 }
                 break;
             case 4:
@@ -329,20 +341,20 @@ export function DisplayTimeAppointments(setTime: (e:string)=>void, appointments:
             case 11:
                 if(currentDay > 30){
                     currentDay = 1;
-                    currentMonth += 1;
+                    currentMonth ++;
                 }
                 break;
             case 2:
                 if(currentDay > 28){
                     currentDay = 1;
-                    currentMonth += 1;
+                    currentMonth ++;
                 }
                 break;
             case 12:
                 if(currentDay > 31){
                     currentDay = 1;
                     currentMonth = 1;
-                    currentYear += 1;
+                    currentYear ++;
                 }
                 break;
         }
@@ -355,13 +367,7 @@ export function DisplayTimeAppointments(setTime: (e:string)=>void, appointments:
 
         appt.push(
             <div className = {`calendar clearButton c-${i}`} key = {`c-${i}`} onClick = {()=>{
-                const date = `${currentMonth}/${currentDay}/${currentYear}D${daysOfWeek[currentDayOfWeek]}`
-                setDate(date);
-                    document.querySelectorAll(".calendar").forEach(ele=>{
-                        ele.classList.remove("clicked")
-                    });
-
-                    document.querySelector(`.c-${i}`)?.classList.add("clicked");
+                handleRenderCalendar({currentMonth: currentMonth, currentDay: currentDay, currentYear: currentYear, daysOfWeek: daysOfWeek, currentDayOfWeek, setDate: (e:string)=> setDate(e), i: i})
             }}>
                 <h3>{daysOfWeek[currentDayOfWeek]}</h3>
                 <h3>{`${month}/${day}/${year}`}</h3>
@@ -372,64 +378,37 @@ export function DisplayTimeAppointments(setTime: (e:string)=>void, appointments:
         dayOfWeek++;
 
     }
-    
-        // 7am - 3pm sat 
-        // 7am - 5pm mon-fri
 
-
-        //go through all objects in appointments array
-        //check if appointments[index].time exists, if it does, remove that time ONLY if it matches that specific date
-
-
-        let jsx = []
-
-        let minutes = 0;
-     
+        let jsx = [];
 
         //times at :00 mark
         for(let time = 7; time <= 17; time++){
-            
-                let hourString:string = time.toString()
-                let minuteString:string = minutes.toString()
-                jsx.push(hourString + ":" + minuteString + "0");
-         
+            jsx.push(time.toString() + ":00");
         }
 
+        const miliaryTimeConversion = jsx.map((time:string)=>{
+            const hours = (parseInt(time.split(":")[0]));
 
-        const sortedJSX = jsx.sort((a,b)=>parseInt(a)-parseInt(b));
-        const miliaryTimeConversion = sortedJSX.map(ele=>{
-            if(parseInt(ele)>12){
-                const hours = ele.split(":")[0];
-                const minutes = ele.split(":")[1];
-                return [(parseInt(hours) - 12).toString() + ":" + minutes + "PM", ele]
-            }else if(parseInt(ele) === 12){
-                const hours = ele.split(":")[0];
-                const minutes = ele.split(":")[1];
-                return [(parseInt(hours)).toString() + ":" + minutes + "PM", ele]
+            if(parseInt(time)>12){
+                //data structure of 1:00PM, 13:00
+                return [(hours-12).toString() + ":00PM", time];
+            }else if(parseInt(time) === 12){
+                //data structure of 12:00PM, 12:00
+                return [hours + ":00PM", time];
             }else{
-                const hours = ele.split(":")[0];
-                const minutes = ele.split(":")[1];
-                return [(parseInt(hours)).toString() + ":" + minutes + "AM", ele]
+                //data structure of 1:00AM, 1:00
+                return [hours + ":00AM", time];
             }
         })
 
+        //render clear buttons of appointment dates
         const finalJSX = miliaryTimeConversion.map((jsx,i)=>{return(
                    <button 
                          className = {`clearButton t-${i} time`} key = {i}
-                         onClick = {(e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
-                             e.preventDefault();
-                             handleChangeTime(e, jsx[1], (e:string)=>setTime(e))
-                            
-                             document.querySelectorAll(".time").forEach(ele=>{
-                                ele.classList.remove("clicked")
-                            });
-    
-                            document.querySelector(`.t-${i}`)?.classList.add("clicked");
-                            }}>
+                         onClick = {(e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handleChangeTime(i,e, jsx[1], (e:string)=>setTime(e))}>
                              {jsx[0]}
                     </button>
-        )
-    })
+        )})
 
 
         return(
@@ -446,97 +425,6 @@ export function DisplayTimeAppointments(setTime: (e:string)=>void, appointments:
         )
 
 }
-
-export function Calendar(setDate: (e:string)=>void){
-    const date = new Date();
-    let month:number = date.getMonth()+1;
-    let dayOfWeek:number = date.getDay();
-    let year:number = date.getFullYear();
-    let day:number = date.getDate();
-
-    const daysOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-
-    const appt:React.JSX.Element[] = [];
-
-    for(let i = 0; i < 8; i++){
-
-        let currentMonth = month;
-        let currentDay = day;
-        let currentYear =year;
-        let currentDayOfWeek = dayOfWeek
-
-        switch(month){
-            case 1:
-            case 3:
-            case 5:
-            case 7:
-            case 8:
-            case 10:
-                if(currentDay > 31){
-                    currentDay = 1;
-                    currentMonth += 1;
-                }
-                break;
-            case 4:
-            case 6:
-            case 9:
-            case 11:
-                if(currentDay > 30){
-                    currentDay = 1;
-                    currentMonth += 1;
-                }
-                break;
-            case 2:
-                if(currentDay > 28){
-                    currentDay = 1;
-                    currentMonth += 1;
-                }
-                break;
-            case 12:
-                if(currentDay > 31){
-                    currentDay = 1;
-                    currentMonth = 1;
-                    currentYear += 1;
-                }
-                break;
-        }
-
-        
-
-        if(currentDayOfWeek > 6){
-            dayOfWeek = 0;
-            currentDayOfWeek = 0
-        }
-
-                  
-        appt.push(
-            <div className = {`calendar clearButton c-${i}`} key = {`c-${i}`} onClick = {()=>{
-                const date = `${currentMonth}/${currentDay}/${currentYear}D${daysOfWeek[currentDayOfWeek]}`
-                setDate(date);
-                    document.querySelectorAll(".calendar").forEach(ele=>{
-                        ele.classList.remove("clicked")
-                    });
-
-                    document.querySelector(`.c-${i}`)?.classList.add("clicked");
-            }}>
-                <h3>{daysOfWeek[currentDayOfWeek]}</h3>
-                <h3>{`${month}/${day}/${year}`}</h3>
-            </div>
-        )
-
-        day++;
-        dayOfWeek++;
-
-    }
-
-
-    return(
-        <section className = "calendarHub flex">
-            {appt}
-        </section>
-        )
-}
-
 
 export function checkAppointmentDate(date: string, time: string, setDate: (e:string)=>void):string | void{
 
