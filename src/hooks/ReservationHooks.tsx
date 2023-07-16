@@ -104,6 +104,12 @@ export interface RenderCalendar{
     i:number
 }
 
+export interface TimeDateAppointments{
+    setTime: (e:string)=>void, 
+    appointments: Appointment[], 
+    setDate: (e:string)=>void
+}
+
 export function TextBoxInput(props: TextBox):React.JSX.Element{
     return(
         <textarea 
@@ -302,19 +308,23 @@ export function handleRenderCalendar(props: RenderCalendar){
         document.querySelector(`.c-${props.i}`)?.classList.add("clicked");
 }
 
-export function DisplayTimeDateAppointments(setTime: (e:string)=>void, appointments: Appointment[], setDate: (e:string)=>void):React.JSX.Element{
+export function DisplayTimeDateAppointments(props: TimeDateAppointments):React.JSX.Element{
 
     const date = new Date();
     //+1 because Date.prototype.getMonth() starts at 0 to represent index
     let month:number = date.getMonth()+1;
-    let dayOfWeek:number = date.getDay();
-    let year:number = date.getFullYear();
     let day:number = date.getDate();
-    
+    let year:number = date.getFullYear();
+    let dayOfWeek:number = date.getDay();
+
+    const [selectedDate, setSelectedDate] = useState<string>(`${month}/${day}/${year}`);
+
+
     //list of days in a week
     const daysOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
     const appt:React.JSX.Element[] = [];
+    const dateAppointments:string[] = [];
 
     for(let i = 0; i < 8; i++){
 
@@ -359,31 +369,62 @@ export function DisplayTimeDateAppointments(setTime: (e:string)=>void, appointme
                 break;
         }
 
+        //have the current date as the default value
+        //set a state called selectedDate and save the current date to its value
+        //if a different date is selected, change the selected date as the current value of setSelectedDate
+        //use the selectedDate value to show the different appointment times that are avaiable for the respective date
 
         if(currentDayOfWeek > 6){
             dayOfWeek = 0;
             currentDayOfWeek = 0
         }
 
-        appt.push(
-            <div className = {`calendar clearButton c-${i}`} key = {`c-${i}`} onClick = {()=>{
-                handleRenderCalendar({currentMonth: currentMonth, currentDay: currentDay, currentYear: currentYear, daysOfWeek: daysOfWeek, currentDayOfWeek, setDate: (e:string)=> setDate(e), i: i})
-            }}>
-                <h3>{daysOfWeek[currentDayOfWeek]}</h3>
-                <h3>{`${month}/${day}/${year}`}</h3>
-            </div>
-        )
+        dateAppointments.push(`${currentMonth}/${currentDay}/${currentYear}`)
+
+        if(!i){
+            appt.push(
+                <div className = {`calendar clearButton c-${i} clicked`} key = {`c-${i}`} onClick = {()=>{
+                    const date = `${currentMonth}/${currentDay}/${currentYear}`
+                    setSelectedDate(date)
+                    handleRenderCalendar({currentMonth: currentMonth, currentDay: currentDay, currentYear: currentYear, daysOfWeek: daysOfWeek, currentDayOfWeek, setDate: (e:string)=> props.setDate(e), i: i})
+                }}>
+                    <h3>{daysOfWeek[currentDayOfWeek]}</h3>
+                    <h3>{`${month}/${day}/${year}`}</h3>
+                </div>
+            )
+        }else{
+            appt.push(
+                <div className = {`calendar clearButton c-${i}`} key = {`c-${i}`} onClick = {()=>{
+                    const date = `${currentMonth}/${currentDay}/${currentYear}`
+                    setSelectedDate(date)
+                    handleRenderCalendar({currentMonth: currentMonth, currentDay: currentDay, currentYear: currentYear, daysOfWeek: daysOfWeek, currentDayOfWeek, setDate: (e:string)=> props.setDate(e), i: i})
+                }}>
+                    <h3>{daysOfWeek[currentDayOfWeek]}</h3>
+                    <h3>{`${month}/${day}/${year}`}</h3>
+                </div>
+            )
+        }
+
 
         day++;
         dayOfWeek++;
 
     }
 
+
+
+    const filterAppointmentTimes = props.appointments.filter((appointment:Appointment) => appointment.date.split("D")[0] === selectedDate)
+ 
+    const appointmentTimes = filterAppointmentTimes.map((appointment:Appointment) => appointment.time)
+
         let jsx = [];
 
         //times at :00 mark
         for(let time = 7; time <= 17; time++){
-            jsx.push(time.toString() + ":00");
+                const timeDisplay = time.toString() + ":00"
+                if(!appointmentTimes.includes(timeDisplay)){
+                    jsx[time-7] = (timeDisplay);
+                }
         }
 
         const miliaryTimeConversion = jsx.map((time:string)=>{
@@ -405,7 +446,7 @@ export function DisplayTimeDateAppointments(setTime: (e:string)=>void, appointme
         const finalJSX = miliaryTimeConversion.map((jsx,i)=>{return(
                    <button 
                          className = {`clearButton t-${i} time`} key = {i}
-                         onClick = {(e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handleChangeTime(i,e, jsx[1], (e:string)=>setTime(e))}>
+                         onClick = {(e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handleChangeTime(i,e, jsx[1], (e:string)=>props.setTime(e))}>
                              {jsx[0]}
                     </button>
         )})
@@ -437,8 +478,6 @@ export function checkAppointmentDate(date: string, time: string, setDate: (e:str
         toast.error('Pick a valid time');
         return;
     }
-
-    console.log(date)
 
     const arrayOfDateAppt = date.split("D")[0].split("/");
     let arrayOfTimeAppt = time.split(":");
