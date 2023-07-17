@@ -1,105 +1,19 @@
 import React, {useState, useEffect, useMemo} from "react"
-import {Client, Account, ID} from "appwrite"
-import {toast} from "react-toastify"
-import axios from "axios"
-import api from "../api/api"
-import {ButtonSubmit} from "../components/Button"
+import {ButtonSubmit, Button} from "../components/Button"
 import Nav from "../components/Nav"
-
-interface InputTypes{
-  type: string,
-  onChange: (e:string)=>void,
-  placeholder: string
-}
-
-export interface User{
-  $createdAt: string, 
-  $id: string,
-  $updatedAt: string,
-  email: string,
-  emailVerification: boolean,
-  name: string,
-  passwordUpdate: string,
-  phone: string,
-  phoneVerification: boolean,
-  prefs: object,
-  registration: string,
-  status: boolean
-}
-
-export function Input(props: InputTypes):React.JSX.Element{
-  return(<input type = {props.type} onChange = {(e)=>props.onChange(e.target.value)} placeholder = {props.placeholder}/>)
-}
-
-export async function GetAccount(setUser: (e:User)=>void){
-  try{
-    const user = await api.getAccount();
-    setUser(user);
-  }catch(err){
-    console.error(err);
-  }
-}
-
-export async function GetUsers(setListOfUsers: (e:User[])=>void){
-  try{
-    const [dataResponse] = await Promise.all([
-      axios.get("https://car-app-backend-0ejb.onrender.com/getUsers")
-    ])
-    if(dataResponse.data.users.length){
-      setListOfUsers(dataResponse.data.users);
-    }
-  }catch(err){
-    console.error(err)
-  }
-}
-
-
-async function handleDelete(userId: string){
-  try{
-    const response = await axios.delete(`http://localhost:8000/${userId}`)
-    console.log(response)
-  }catch(err){
-    console.error(err)
-  }
-
-  
-}
-
-export function DisplayUsers(listOfUsers: User[], currentUser: User){
-  if(currentUser.$id === "649c8a408d41d5c02f5c"){
-    return listOfUsers.map((user:User)=>{
-      return(
-        <ul key = {user.$id}>
-          {user.$id === "649c8a408d41d5c02f5c" ? "" : <li className = "fa-sharp fa-solid fa-trash button" onClick = {()=>handleDelete(user.$id)}></li>}
-          <li>{user.email}</li>
-          <li>{user.$createdAt}</li>
-          <li>{user.$updatedAt? user.$updatedAt : ""}</li>
-          <li>{user.name}</li>
-        </ul> 
-      )
-    })
-  }else{
-    return listOfUsers.map((user:User)=>{
-      return(
-        <ul key = {user.$id}>
-          <li>{user.email}</li>
-          <li>{user.$createdAt}</li>
-          <li>{user.$updatedAt? user.$updatedAt : ""}</li>
-          <li>{user.name}</li>
-        </ul> 
-      )
-    })
-  }
-    
-}
+import {User, GenerateNewEmployee, handleLogin, handleLogout, GetAccount, GetUsers, DisplayUsers, Input, handleSignUp} from "../hooks/LoginHooks"
+import api from "../api/api"
+import {toast} from "react-toastify"
 
 export default function Login(){
 
   const [email, setEmail] = useState<string>("");
+  const [generatedPassword, setGeneratedPassword] = useState<string>("");
+  const [employeeId, setEmployeeId] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [user, setUser] = useState<User>();
-  const [listOfUsers, setListOfUsers] = useState<User[]>([])
+  const [listOfUsers, setListOfUsers] = useState<User[]>([]);
 
   useEffect(()=>{
     GetAccount((e:User) => setUser(e))
@@ -109,89 +23,11 @@ export default function Login(){
     GetUsers((e:User[])=>setListOfUsers(e));
   },[])
 
-  async function handleSignUp():Promise<void>{
+  async function updateAccountName(){
     try{
-
-      if(!email){
-        toast.error("Please input an email address");
-        return;
-      }else if(!name){
-        toast.error("Please input your full name");
-        return;
-      }else if(!password){
-        toast.error("Please input a password");
-        return;
-      }
-    
-      const fullName = /^[A-Za-z\s]+$/;
-      const mail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    
-      if(!fullName.test(name)){
-        toast.error("Please input a valid full name");
-        return;
-      }else if(!mail.test(email)){
-        toast.error("Please input a valid password");
-        return;
-      }
-
-
-      const client = new Client()
-      .setEndpoint("https://cloud.appwrite.io/v1") // Your API Endpoint
-      .setProject(process.env.REACT_APP_PROJECT) // Your project ID
-    
-  
-      const account = new Account(client);
-  
-      // Register User
-      await account.create(
-          ID.unique(),
-          email,
-          password,
-          name
-      )
-
-      await api.createSession(email, password);
-        const response = await api.getAccount();
-        if(response){
-          console.log(response);
-          window.location.reload()
-        }
-
-    }catch(err){
-      toast.error(`${err}`);
-      console.error(err);
-  }
-  }
-
-  async function handleLogin(): Promise<void>{
-    try{
-      if(!email){
-        toast.error("Please input an email address");
-        return;
-      }else if(!name){
-        toast.error("Please input your full name");
-        return;
-      }else if(!password){
-        toast.error("Please input a password");
-        return;
-      }
-    
-      const fullName = /^[A-Za-z\s]+$/;
-      const mail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    
-      if(!fullName.test(name)){
-        toast.error("Please input a valid full name");
-        return;
-      }else if(!mail.test(email)){
-        toast.error("Please input a valid password");
-        return;
-      }
-
-      await api.createSession(email, password);
-      const response = await api.getAccount();
-      if(response){
-        console.log(response);
-        window.location.reload()
+      const updatedName = await api.updateAccountName(name);
+      if(updatedName){
+        window.location.reload();
       }
     }catch(err){
       console.error(err);
@@ -199,18 +35,22 @@ export default function Login(){
     }
   }
 
-  async function handleLogout(): Promise<void>{
+  async function updateAccountPassword(){
     try{
-      const user = await api.deleteCurrentSession();
-      console.log(user);
-      window.location.reload();
+      const updatedPassword = await api.updateAccountPassword(password);
+      if(updatedPassword){
+        window.location.reload();
+      }
     }catch(err){
       console.error(err);
+      toast.error(`${err}`);
     }
   }
+
 
   return(
     <main>
+        
         <Nav/>
 
         {user? <h1>Welcome {user.name}</h1> : <h1>Login</h1>}
@@ -220,13 +60,12 @@ export default function Login(){
 
         :
         <form>
-          {ButtonSubmit({handleButtonClick: (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handleLogin(), text: "Login"})}
-          {ButtonSubmit({handleButtonClick: (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handleSignUp(), text: "SignUp"})}
-          {/* <Button handleButtonClick = {()=>getAccount()} text = {"Get Account"}/> */}
+          {ButtonSubmit({handleButtonClick: (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handleLogin({email:email, name: name, password: password, employeeId: employeeId, listOfUsers: listOfUsers}), text: "Login"})}
         
-          {Input({type: "email", onChange: (e)=>setEmail(e), placeholder: "Your Email"})}
-          {Input({type: "text", onChange: (e)=>setName(e), placeholder: "Your Full Name"})}
-          {Input({type: "password", onChange: (e)=>setPassword(e), placeholder: "Your Password"})}
+          {Input({type: "email",  name: "email", onChange: (e)=>setEmail(e), placeholder: "Your Email"})}
+          {Input({type: "text", name: "employeeId",  onChange: (e)=>setEmployeeId(e), placeholder: "Your EmployeeId"})}
+          {Input({type: "text", name: "name",  onChange: (e)=>setName(e), placeholder: "Your Full Name"})}
+          {Input({type: "password", name: "password",  onChange: (e)=>setPassword(e), placeholder: "Your Password"})}
         </form>
         }
 
@@ -235,15 +74,49 @@ export default function Login(){
       user?.$id === "649c8a408d41d5c02f5c" ? 
         <section>
           <h3>Admin Hub</h3>
+
+          {Input({type: "email", name: "email", onChange: (e)=>setEmail(e), placeholder: "Employees Email"})}
+          {Input({type: "text", name: "text", onChange: (e)=>setName(e), placeholder: "Employees Name"})}
+          {Input({type: "text", name: "password" ,value: generatedPassword, disabled: true, onChange: (e)=>setPassword(e), placeholder: "Employees Password"})}
+
+          {generatedPassword ? "" :
+          Button({text: "Automate Password for New Employee Account", handleButtonClick: ()=>{GenerateNewEmployee((e:string)=>setPassword(e), (e:string)=>setGeneratedPassword(e))}})
+          }
+
+          {ButtonSubmit({handleButtonClick: (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handleSignUp({email: email, name: name, password: password}), text: "Create Employee Sign Up"})}
+
           {DisplayUsers(listOfUsers, user)}
         </section>
+
       :
         <section>
           <h3>Employee Hub</h3>
         </section>
       
       :
-      ""
+      <section>
+        <h2>Error Occured, Please Try Again Later</h2>
+      </section>
+    }
+
+    {user ? 
+    <section>
+      <section>
+        {Input({type: "text", name: "text", onChange: (e)=>setName(e), placeholder: user?.name})}
+        {Button({text: "Update User's Name", handleButtonClick: ()=>updateAccountName()})}
+      </section>
+
+      <section>
+      {Input({type: "password", name: "password", onChange: (e)=>setPassword(e), placeholder: "New Password Here"})}
+        {Button({text: "Update User's Password", handleButtonClick: ()=>updateAccountPassword()})}
+      </section>
+
+      <section>
+
+      </section>
+    </section>
+    :
+    ""
     }
 
     </main>

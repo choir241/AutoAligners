@@ -1,10 +1,20 @@
+/* Font
+   ========================================================================== */
+
 html{
     font-size: 62.5%;
 }
 
-.flex{
-    display: flex;
+h1{
+    font-size: 5rem;
 }
+
+body{
+    padding: 2rem;
+}
+
+/* Button
+   ========================================================================== */
 
 .button{
     letter-spacing: normal;
@@ -57,6 +67,26 @@ html{
     transition: .5s;
 }
 
+.clicked, .clicked button{
+    background: black;
+    color: white;
+}
+
+/* Flex
+   ========================================================================== */
+
+.flex{
+    display: flex;
+}
+
+
+.appointmentTimes{
+    flex-wrap: wrap;
+}
+
+/* Form
+   ========================================================================== */
+
 input, select, option, label{
     cursor: pointer;
 }
@@ -65,9 +95,8 @@ textarea{
     resize: none;
 }
 
-.appointmentTimes{
-    flex-wrap: wrap;
-}
+/* Calendar
+   ========================================================================== */
 
 .calendar{
     margin: 0rem 2rem;
@@ -82,9 +111,4 @@ textarea{
 .calendarHub{
     padding: 2rem;
     overflow-y: scroll;
-}
-
-.clicked, .clicked button{
-    background: black;
-    color: white;
 }

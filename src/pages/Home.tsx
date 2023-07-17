@@ -6,7 +6,6 @@ export default function Home(){
     return(
         <main>
             <Nav/>
-            <h1>Car App</h1>
         </main>
     )   
 }

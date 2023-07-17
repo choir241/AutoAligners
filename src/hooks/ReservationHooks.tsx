@@ -3,6 +3,7 @@ import {toast} from "react-toastify"
 import {carData} from "../api/data"
 import api from "../api/api"
 import { Permission, Role } from "appwrite"
+import { Service } from "appwrite/types/service"
 
 //globally accessible env variables
 declare global {
@@ -108,6 +109,13 @@ export interface TimeDateAppointments{
     setTime: (e:string)=>void, 
     appointments: Appointment[], 
     setDate: (e:string)=>void
+}
+
+export interface ChangeTime{
+    i:number,
+    e:React.MouseEvent<HTMLButtonElement, MouseEvent>, 
+    time:string, 
+    setTime: (e:string)=>void
 }
 
 export function TextBoxInput(props: TextBox):React.JSX.Element{
@@ -231,16 +239,16 @@ export async function GetCarData(props:CarSelectData){
             if(props.carMake && props.carMake !== "Select Car Make"){
 
                 //sets form options to all car models available for selected car make value
+                //returning false is there to 1. prevent the warning to appear that filter method expects a returned value 2. to return a value that won't affect the current existing desired functionality
                 const response = carData.filter((car:Car)=>{
-                    let model = ""
-                    if(car.manufacturer === props.carMake){
-                        model = car.model
-                    }
-                    return model
+                   if(car.manufacturer === props.carMake){
+                        return car.model
+                   }
+                   return false;
                 })
 
                 //returns a new array of react jsx element with new car model values that are respective to selected car make value
-                const carOptions:React.JSX.Element[] = response.map(function(car:Car,i:number){return <option key = {i}>{car.model}</option>});
+                const carOptions:React.JSX.Element[] = response.map((car:Car,i:number)=>{return <option key = {i}>{car.model}</option>});
                 const modelSelect = ()=>props.onModelSelect(carOptions)
                 modelSelect();
             }
@@ -287,15 +295,15 @@ export function ChooseCarService(onChange:(e:string)=>void){
     }
 }
 
-function handleChangeTime(i:number,e:React.MouseEvent<HTMLButtonElement, MouseEvent>, time:string, setTime: (e:string)=>void){
-    e.preventDefault();
-    setTime(time)
+function handleChangeTime(props: ChangeTime){
+    props.e.preventDefault();
+    props.setTime(props.time)
             
     document.querySelectorAll(".time").forEach(ele=>{
         ele.classList.remove("clicked")
     });
 
-    document.querySelector(`.t-${i}`)?.classList.add("clicked");
+    document.querySelector(`.t-${props.i}`)?.classList.add("clicked");
 }
 
 export function handleRenderCalendar(props: RenderCalendar){
@@ -319,12 +327,10 @@ export function DisplayTimeDateAppointments(props: TimeDateAppointments):React.J
 
     const [selectedDate, setSelectedDate] = useState<string>(`${month}/${day}/${year}`);
 
-
     //list of days in a week
     const daysOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
     const appt:React.JSX.Element[] = [];
-    const dateAppointments:string[] = [];
 
     for(let i = 0; i < 8; i++){
 
@@ -379,8 +385,6 @@ export function DisplayTimeDateAppointments(props: TimeDateAppointments):React.J
             currentDayOfWeek = 0
         }
 
-        dateAppointments.push(`${currentMonth}/${currentDay}/${currentYear}`)
-
         if(!i){
             appt.push(
                 <div className = {`calendar clearButton c-${i} clicked`} key = {`c-${i}`} onClick = {()=>{
@@ -404,7 +408,6 @@ export function DisplayTimeDateAppointments(props: TimeDateAppointments):React.J
                 </div>
             )
         }
-
 
         day++;
         dayOfWeek++;
@@ -444,17 +447,16 @@ export function DisplayTimeDateAppointments(props: TimeDateAppointments):React.J
 
         //render clear buttons of appointment dates
         const finalJSX = miliaryTimeConversion.map((jsx,i)=>{return(
-                   <button 
-                         className = {`clearButton t-${i} time`} key = {i}
-                         onClick = {(e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handleChangeTime(i,e, jsx[1], (e:string)=>props.setTime(e))}>
-                             {jsx[0]}
-                    </button>
+            <button 
+                  className = {`clearButton t-${i} time`} key = {i}
+                  onClick = {(e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handleChangeTime({i: i,e: e,time: jsx[1],setTime: (e:string)=>props.setTime(e)})}>
+                      {jsx[0]}
+            </button>
         )})
 
 
         return(
             <section>
-                
                 <section className = "calendarHub flex">
                     {appt}
                 </section>
@@ -517,28 +519,14 @@ export function checkAppointmentDate(date: string, time: string, setDate: (e:str
     const daysOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
     const getAppointmentDayoFWeek = appointmentDayoFWeek.getDay();
 
-    console.log(appointmentDayoFWeek)
-    console.log(getAppointmentDayoFWeek)
-
-    // if(getAppointmentDayoFWeek === 6){
-    //     toast.error("We are closed on Sundays");
-    //     return;
-    // }else if(getAppointmentDayoFWeek === 5){
-    //     toast.error("We are not open during those times");
-    //     return;
-    // }
-
     if(!daysOfWeek.includes(date.split("D")[1])){
         setDate(`${date}D${daysOfWeek[getAppointmentDayoFWeek]}`)
     }
 
 }
 
-
 export async function handleSubmitData(props: Appointment):Promise<void>{         
     
-        console.log(props.date)
-
             const formData = {
                 "date":props.date,
                 "time":props.time,
@@ -560,8 +548,7 @@ export async function handleSubmitData(props: Appointment):Promise<void>{
             await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID, formData, [Permission.read(Role.any())])
 
             window.location.reload();   
-        }
-
+}
 
 export function checkInputValidation(props: Appointment):false|undefined{
             if(!props.date){
@@ -616,8 +603,7 @@ export function checkInputValidation(props: Appointment):false|undefined{
             alert("Appointment Made!");
 
             handleSubmitData({service: props.service, firstName: props.firstName, lastName: props.lastName, date: props.date, time: props.time, carModel: props.carModel, carMake: props.carMake, carYear: props.carYear, email: props.email, phone: props.phone, zipCode: props.zipCode, contact: props.contact, comment: props.comment, stayLeave:props.stayLeave});
- }
-
+}
 
 export async function getAppointmentData(setAppointments: (e:Appointment[])=>void){
     try{
@@ -627,4 +613,91 @@ export async function getAppointmentData(setAppointments: (e:Appointment[])=>voi
         console.error(err);
         toast.error(`${err}`);
     }
+}
+
+export function validateInput(props: ServiceEstimate):false|undefined{
+    if(!props.carMake || props.carMake === "Select Car Make"){
+        toast.error("Please select a proper car make");
+        return false;
+    }else if(!props.carModel || props.carModel === "Select Car Model"){
+        toast.error("Please select a proper car model");
+        return false;
+    }else if(!props.carYear || props.carYear === "Select Car Year"){
+        toast.error("Please select a proper car year");
+        return false;
+    }else if(!props.stayLeave){
+        toast.error("Please pick between dropping off your car and waiting for it");
+        return false;
+    }else if(!props.service || props.service === "Choose Service For Your Car"){
+        toast.error("Please Pick a valid Car Service");
+        return false;
+    }else if(!props.firstName || !props.lastName){
+        toast.error("Please input your name");
+        return false;
+    }else if(!props.email){
+        toast.error("Please input your email");
+        return false;
+    }else if(!props.phone){
+        toast.error("Please input your phone number");
+        return false;
+    }else if(!props.zipCode){
+        toast.error("Please input your zip code!");
+        return false;
+    }else if(!props.contact){
+        toast.error("Please choose preferred contact method");
+        return false;
+    }
+
+    const name = /^[A-Za-z]+$/;
+    const mail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    if(!name.test(props.firstName) || !name.test(props.lastName)){
+        toast.error("Please input a valid name");
+        return false;
+    }else if(!mail.test(props.email)){
+        toast.error('Please input a valid email');
+        return false;
+    }
+
+    alert("Appointment Made!");
+
+    SubmitServiceEstimate({service: props.service, firstName: props.firstName, lastName: props.lastName, carModel: props.carModel, carMake: props.carMake, carYear: props.carYear, email: props.email, phone: props.phone, zipCode: props.zipCode, contact: props.contact, comment: props.comment, stayLeave:props.stayLeave});
+}
+
+interface ServiceEstimate{
+    carModel: string,
+    carMake: string,
+    carYear: string,
+    firstName: string,
+    lastName: string,
+    email: string,
+    phone: string,
+    zipCode: string,
+    contact: string,
+    comment: string,
+    stayLeave: string,
+    service: string
+}
+
+export async function SubmitServiceEstimate(props: ServiceEstimate):Promise<void>{         
+    
+    const formData = {
+        "carMake":props.carMake,
+        "carYear":props.carYear,
+        "carModel":props.carModel,
+        "stayLeave":props.stayLeave,
+        "service":props.service,
+        "firstName":props.firstName,
+        "lastName":props.lastName,
+        "email":props.email,
+        "phone":props.phone,
+        "zipCode":props.zipCode,
+        "contact":props.contact,
+        "comment":props.comment
+    }
+
+
+    await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID, formData, [Permission.read(Role.any())])
+
+    window.location.reload();   
 }

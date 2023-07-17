@@ -20,6 +20,16 @@
       return api.provider().account.create("unique()", email, password, name);
     },
 
+    updateAccountName: (name) => {
+      return api.provider().account.updateName(name)
+    },
+
+    updateAccountPassword: (password) => {
+      return api.provider().account.updatePassword(password)
+    },
+
+
+
     getAccount: () => {
       let account = api.provider().account;
       return account.get();
