@@ -9,10 +9,22 @@ h1{
     font-size: 5rem;
 }
 
+h2{
+    font-size: 4rem;
+}
+
+h3{
+    font-size: 2.5rem;
+}
+
 body{
     padding: 2rem;
 }
 
+i{
+    color: black;
+    font-size: 4rem;
+}
 /* Button
    ========================================================================== */
 
@@ -111,4 +123,48 @@ textarea{
 .calendarHub{
     padding: 2rem;
     overflow-y: scroll;
+}
+
+/* Appointment
+   ========================================================================== */
+
+.appointmentContainer{
+    border-radius: 5px;
+    background: none;
+    border: none;
+    box-shadow: .5px .5px 2px .7px rgb(161, 158, 158);
+    margin: 2px;
+    padding: 10px;
+}
+
+.appointmentContainer section{
+    padding: .5rem;  
+}
+
+.appointments{
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+}
+
+
+/* Account
+   ========================================================================== */
+
+.deleteAccount{
+    width: 50%;
+    border-radius: 5px;
+    background-color: rgb(255, 46, 46);
+    padding: 2rem;
+    transition: 1s;
+}
+
+/* Display
+   ========================================================================== */
+.hidden{
+    opacity: 0;
+}
+
+.show{
+    opacity: 100;
 }

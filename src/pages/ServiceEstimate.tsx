@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react"
 import {Button} from "../components/Button"
 import Nav from "../components/Nav"
-import {validateInput, GetCarData, SelectCarMakeInput, SelectCarModelInput, ChooseTwoInput, SelectCarYearInput, ChooseCarService, Input, TextBoxInput, checkInputValidation} from "../hooks/ReservationHooks"
+import {validateServiceEstimateInput, GetCarData, SelectCarMakeInput, SelectCarModelInput, ChooseTwoInput, SelectCarYearInput, ChooseCarService, Input, TextBoxInput} from "../hooks/ReservationHooks"
 
 export default function ServiceEstimate(){
 
@@ -28,9 +28,9 @@ export default function ServiceEstimate(){
     },[carMake, carModel]);
     
 
-    function handleCreateAppointment():void{    
+    function handleServiceEstimate():void{    
 
-        if(!validateInput({service: service, firstName: firstName, lastName: lastName, carModel: carModel, carMake: carMake, carYear:carYear, email: email, phone: phone, zipCode: zipCode, contact: contact, comment: comment, stayLeave:stayLeave})){
+        if(!validateServiceEstimateInput({service: service, firstName: firstName, lastName: lastName, carModel: carModel, carMake: carMake, carYear:carYear, email: email, phone: phone, zipCode: zipCode, contact: contact, comment: comment, stayLeave:stayLeave})){
             return;
         }
 
@@ -70,7 +70,7 @@ export default function ServiceEstimate(){
         
         <Button
         text = "Submit Service Estimate"
-        handleButtonClick={()=> handleCreateAppointment()}/>
+        handleButtonClick={()=> handleServiceEstimate()}/>
 
     </main>
     )

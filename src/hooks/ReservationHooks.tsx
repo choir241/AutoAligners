@@ -3,7 +3,6 @@ import {toast} from "react-toastify"
 import {carData} from "../api/data"
 import api from "../api/api"
 import { Permission, Role } from "appwrite"
-import { Service } from "appwrite/types/service"
 
 //globally accessible env variables
 declare global {
@@ -11,6 +10,7 @@ declare global {
       export interface ProcessEnv {
         REACT_APP_COLLECTION_ID: string;
         REACT_APP_DATABASE_ID: string;
+        REACT_APP_SERVICE_COLLECTION_ID: string;
         REACT_APP_PROJECT: string;
         REACT_APP_CAR_API_KEY: string;
         REACT_APP_ENDPOINT: string;
@@ -79,6 +79,7 @@ export interface ChooseInput{
 
 //interface type for appointments
 export interface Appointment{
+    $id?: string,
     date: string,
     time: string,
     carModel: string,
@@ -615,7 +616,7 @@ export async function getAppointmentData(setAppointments: (e:Appointment[])=>voi
     }
 }
 
-export function validateInput(props: ServiceEstimate):false|undefined{
+export function validateServiceEstimateInput(props: ServiceEstimate):false|undefined{
     if(!props.carMake || props.carMake === "Select Car Make"){
         toast.error("Please select a proper car make");
         return false;
@@ -697,7 +698,7 @@ export async function SubmitServiceEstimate(props: ServiceEstimate):Promise<void
     }
 
 
-    await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID, formData, [Permission.read(Role.any())])
+    await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_SERVICE_COLLECTION_ID, formData, [Permission.read(Role.any())])
 
     window.location.reload();   
 }

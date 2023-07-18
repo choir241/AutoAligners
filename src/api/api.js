@@ -24,11 +24,13 @@
       return api.provider().account.updateName(name)
     },
 
-    updateAccountPassword: (password) => {
-      return api.provider().account.updatePassword(password)
+    updateAccountPassword: (password, oldPassword) => {
+      return api.provider().account.updatePassword(password, oldPassword)
     },
 
-
+    updateAccountEmail: (email, password) => {
+      return api.provider().account.updateEmail(email, password)
+    },
 
     getAccount: () => {
       let account = api.provider().account;

@@ -1,14 +1,15 @@
 import React, {useState, useEffect, useMemo} from "react"
 import {ButtonSubmit, Button} from "../components/Button"
 import Nav from "../components/Nav"
-import {User, GenerateNewEmployee, handleLogin, handleLogout, GetAccount, GetUsers, DisplayUsers, Input, handleSignUp} from "../hooks/LoginHooks"
-import api from "../api/api"
-import {toast} from "react-toastify"
+import {updateAccountEmail, updateAccountName, updateAccountPassword, User, GenerateNewEmployee, handleLogin, GetAccount, GetUsers, DisplayUsers, Input, handleSignUp} from "../hooks/LoginHooks"
+import axios from "axios"
 
 export default function Login(){
 
   const [email, setEmail] = useState<string>("");
   const [generatedPassword, setGeneratedPassword] = useState<string>("");
+  const [displayDelete, setDisplayDelete] = useState<boolean>(false);
+  const [oldPassword, setOldPassword] = useState<string>("");
   const [employeeId, setEmployeeId] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [name, setName] = useState<string>("");
@@ -16,37 +17,29 @@ export default function Login(){
   const [listOfUsers, setListOfUsers] = useState<User[]>([]);
 
   useEffect(()=>{
-    GetAccount((e:User) => setUser(e))
+    if(localStorage.getItem("email")){
+      GetAccount((e:User) => setUser(e))
+    }
   },[])
 
   useMemo(()=>{
-    GetUsers((e:User[])=>setListOfUsers(e));
+      GetUsers((e:User[])=>setListOfUsers(e));
   },[])
 
-  async function updateAccountName(){
+
+  async function handleDeleteAccount(){
     try{
-      const updatedName = await api.updateAccountName(name);
-      if(updatedName){
-        window.location.reload();
-      }
+      await axios.delete(`https://car-app-backend-0ejb.onrender.com/deleteUser/${user?.$id}`)
+      localStorage.setItem("email","");
+      window.location.reload();
     }catch(err){
       console.error(err);
-      toast.error(`${err}`);
     }
+
+
   }
 
-  async function updateAccountPassword(){
-    try{
-      const updatedPassword = await api.updateAccountPassword(password);
-      if(updatedPassword){
-        window.location.reload();
-      }
-    }catch(err){
-      console.error(err);
-      toast.error(`${err}`);
-    }
-  }
-
+  //example employee id 64b59ee3ae327146e13f
 
   return(
     <main>
@@ -56,8 +49,7 @@ export default function Login(){
         {user? <h1>Welcome {user.name}</h1> : <h1>Login</h1>}
 
         {user ? 
-        ButtonSubmit({handleButtonClick: (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handleLogout(), text: "Logout"})
-
+          ""
         :
         <form>
           {ButtonSubmit({handleButtonClick: (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handleLogin({email:email, name: name, password: password, employeeId: employeeId, listOfUsers: listOfUsers}), text: "Login"})}
@@ -94,24 +86,36 @@ export default function Login(){
         </section>
       
       :
-      <section>
-        <h2>Error Occured, Please Try Again Later</h2>
-      </section>
+      ""
     }
 
     {user ? 
     <section>
       <section>
         {Input({type: "text", name: "text", onChange: (e)=>setName(e), placeholder: user?.name})}
-        {Button({text: "Update User's Name", handleButtonClick: ()=>updateAccountName()})}
+        {Button({text: "Update User's Name", handleButtonClick: ()=>updateAccountName(name)})}
       </section>
 
       <section>
+      {Input({type: "password", name: "password", onChange: (e)=>setOldPassword(e), placeholder: "Old Password Here"})}
       {Input({type: "password", name: "password", onChange: (e)=>setPassword(e), placeholder: "New Password Here"})}
-        {Button({text: "Update User's Password", handleButtonClick: ()=>updateAccountPassword()})}
+        {Button({text: "Update User's Password", handleButtonClick: ()=>updateAccountPassword(password, oldPassword)})}
       </section>
 
       <section>
+      {Input({type: "email", name: "email", onChange: (e)=>setEmail(e), placeholder: user?.email})}
+      {Input({type: "password", name: "password", onChange: (e)=>setPassword(e), placeholder: "Type your password here"})}
+        {Button({text: "Update User's Email", handleButtonClick: ()=>updateAccountEmail(email, password)})}
+      </section>
+
+      <section>
+        {Button({text: "Delete User's Account", handleButtonClick: ()=>setDisplayDelete(!displayDelete)})}
+
+
+        <div className = {`${displayDelete ? "show" : "hidden"} deleteAccount`}>
+          <h3>Are you sure you want to delete your account?</h3>
+          {Button({text: "Delete Account", handleButtonClick: ()=>handleDeleteAccount()})}
+        </div>
 
       </section>
     </section>

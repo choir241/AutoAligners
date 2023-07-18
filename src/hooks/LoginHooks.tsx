@@ -49,8 +49,11 @@ export function Input(props: InputTypes):React.JSX.Element{
   
 export async function GetAccount(setUser: (e:User)=>void){
   try{
-    const user = await api.getAccount();
-    setUser(user);
+    if(localStorage.getItem("email")){
+      const user = await api.getAccount();
+      setUser(user);
+    }
+
   }catch(err){
     console.error(err);
   }
@@ -184,6 +187,9 @@ export async function handleLogin(props: Login): Promise<void>{
       const checkEmployee = props.listOfUsers.filter((user: User)=>{
         return user.$id === props.employeeId
       })
+
+      console.log(checkEmployee)
+
     
       const fullName = /^[A-Za-z\s]+$/;
       const mail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -199,10 +205,12 @@ export async function handleLogin(props: Login): Promise<void>{
         return;
       }
 
+
       await api.createSession(props.email, props.password);
       const response = await api.getAccount();
       if(response){
         console.log(response);
+        localStorage.setItem("email",props.email);
         window.location.reload()
       }
     }catch(err){
@@ -214,8 +222,11 @@ export async function handleLogin(props: Login): Promise<void>{
 export async function handleLogout(): Promise<void>{
   try{
     const user = await api.deleteCurrentSession();
+    localStorage.setItem("email", "");
     console.log(user);
-    window.location.reload();
+    if(user){
+      window.location.reload();
+    }
   }catch(err){
     console.error(err);
   }
@@ -270,4 +281,41 @@ export function GenerateNewEmployee(setPassword: (e:string)=>void, setGeneratedP
   //example: "Melt@24"
   //example: "bOb5&1"
   //example: "zERO11$"
+}
+
+
+export async function updateAccountName(name: string){
+  try{
+    const updatedName = await api.updateAccountName(name);
+    if(updatedName){
+      window.location.reload();
+    }
+  }catch(err){
+    console.error(err);
+    toast.error(`${err}`);
+  }
+}
+
+export async function updateAccountPassword(password:string,oldPassword:string){
+  try{
+    const updatedPassword = await api.updateAccountPassword(password,oldPassword);
+    if(updatedPassword){
+      window.location.reload();
+    }
+  }catch(err){
+    console.error(err);
+    toast.error(`${err}`);
+  }
+}
+
+export async function updateAccountEmail(email: string, password: string){
+  try{
+    const updatedEmail = await api.updateAccountEmail(email, password);
+    if(updatedEmail){
+      window.location.reload();
+    }
+  }catch(err){
+    console.error(err)
+    toast.error(`${err}`)
+  }
 }
