@@ -12,6 +12,8 @@ const App = () => {
     const Login = lazy(()=>import("./pages/Login.tsx"));
     const ServiceEstimate = lazy(()=>import("./pages/ServiceEstimate.tsx"));
     const ManageAppointments = lazy(()=>import("./pages/ManageAppointments.tsx"));
+    const EditAppointment = lazy(()=>import("./pages/EditAppointment.tsx"));
+
     return(
         <Suspense fallback = {<h1>Loading...</h1>}>
             <BrowserRouter>
@@ -19,10 +21,10 @@ const App = () => {
                   <Route exact path = "/" element = {<Home/>}/>
                   <Route path = "/login" element = {<Login/>}/>
                   <Route path = "/reservation" element = {<Reservation/>}/>
-
                     <Route element = {<PrivateRoutes/>}>
                         <Route path = "/estimate" element = {<ServiceEstimate/>}/>
                         <Route path = "/manageAppointments" element = {<ManageAppointments/>}/>
+                        <Route path = "/editAppointment" element = {<EditAppointment/>}/>
                     </Route>
                 </Routes>
             </BrowserRouter>

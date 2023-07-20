@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react"
 import {Appointment, getAppointmentData} from "../hooks/ReservationHooks"
 import Nav from "../components/Nav"
 import api from "../api/api"
+import {Link} from "react-router-dom"
 
 export default function ManageAppointments(){
 
@@ -13,7 +14,6 @@ export default function ManageAppointments(){
 
     async function handleDeleteAppointment(id:string | undefined){
         await api.deleteDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID, id);
-        console.log("delete")
         window.location.reload();
     }
 
@@ -46,7 +46,7 @@ export default function ManageAppointments(){
                     <section>
                     <h3>{appointment.comment}</h3>
                     <i className="fa-regular fa-trash-can button" onClick= {()=>handleDeleteAppointment(appointment.$id)}></i>
-                    <i className="fa-regular fa-pen-to-square button"></i>
+                    <Link to = "/editAppointment" className="fa-regular fa-pen-to-square button" onClick = {()=>localStorage.setItem("id", appointment.$id || "")}></Link>
 
                     </section>
       

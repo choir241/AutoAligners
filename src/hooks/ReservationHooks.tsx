@@ -67,7 +67,8 @@ export interface GeneralInput{
     placeholder?: string,
     minlength?: number,
     maxlength?: number,
-    value?: string
+    value?: string,
+    defaultValue?: string
 }
 
 export interface ChooseInput{
@@ -207,6 +208,7 @@ export function Input(props: GeneralInput):React.JSX.Element{
     return(
         <input
             value = {props.value}
+            defaultValue = {props.defaultValue}
             type = {props.type}
             onChange = {(e)=>props.onChange(e.target.value)}
             placeholder = {props.placeholder}
@@ -276,17 +278,17 @@ export async function GetCarData(props:CarSelectData){
         }
 }
 
-export function ChooseCarService(onChange:(e:string)=>void){
+export function ChooseCarService(onChange:(e:string)=>void, defaultValue?: string){
     try{
         //list of all available car services
         const services = ["Oil Change","Brakes","Tire Purchase/Installation","Tire Services","Vehicle Inspection","Check Engine Light","Air Conditioning","Batteries Starting & Charging","Belts & Hoses","Engine","Exhaust","Fuel Systems","Heating & Cooling","Routine Maintenance","Steering Suspension Alignment","Transmission","Other"];
 
         //returns a new array of react jsx elements with all available car services
-        const serviceOptions = services.map((service:string,i:number)=><option key = {i}>{service}</option>);
+        const serviceOptions = services.map((service:string,i:number)=>service !== defaultValue ? <option key = {i}>{service}</option> : "");
 
         return(
             <select onChange = {(e)=>onChange(e.target.value)}>
-                <option defaultValue = "default">Choose Service For Your Car</option>
+                <option defaultValue = {defaultValue || "default"}>{defaultValue || `Choose Service For Your Car`}</option>
                 {serviceOptions}
             </select>
         )
