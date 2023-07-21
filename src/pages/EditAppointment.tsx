@@ -1,9 +1,7 @@
 import React, {useState, useMemo} from "react"
-import api from "../api/api"
-import {toast} from "react-toastify"
 import Nav from "../components/Nav"
-import {checkAppointmentDate, getAppointmentData, Appointment, DisplayTimeDateAppointments, GetCarData, SelectCarMakeInput, SelectCarModelInput, SelectCarYearInput, ChooseCarService, Input, TextBoxInput} from "../hooks/ReservationHooks"
-import { EditChooseTwoInput, ValidateEditInput } from "../hooks/EditAppointmentHooks"
+import {getAppointmentData, Appointment, DisplayTimeDateAppointments, GetCarData, SelectCarMakeInput, SelectCarModelInput, SelectCarYearInput, ChooseCarService, Input, TextBoxInput} from "../hooks/ReservationHooks"
+import { EditChooseTwoInput, getEditAppointmentData, handleEditAppointment } from "../hooks/EditAppointmentHooks"
 import {Button} from "../components/Button"
 
 export default function EditAppointment(){
@@ -31,59 +29,14 @@ export default function EditAppointment(){
     const [appointments, setAppointments] = useState<Appointment[]>([]);
 
     useMemo(()=>{
-        async function getAppointmentData(){
-            try{
-                const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID)
-
-                if(data.documents.length){
-                    const findAppointmentData = data.documents.filter((appointment: Appointment)=>appointment.$id === localStorage.getItem("id"))
-                    const appointment = findAppointmentData[0]
-                    setId(appointment.$id)
-                    setDate(appointment.date)
-                    setTime(appointment.time)
-                    setCarModel(appointment.carModel)
-                    setCarMake(appointment.carMake)
-                    setCarYear(appointment.carYear)
-                    setFirstName(appointment.firstName)
-                    setLastName(appointment.lastName)
-                    setEmail(appointment.email)
-                    setPhone(appointment.phone)
-                    setZipCode(appointment.zipCode)
-                    setContact(appointment.contact)
-                    setComment(appointment.comment)
-                    setStay_Leave(appointment.stayLeave)
-                    setService(appointment.service)
-                }
-
-            }catch(err){
-                console.error(err);
-                toast.error(`${err}`);
-            }
-        }
-
-        getAppointmentData()
-    },[])
-
-    useMemo(()=>{
         GetCarData({onMakeSelect: setCarMakeOptions, onModelSelect: setCarModelOptions, onYearSelect: setCarYearOptions, carMake: carMake, carModel:carModel});
 
         getAppointmentData((e:Appointment[])=>setAppointments(e))
 
+        getEditAppointmentData({setId: (e:string)=>setId(e),setDate: (e:string)=>setDate(e),setTime: (e:string)=>setTime(e),setCarModel: (e:string)=>setCarModel(e),setCarMake: (e:string)=>setCarMake(e),setCarYear: (e:string)=>setCarYear(e),setFirstName: (e:string)=>setFirstName(e),setLastName: (e:string)=>setLastName(e),setEmail: (e:string)=>setEmail(e),setPhone: (e:string)=>setPhone(e), setZipCode: (e:string)=>setZipCode(e),setContact: (e:string)=>setContact(e),setComment: (e:string)=>setComment(e),setStay_Leave: (e:string)=>setStay_Leave(e),setService: (e:string)=>setService(e)})
+
     },[carMake, carModel]);
 
-    async function handleEditAppointment(){
-        try{
-            checkAppointmentDate(date, time, (e:string)=>setDate(e))
-
-            if(!ValidateEditInput({$id: id, service: service, firstName: firstName, lastName: lastName, date: date, time: time, carModel: carModel, carMake: carMake, carYear:carYear, email: email, phone: phone, zipCode: zipCode, contact: contact, comment: comment, stayLeave:stayLeave })){
-                return;
-            }
-
-        }catch(err){
-            console.error(err);
-        }
-    }
-    
     return(
         <main>
             <Nav/>
@@ -117,7 +70,7 @@ export default function EditAppointment(){
 
             <Button
                 text = "Edit Appointment"
-                handleButtonClick={()=> handleEditAppointment()}/>
+                handleButtonClick={()=> handleEditAppointment({Appointment: {$id: id, service: service, firstName: firstName, lastName: lastName, date: date, time: time, carMake: carMake, carModel: carModel, carYear: carYear, email: email, phone: phone, zipCode: zipCode, contact: contact, comment: comment, stayLeave: stayLeave, setDate: (e:string)=>setDate(e)}})}/>
 
         </main>
     )

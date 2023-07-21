@@ -319,3 +319,13 @@ export async function updateAccountEmail(email: string, password: string){
     toast.error(`${err}`)
   }
 }
+
+export async function handleDeleteAccount(user: User){
+  try{
+    await axios.delete(`https://car-app-backend-0ejb.onrender.com/deleteUser/${user?.$id}`)
+    localStorage.setItem("email","");
+    window.location.reload();
+  }catch(err){
+    console.error(err);
+  }
+}

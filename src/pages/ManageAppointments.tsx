@@ -1,67 +1,28 @@
 import React, {useState, useEffect} from "react"
 import {Appointment, getAppointmentData} from "../hooks/ReservationHooks"
 import Nav from "../components/Nav"
-import api from "../api/api"
-import {Link} from "react-router-dom"
+import { displayAppointments } from "../hooks/ManageAppointmentHooks"
 
 export default function ManageAppointments(){
 
     const [appointments, setAppointments] = useState<Appointment[]>([])
+    const [classNameContainer, setClassNameContainer] = useState<string>("appointmentContainer")
 
     useEffect(()=>{
         getAppointmentData((e:Appointment[])=>setAppointments(e))
     },[])
 
-    async function handleDeleteAppointment(id:string | undefined){
-        await api.deleteDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID, id);
-        window.location.reload();
-    }
-
-    function displayAppointments():React.JSX.Element[]{
-       return appointments.map((appointment: Appointment, i: number)=>{
-        const appointmentDate = appointment.date.split("D")[0];
-        const appointmentDayoFWeek = appointment.date.split("D")[1];
-        const appointmentTime = parseInt(appointment.time)
-            return(
-                <div key = {i} className = "appointmentContainer">
-                    <h1>{appointment.firstName} {appointment.lastName}</h1>
-                    <h1>{appointmentDate}</h1>
-                    <h1>{appointmentDayoFWeek}</h1>
-                    <h1>{appointmentTime > 12 ? (appointmentTime -12).toString() + ":00PM" : appointmentTime + ":00AM"}</h1>
-
-                    <section>
-                    <h2>{appointment.service}</h2>
-                    <h2>{appointment.carMake}</h2>
-                    <h2>{appointment.carModel}</h2>
-                    <h2>{appointment.carYear}</h2>
-                    </section>
-                    <section>
-
-                    <h2>Preferred Contact: {appointment.contact}</h2>
-                    <h3>{appointment.phone}</h3>
-                    <h3>{appointment.email}</h3>
-                    <h3>{appointment.stayLeave}</h3>
-                    <h3>{appointment.zipCode}</h3>
-                    </section>
-                    <section>
-                    <h3>{appointment.comment}</h3>
-                    <i className="fa-regular fa-trash-can button" onClick= {()=>handleDeleteAppointment(appointment.$id)}></i>
-                    <Link to = "/editAppointment" className="fa-regular fa-pen-to-square button" onClick = {()=>localStorage.setItem("id", appointment.$id || "")}></Link>
-
-                    </section>
-      
-                </div>
-            )
-        })
-    }
-
     return(
         <main>
             <Nav/>
             <h1>Manage Appointments</h1>
-
+            <section className = "flex">
+                <i className="fa-solid fa-list appointmentContainer" onClick = {()=>setClassNameContainer("listAppointmentContainer")}></i>
+                <i className="fa-solid fa-grip appointmentContainer" onClick = {()=>setClassNameContainer("appointmentContainer")}></i>
+            </section>
+          
             <section className = "appointments flex">
-                {displayAppointments()}
+                {displayAppointments(appointments, classNameContainer)}
             </section>
         </main>
     )

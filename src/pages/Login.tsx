@@ -1,8 +1,7 @@
 import React, {useState, useEffect, useMemo} from "react"
 import {ButtonSubmit, Button} from "../components/Button"
 import Nav from "../components/Nav"
-import {updateAccountEmail, updateAccountName, updateAccountPassword, User, GenerateNewEmployee, handleLogin, GetAccount, GetUsers, DisplayUsers, Input, handleSignUp} from "../hooks/LoginHooks"
-import axios from "axios"
+import {updateAccountEmail, handleDeleteAccount, updateAccountName, updateAccountPassword, User, GenerateNewEmployee, handleLogin, GetAccount, GetUsers, DisplayUsers, Input, handleSignUp} from "../hooks/LoginHooks"
 
 export default function Login(){
 
@@ -26,18 +25,6 @@ export default function Login(){
       GetUsers((e:User[])=>setListOfUsers(e));
   },[])
 
-
-  async function handleDeleteAccount(){
-    try{
-      await axios.delete(`https://car-app-backend-0ejb.onrender.com/deleteUser/${user?.$id}`)
-      localStorage.setItem("email","");
-      window.location.reload();
-    }catch(err){
-      console.error(err);
-    }
-
-
-  }
 
   //example employee id 64b59ee3ae327146e13f
 
@@ -114,7 +101,7 @@ export default function Login(){
 
         <div className = {`${displayDelete ? "show" : "hidden"} deleteAccount`}>
           <h3>Are you sure you want to delete your account?</h3>
-          {Button({text: "Delete Account", handleButtonClick: ()=>handleDeleteAccount()})}
+          {Button({text: "Delete Account", handleButtonClick: ()=>handleDeleteAccount(user)})}
         </div>
 
       </section>

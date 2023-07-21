@@ -21,9 +21,15 @@ body{
     padding: 2rem;
 }
 
-i{
+i,svg{
     color: black;
     font-size: 4rem;
+}
+
+i:hover, svg:hover{
+    cursor: pointer;
+    transition: 1s;
+    background: rgb(224, 216, 216);
 }
 /* Button
    ========================================================================== */
@@ -96,6 +102,18 @@ i{
     flex-wrap: wrap;
 }
 
+.flex-col{
+    flex-direction: column;
+}
+
+.justifyAround{
+    justify-content: space-around;
+}
+
+.justifyBetween{
+    justify-content: space-between;
+}
+
 /* Form
    ========================================================================== */
 
@@ -141,10 +159,21 @@ textarea{
     padding: .5rem;  
 }
 
+.appointments div h1, .appointments div h2, .appointments div h3{
+    margin: 0rem 2rem 1rem 2rem;
+}
+
+
+.listAppointmentContainer{
+    width: 100%;
+    border-bottom: 1px solid black;
+    padding-bottom: 2rem;
+    margin-bottom: 4rem;
+}
+
 .appointments{
     flex-wrap: wrap;
-    justify-content: space-between;
-
+    justify-content: space-evenly;
 }
 
 
