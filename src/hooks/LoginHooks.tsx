@@ -86,8 +86,7 @@ export async function handleDelete(userId: string){
   }
   
 export function DisplayUsers(listOfUsers: User[], currentUser: User){
-    try{
-
+  try{
         if(currentUser.$id === "649c8a408d41d5c02f5c"){
            const users = listOfUsers.map((user:User)=>{
             const createdAtDate = user.$createdAt.split("T")[0];
@@ -108,6 +107,7 @@ export function DisplayUsers(listOfUsers: User[], currentUser: User){
                 </ul> 
               )
             })
+
             return users
           }
 
@@ -188,6 +188,7 @@ export async function handleLogin(props: Login): Promise<void>{
         return user.$id === props.employeeId
       })
 
+      console.log(props.listOfUsers)
       console.log(checkEmployee)
 
     

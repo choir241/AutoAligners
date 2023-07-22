@@ -25,8 +25,7 @@ export default function Login(){
       GetUsers((e:User[])=>setListOfUsers(e));
   },[])
 
-
-  //example employee id 64b59ee3ae327146e13f
+  //example employee id 649c8a408d41d5c02f5c
 
   return(
     <main>
@@ -64,7 +63,9 @@ export default function Login(){
 
           {ButtonSubmit({handleButtonClick: (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handleSignUp({email: email, name: name, password: password}), text: "Create Employee Sign Up"})}
 
+
           {DisplayUsers(listOfUsers, user)}
+          
         </section>
 
       :

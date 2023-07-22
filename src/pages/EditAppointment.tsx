@@ -27,6 +27,39 @@ export default function EditAppointment(){
     const [service, setService] = useState<string>("");
 
     const [appointments, setAppointments] = useState<Appointment[]>([]);
+    const [warning, setWarning] = useState<string>("");
+
+    function checkDate(date:string):void{
+        try{
+            const appointmentMonth = parseInt(date.split("D")[0].split("/")[0]);
+            const appointmentDay = parseInt(date.split("D")[0].split("/")[1]);
+            const appointmentYear = parseInt(date.split("D")[0].split("/")[2]);
+
+            const currentDate = new Date();
+            const currentMonth = currentDate.getMonth()+1;
+            const currentDay = currentDate.getDate();
+            const currentYear = currentDate.getFullYear();
+
+            if(appointmentYear < currentYear){
+                setWarning("Appointment Date is Expired");
+                return;
+            }else if(appointmentMonth < currentMonth){
+                setWarning("Appointment Date is Expired");
+                return;
+            }else if(appointmentYear === currentYear && (appointmentMonth < currentMonth)){
+                setWarning("Appointment Date is Expired");
+                return;
+            }else if(appointmentMonth === currentMonth && appointmentDay < currentDay){
+                setWarning("Appointment Date is Expired");
+                return;
+            }
+
+            console.log("test");
+        }catch(err){
+            console.log(err);
+        }
+        
+    }
 
     useMemo(()=>{
         GetCarData({onMakeSelect: setCarMakeOptions, onModelSelect: setCarModelOptions, onYearSelect: setCarYearOptions, carMake: carMake, carModel:carModel});
@@ -35,13 +68,16 @@ export default function EditAppointment(){
 
         getEditAppointmentData({setId: (e:string)=>setId(e),setDate: (e:string)=>setDate(e),setTime: (e:string)=>setTime(e),setCarModel: (e:string)=>setCarModel(e),setCarMake: (e:string)=>setCarMake(e),setCarYear: (e:string)=>setCarYear(e),setFirstName: (e:string)=>setFirstName(e),setLastName: (e:string)=>setLastName(e),setEmail: (e:string)=>setEmail(e),setPhone: (e:string)=>setPhone(e), setZipCode: (e:string)=>setZipCode(e),setContact: (e:string)=>setContact(e),setComment: (e:string)=>setComment(e),setStay_Leave: (e:string)=>setStay_Leave(e),setService: (e:string)=>setService(e)})
 
-    },[carMake, carModel]);
+        checkDate(date);
+    },[carMake, carModel, date]);
 
     return(
         <main>
             <Nav/>
 
             <h1>Edit Appointment</h1>
+
+            {warning ? <h2>{warning}</h2> : ""}
 
             <form>
 {DisplayTimeDateAppointments({setTime: (e:string)=>setTime(e), appointments: appointments, setDate: (e:string)=>setDate(e)})}

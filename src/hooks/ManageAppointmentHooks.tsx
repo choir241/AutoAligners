@@ -61,6 +61,8 @@ export function displayAppointments(appointments: Appointment[], classNameContai
                  :
                  ""
                 }
+
+                <button className = "button" onClick = {()=>console.log("client was notified")}>Notify client that Car is ready</button>
    
              </div>
          )
