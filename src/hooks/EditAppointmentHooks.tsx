@@ -1,7 +1,7 @@
 import React from "react"
 import {toast} from "react-toastify"
 import api from "../api/api"
-import {Appointment,checkAppointmentDate} from "./ReservationHooks"
+import {Appointment} from "./ReservationHooks"
 
 export interface ChooseInput{
     defaultValue: string,
@@ -26,7 +26,8 @@ interface appointmentStates{
     setContact: (e:string) => void,
     setComment: (e:string) => void,
     setStay_Leave: (e:string) => void,
-    setService: (e:string) => void
+    setService: (e:string) => void,
+    setAppointmentData: (e:Appointment) => void
 }
 
 export function ValidateEditInput(props: Appointment):false|undefined{
@@ -131,30 +132,20 @@ export async function HandleSubmitData(props: Appointment):Promise<void>{
 
     await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID, props.$id, formData)
 
+
 }
 
 export async function getEditAppointmentData(props: appointmentStates){
     try{
         const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID)
 
-        if(data.documents.length){
+        if(data.documents.length && data){
+
+
             const findAppointmentData = data.documents.filter((appointment: Appointment)=>appointment.$id === localStorage.getItem("id"))
             const appointment = findAppointmentData[0]
-            props.setId(appointment.$id)
-            props.setDate(appointment.date)
-            props.setTime(appointment.time)
-            props.setCarModel(appointment.carModel)
-            props.setCarMake(appointment.carMake)
-            props.setCarYear(appointment.carYear)
-            props.setFirstName(appointment.firstName)
-            props.setLastName(appointment.lastName)
-            props.setEmail(appointment.email)
-            props.setPhone(appointment.phone)
-            props.setZipCode(appointment.zipCode)
-            props.setContact(appointment.contact)
-            props.setComment(appointment.comment)
-            props.setStay_Leave(appointment.stayLeave)
-            props.setService(appointment.service)
+
+            props.setAppointmentData(appointment)
         }
 
     }catch(err){
@@ -173,8 +164,6 @@ interface EditAppointment{
 
 export async function handleEditAppointment(props: EditAppointment){
     try{
-        checkAppointmentDate(props.Appointment.date, props.Appointment.time, (e:string)=>props.Appointment.setDate(e))
-
         if(!ValidateEditInput({$id: props.Appointment.$id, service: props.Appointment.service, firstName: props.Appointment.firstName, lastName: props.Appointment.lastName, date: props.Appointment.date, time: props.Appointment.time, carModel: props.Appointment.carModel, carMake: props.Appointment.carMake, carYear:props.Appointment.carYear, email: props.Appointment.email, phone: props.Appointment.phone, zipCode: props.Appointment.zipCode, contact: props.Appointment.contact, comment: props.Appointment.comment, stayLeave:props.Appointment.stayLeave })){
             return;
         }

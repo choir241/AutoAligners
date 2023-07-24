@@ -29,6 +29,8 @@ export default function EditAppointment(){
     const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [warning, setWarning] = useState<string>("");
 
+    const [appointmentData, setAppointmentData] = useState<Appointment>();
+
     function checkDate(date:string):void{
         try{
             const appointmentMonth = parseInt(date.split("D")[0].split("/")[0]);
@@ -66,7 +68,7 @@ export default function EditAppointment(){
 
         getAppointmentData((e:Appointment[])=>setAppointments(e))
 
-        getEditAppointmentData({setId: (e:string)=>setId(e),setDate: (e:string)=>setDate(e),setTime: (e:string)=>setTime(e),setCarModel: (e:string)=>setCarModel(e),setCarMake: (e:string)=>setCarMake(e),setCarYear: (e:string)=>setCarYear(e),setFirstName: (e:string)=>setFirstName(e),setLastName: (e:string)=>setLastName(e),setEmail: (e:string)=>setEmail(e),setPhone: (e:string)=>setPhone(e), setZipCode: (e:string)=>setZipCode(e),setContact: (e:string)=>setContact(e),setComment: (e:string)=>setComment(e),setStay_Leave: (e:string)=>setStay_Leave(e),setService: (e:string)=>setService(e)})
+        getEditAppointmentData({setAppointmentData: (e:Appointment)=> setAppointmentData(e) ,setId: (e:string)=>setId(e),setDate: (e:string)=>setDate(e),setTime: (e:string)=>setTime(e),setCarModel: (e:string)=>setCarModel(e),setCarMake: (e:string)=>setCarMake(e),setCarYear: (e:string)=>setCarYear(e),setFirstName: (e:string)=>setFirstName(e),setLastName: (e:string)=>setLastName(e),setEmail: (e:string)=>setEmail(e),setPhone: (e:string)=>setPhone(e), setZipCode: (e:string)=>setZipCode(e),setContact: (e:string)=>setContact(e),setComment: (e:string)=>setComment(e),setStay_Leave: (e:string)=>setStay_Leave(e),setService: (e:string)=>setService(e)})
 
         checkDate(date);
     },[carMake, carModel, date]);
