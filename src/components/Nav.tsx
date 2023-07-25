@@ -9,7 +9,8 @@ export default function Nav(){
             <ul className = "flex">
               <h1>Car App</h1>
               <li>{ButtonLink({domain: "/", text: "Home"})}</li>
-              {localStorage.getItem("email") ? <li>{ButtonLink({domain: "/login", text: "Your Account"})}</li> :  <li>{ButtonLink({domain: "/login", text: "Login/Signup"})}</li>}
+              {localStorage.getItem("email") ? "" : <li>{ButtonLink({domain: "/demo", text: "Demo"})}</li>}
+              {localStorage.getItem("email") ? <li>{ButtonLink({domain: "/login", text: "Your Account"})}</li> :  <li>{ButtonLink({domain: "/login", text: "Login"})}</li>}
               {localStorage.getItem("email") ? "" : <li>{ButtonLink({domain: "/reservation", text: "Make Reservation"})}</li>}
               <li>{ButtonLink({domain: "/estimate", text: "Estimate Car Service"})}</li>
               {localStorage.getItem("email") ? <li>{ButtonLink({domain: "/manageAppointments", text: "Manage Appointments"})}</li> : ""}

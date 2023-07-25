@@ -171,6 +171,8 @@ export async function handleSignUp(props: SignUp):Promise<void>{
 
 export async function handleLogin(props: Login): Promise<void>{
     try{
+      if(props.listOfUsers.length){
+
       if(!props.email){
         toast.error("Please input an email address");
         return;
@@ -182,9 +184,10 @@ export async function handleLogin(props: Login): Promise<void>{
         return;
       }else if(!props.employeeId){
         toast.error("Please input an employee Id");
+        return;
       }
 
-      const checkEmployee = props.listOfUsers.filter((user: User)=>{
+      const checkEmployee = props?.listOfUsers?.filter((user: User)=>{
         return user.$id === props.employeeId
       })
 
@@ -214,6 +217,8 @@ export async function handleLogin(props: Login): Promise<void>{
         localStorage.setItem("email",props.email);
         window.location.reload()
       }
+    }
+
     }catch(err){
       console.error(err);
       toast.error(`${err}`);
