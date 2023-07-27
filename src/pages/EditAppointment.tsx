@@ -7,7 +7,6 @@ import {Button} from "../components/Button"
 
 export default function EditAppointment(){
 
-    const [id, setId] = useState<string>("");
     const [date, setDate] = useState<string>("");
     const [time, setTime] = useState<string>("");
     const [carModel, setCarModel] = useState<string>("");
@@ -52,7 +51,7 @@ export default function EditAppointment(){
             {warning ? <h2>{warning}</h2> : ""}
 
             <form>
-{DisplayTimeDateAppointments({setTime: (e:string)=>setTime(e), appointments: appointments, setDate: (e:string)=>setDate(e)})}
+{DisplayTimeDateAppointments({setTime: (e:string)=>setTime(e), appointments: appointments, setDate: (e:string)=>setDate(e), date: data.date, time: data.time})}
 
 {SelectCarMakeInput({defaultValue: data.carMake, options: carMakeOptions, onChange: (e:string)=>setCarMake(e), carMake: carMake, carYear: carYear, carModel: carModel, resetModel: (e:string)=>setCarModel(e), resetYear:(e:string)=>setCarYear(e), resetMake:(e:string)=>setCarMake(e)})}
 {SelectCarModelInput({defaultValue: data.carModel, options: carModelOptions, onChange: (e:string)=>setCarModel(e), carMake: carMake, carModel: carModel, carYear: carYear, resetModel:(e:string)=>setCarModel(e), resetYear: (e:string)=>setCarYear(e), resetMake:(e:string)=>setCarMake})}
@@ -81,7 +80,6 @@ export default function EditAppointment(){
                 text = "Edit Appointment"
                 handleButtonClick={()=> handleEditAppointment(
                     {Appointment: {
-                        $id: id, 
                         service: service, 
                         firstName: firstName, 
                         lastName: lastName, 

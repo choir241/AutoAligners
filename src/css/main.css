@@ -106,6 +106,10 @@ i:hover, svg:hover{
     flex-direction: column;
 }
 
+.alignCenter{
+    align-items: center;
+}
+
 .justifyAround{
     justify-content: space-around;
 }
@@ -151,7 +155,7 @@ textarea{
     background: none;
     border: none;
     box-shadow: .5px .5px 2px .7px rgb(161, 158, 158);
-    margin: 2px;
+    margin: 12px;
     padding: 10px;
 }
 
@@ -166,7 +170,7 @@ textarea{
 
 .listAppointmentContainer{
     width: 100%;
-    border-bottom: 1px solid black;
+    border-bottom: 3px solid black;
     padding-bottom: 2rem;
     margin-bottom: 4rem;
 }
@@ -175,6 +179,16 @@ textarea{
     flex-wrap: wrap;
     justify-content: space-evenly;
 }
+
+
+div .expired{
+    background: red;
+}
+
+h1.expired{
+    font-weight: bold;
+}
+
 
 
 /* Account

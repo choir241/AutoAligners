@@ -173,27 +173,23 @@ export async function handleLogin(props: Login): Promise<void>{
     try{
       if(props.listOfUsers.length){
 
-      if(!props.email){
-        toast.error("Please input an email address");
-        return;
-      }else if(!props.name){
-        toast.error("Please input your full name");
-        return;
-      }else if(!props.password){
-        toast.error("Please input a password");
-        return;
-      }else if(!props.employeeId){
-        toast.error("Please input an employee Id");
-        return;
-      }
+        if(!props.email){
+          toast.error("Please input an email address");
+          return;
+        }else if(!props.name){
+          toast.error("Please input your full name");
+          return;
+        }else if(!props.password){
+          toast.error("Please input a password");
+          return;
+        }else if(!props.employeeId){
+          toast.error("Please input an employee Id");
+          return;
+        }
 
       const checkEmployee = props?.listOfUsers?.filter((user: User)=>{
         return user.$id === props.employeeId
       })
-
-      console.log(props.listOfUsers)
-      console.log(checkEmployee)
-
     
       const fullName = /^[A-Za-z\s]+$/;
       const mail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;

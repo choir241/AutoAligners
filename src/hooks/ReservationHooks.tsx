@@ -110,7 +110,9 @@ export interface RenderCalendar{
 export interface TimeDateAppointments{
     setTime: (e:string)=>void, 
     appointments: Appointment[], 
-    setDate: (e:string)=>void
+    setDate: (e:string)=>void,
+    date?: string,
+    time?: string
 }
 
 export interface ChangeTime{
@@ -388,7 +390,7 @@ export function DisplayTimeDateAppointments(props: TimeDateAppointments):React.J
             currentDayOfWeek = 0
         }
 
-        if(!i){
+        if(props.date?.split("D")[0] === `${month}/${day}/${year}`){
             appt.push(
                 <div className = {`calendar clearButton c-${i} clicked`} key = {`c-${i}`} onClick = {()=>{
                     const date = `${currentMonth}/${currentDay}/${currentYear}`
@@ -399,7 +401,9 @@ export function DisplayTimeDateAppointments(props: TimeDateAppointments):React.J
                     <h3>{`${month}/${day}/${year}`}</h3>
                 </div>
             )
-        }else{
+        }
+
+       else{
             appt.push(
                 <div className = {`calendar clearButton c-${i}`} key = {`c-${i}`} onClick = {()=>{
                     const date = `${currentMonth}/${currentDay}/${currentYear}`

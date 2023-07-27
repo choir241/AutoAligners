@@ -11,11 +11,21 @@ export async function handleDeleteAppointment(id:string | undefined){
 
 export function displayAppointments(appointments: Appointment[], classNameContainer: string):React.JSX.Element[]{
     return appointments.map((appointment: Appointment, i: number)=>{
-     const appointmentDate = appointment.date.split("D")[0];
-     const appointmentDayoFWeek = appointment.date.split("D")[1];
-     const appointmentTime = parseInt(appointment.time)
+    const appointmentDate = appointment.date.split("D")[0];
+    const appointmentDayoFWeek = appointment.date.split("D")[1];
+    const appointmentTime = parseInt(appointment.time)
+
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth()+1;
+    const currentDay = currentDate.getDate();
+    const currentYear = currentDate.getFullYear();
+
+    const currentHours = currentDate.getHours();
+    
+    const fullCurrentDate = `${currentMonth}/${currentDay}/${currentYear}` 
+
          return(
-             <div key = {i} className = {classNameContainer}>
+             <div key = {i} className = {`${classNameContainer} ${(appointmentDate > fullCurrentDate) || (appointmentDate === fullCurrentDate && appointmentTime <= currentHours) ? "" : "expired"}`}>
                 <section className = {classNameContainer === "appointmentContainer" ? "flex flex-col" : "flex justifyBetween"}>
                  <div className = "flex">
                     <h1>{appointment.firstName} {appointment.lastName}</h1>
@@ -24,7 +34,7 @@ export function displayAppointments(appointments: Appointment[], classNameContai
                  </div>
           
                  <div className = "flex">
-                 <h1>{appointmentDate}</h1>
+                 <h1 className = {(appointmentDate > fullCurrentDate) || (appointmentDate === fullCurrentDate && appointmentTime <= currentHours) ? "" : "expired"}>{appointmentDate}</h1>
                  {classNameContainer === "appointmentContainer" ? "" : <h1>{appointmentDayoFWeek}</h1>}
                  <h1>{appointmentTime > 12 ? (appointmentTime -12).toString() + ":00PM" : appointmentTime + ":00AM"}</h1>
                  </div>
@@ -62,8 +72,13 @@ export function displayAppointments(appointments: Appointment[], classNameContai
                  ""
                 }
 
-                <button className = "button" onClick = {()=>console.log("client was notified")}>Notify client that Car is ready</button>
-   
+                <div className = "flex alignCenter">
+                {(appointmentDate > fullCurrentDate) || (appointmentDate === fullCurrentDate && appointmentTime <= currentHours) 
+                ? <button className = "button" onClick = {()=>console.log("client was notified")}>Notify client that Car is ready</button>                : 
+                   <h2>Expired Apppointment</h2> }
+                    <i className = {(appointmentDate > fullCurrentDate) || (appointmentDate === fullCurrentDate && appointmentTime <= currentHours) ? "" : "fa-solid fa-triangle-exclamation"}></i>
+                </div>
+           
              </div>
          )
      })

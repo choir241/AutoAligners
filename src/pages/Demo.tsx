@@ -26,9 +26,11 @@ export default function Demo(){
               {Input({type: "text", onChange: (e:string)=> "", name: "name", placeholder: name, disabled : true})}
               {Input({type: "password",onChange: (e:string)=> "",  name: "password", placeholder: password, disabled : true})}
 
-              {ButtonSubmit({handleButtonClick: (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handleLogin({email:email, name: name, password: password, employeeId: employeeID, listOfUsers: listOfUsers}), text: "Login"})}
-
             </form>
+
+            {listOfUsers.length ? 
+            ButtonSubmit({handleButtonClick: ()=>handleLogin({email:email, name: name, password: password, employeeId: employeeID, listOfUsers: listOfUsers}), text: "Login"})
+            : <h1>...Loading</h1>}
         </main>
     )
 
