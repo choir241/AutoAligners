@@ -56,9 +56,7 @@
     },
 
     updateDocument: (databaseId, collectionId, documentId, data) => {
-      return api
-        .provider()
-        .database.updateDocument(databaseId, collectionId, documentId, data);
+      return api.provider().database.updateDocument(databaseId, collectionId, documentId, data);
     },
 
     deleteDocument: (databaseId, collectionId, documentId) => {
