@@ -4,29 +4,34 @@ import {PrivateRoutes, PublicRoutes} from "./middleware/Routes"
 import {lazy, Suspense} from "react"
 import {ToastContainer} from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
+import {EmployeeHub} from "./pages/Employee.tsx"
 
 const App = () => {
 
     const Home = lazy(()=>import("./pages/Home.tsx"));
     const Reservation = lazy(()=>import("./pages/Reservation.tsx"));
-    const Login = lazy(()=>import("./pages/Login.tsx"));
     const Demo = lazy(()=>import("./pages/Demo.tsx"));
     const ServiceEstimate = lazy(()=>import("./pages/ServiceEstimate.tsx"));
     const ManageAppointments = lazy(()=>import("./pages/ManageAppointments.tsx"));
     const EditAppointment = lazy(()=>import("./pages/EditAppointment.tsx"));
+    const Employee = lazy(()=>import("./pages/Employee.tsx"))
+    const Finance = lazy(()=>import("./pages/Finance.tsx"))
 
     return(
         <Suspense fallback = {<h1>Loading...</h1>}>
             <BrowserRouter>
                 <Routes>
                   <Route exact path = "/" element = {<Home/>}/>
-                  <Route path = "/login" element = {<Login/>}/>
+                  <Route path = "/employee" element = {<Employee/>}/>
+
                     <Route element = {<PublicRoutes/>}>
+                        <Route path = "/finance" element = {<Finance/>}/>
+                        <Route path = "/login" element = {<EmployeeHub/>}/>
+                        <Route path = "/estimate" element = {<ServiceEstimate/>}/>
                         <Route path = "/demo" element = {<Demo/>}/>
                         <Route path = "/reservation" element = {<Reservation/>}/>
                     </Route>
                     <Route element = {<PrivateRoutes/>}>
-                        <Route path = "/estimate" element = {<ServiceEstimate/>}/>
                         <Route path = "/manageAppointments" element = {<ManageAppointments/>}/>
                         <Route path = "/editAppointment" element = {<EditAppointment/>}/>
                     </Route>

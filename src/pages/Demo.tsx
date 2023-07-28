@@ -28,7 +28,7 @@ export default function Demo(){
 
             </form>
 
-            {listOfUsers.length ? 
+            {listOfUsers.length && listOfUsers ? 
             ButtonSubmit({handleButtonClick: ()=>handleLogin({email:email, name: name, password: password, employeeId: employeeID, listOfUsers: listOfUsers}), text: "Login"})
             : <h1>...Loading</h1>}
         </main>

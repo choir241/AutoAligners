@@ -1,21 +1,24 @@
 import React from "react"
 import {ButtonLink,ButtonSubmit} from "../components/Button"
 import {handleLogout} from "../hooks/LoginHooks"
+import {Link} from "react-router-dom"
 
 export default function Nav(){
 
     return(
-        <nav>
-            <ul className = "flex">
-              <h1>Car App</h1>
-              <li>{ButtonLink({domain: "/", text: "Home"})}</li>
-              {localStorage.getItem("email") ? "" : <li>{ButtonLink({domain: "/demo", text: "Demo"})}</li>}
-              {localStorage.getItem("email") ? <li>{ButtonLink({domain: "/login", text: "Your Account"})}</li> :  <li>{ButtonLink({domain: "/login", text: "Login"})}</li>}
-              {localStorage.getItem("email") ? "" : <li>{ButtonLink({domain: "/reservation", text: "Make Reservation"})}</li>}
-              <li>{ButtonLink({domain: "/estimate", text: "Estimate Car Service"})}</li>
-              {localStorage.getItem("email") ? <li>{ButtonLink({domain: "/manageAppointments", text: "Manage Appointments"})}</li> : ""}
-              {localStorage.getItem("email") ? <li>{ButtonSubmit({handleButtonClick: (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handleLogout(), text: "Logout"})}</li>: ""}
+        <nav className = "flex justifyBetween">
+                <Link to = "/"><h1>AutoAligners</h1></Link>
+            <ul className = "flex alignCenter">
+              <li><Link to = "/">Home</Link></li>
+              {localStorage.getItem("email") ? "" : <li><Link to = "/estimate">Estimate Car Service</Link></li>}
+              {localStorage.getItem("email") ? "" : <li><Link to = "/finance">Finance</Link></li>}
+              <li><Link to = "/employee">Employee Hub</Link></li>
+              
+              {localStorage.getItem("email") ? <li><Link to = "/manageAppointments">Manage Appointments</Link></li> : ""}
             </ul>
+            {localStorage.getItem("email") ? <div>{ButtonSubmit({handleButtonClick: (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handleLogout(), text: "Logout"})}</div>: ""}
+            {localStorage.getItem("email") ? "" : <div>{ButtonLink({domain: "/reservation", text: "Make Reservation"})}</div>}
+
         </nav>
     )
 }
