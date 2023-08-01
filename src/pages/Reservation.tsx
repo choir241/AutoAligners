@@ -47,7 +47,7 @@
         return(
             <main>
 
-                <Nav/>
+                <Nav pageHeading = ""/>
 
                 <h1>Make Reservation</h1>
 

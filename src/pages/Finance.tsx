@@ -1,33 +1,120 @@
-import React from "react"
+import React,{useState} from "react"
 import Nav from "../components/Nav"
 import Footer from "../components/Footer"
+import {ButtonLink} from "../components/Button"
+import Assets from "../components/Assets"
 
 export default function Finance(){
+
+    const [bronzeDisplay, setBronzeDisplay] = useState<boolean>(false)
+    const [goldDisplay, setGoldDisplay] = useState<boolean>(false)
+    const [silverDisplay, setSilverDisplay] = useState<boolean>(false)
+
+
+    function toggleBronzeDisplay(){
+        setBronzeDisplay(!bronzeDisplay)
+    }
+
+    function toggleGoldDisplay(){
+        setGoldDisplay(!goldDisplay)
+    }
+
+    function toggleSilverDisplay(){
+        setSilverDisplay(!silverDisplay)
+    }
+
     return(
-        <main>
-            <Nav/>
+        <main className = "flex flex-col justifyBetween" id = "finance">
+            <Nav pageHeading = {"Financial Options for Car Services"}/>
+
             <section>
-            Financial Options for Car Services:
 
-Payment Plans:
+            <section className = "flex flex-col">
+                <h2>Subscription Plans</h2>
 
-3-month Payment Plan: $400/month for a total of $1,200.
-6-month Payment Plan: $210/month for a total of $1,260.
-Pay Later:
+        <section className="flex justifyAround alignCenter">
+                 <div className = "imageContainer flex alignCenter justifyCenter flex-col">
+                    <h3>Bronze Plan <i className = "fa-solid fa-circle-info button" onClick = {()=>toggleBronzeDisplay()}></i></h3>
+                    <img src={Assets.blackCard} alt="generic business black credit card"  onClick = {()=>toggleBronzeDisplay()}/>
 
-Book now and pay later! Schedule your appointment and pay within 30 days after service completion.
-Deferred Payments:
+                    <p className = {`${bronzeDisplay? "" : "displayNone"} clearButton flex flex-col alignStart`}><i className = "fa-solid fa-xmark button" onClick = {()=>toggleBronzeDisplay()}></i>$75/month includes 3 services per year (Oil Change, Tire Rotation, and 20-point Inspection).</p>
+                </div>
+                <div className = "imageContainer blueCardContainer flex alignCenter justifyCenter flex-col">
+                    <h3>Silver Plan <i className = "fa-solid fa-circle-info button" onClick = {()=>toggleSilverDisplay()}></i></h3>
+                    <img src={Assets.blueCard} className = "blueCard" alt="generic blue Visa debit card with a Vivid logo centered on the card"  onClick = {()=>toggleSilverDisplay()}/>
+                    <p className = {`${silverDisplay? "" : "displayNone"} clearButton flex flex-col alignStart`}><i className = "fa-solid fa-xmark button" onClick = {()=>toggleSilverDisplay()}></i>$120/month includes 6 services per year (Silver Subscription + Brake Check, Engine Diagnostic).</p>
+                </div>
+                <div className = "imageContainer goldCardContainer flex alignCenter justifyCenter flex-col">
+                    <h3>Gold Plan <i className = "fa-solid fa-circle-info button" onClick = {()=>toggleGoldDisplay()}></i></h3>
+                    <img src={Assets.goldCard} alt="generic business gold credit card" onClick = {()=>toggleGoldDisplay()}/>
+                    
+                    <p className = {`${goldDisplay? "": "displayNone"} clearButton flex flex-col alignStart`}><i className = "fa-solid fa-xmark button" onClick = {()=>toggleGoldDisplay()}></i>$199/month includes 12 services/year (Gold + Air Conditioning Service, Wheel Alignment)</p>
+                </div>
+        </section>
+            
 
-Get your car serviced today and defer payments for up to 45 days.
-Interest-Free Financing:
+            </section>
 
-For services above $800, enjoy 0% interest financing for up to 6 months.
-Subscription Plans:
 
-Silver Subscription: $75/month includes 3 services per year (Oil Change, Tire Rotation, and 20-point Inspection).
-Gold Subscription: $120/month includes 6 services per year (Silver Subscription + Brake Check, Engine Diagnostic).
-Platinum Subscription: $199/month includes 12 services per year (Gold Subscription + Air Conditioning Service, Wheel Alignment).
-Bundle Discounts:
+            <section>
+                <h2>Pay Later</h2>
+        
+
+                <div className="flex justifyBetween alignCenter">
+                    <h3>Book now and pay later! Schedule your appointment and pay within 30 days after service completion.</h3>
+
+                    {ButtonLink({domain: "/reservation", text: "Make Reservation"})}
+                </div>
+
+              
+            </section>
+         
+
+         <section className = "textAlignRight">
+            
+            <h2>Deferred Payments:</h2>
+
+            <div className = "flex justifyBetween alignCenter">
+
+                {ButtonLink({domain: "/estimate", text: "Estimate Car Service"})}
+                
+                <h3>Get your car serviced today and defer payments for up to 45 days.</h3>
+
+            </div>
+
+
+         </section>
+
+
+        <section>
+            <h2>Interest-Free Financing:</h2>
+
+
+            <div className="flex justifyBetween alignContent">
+            <h3>For services above $800, enjoy 0% interest financing for up to 6 months.</h3>
+            
+                <div className = "buttonContainer flex justifyBetween alignCenter">
+                    {ButtonLink({domain: "/reservation", text: "Make Reservation"})}
+                    {ButtonLink({domain: "/estimate", text: "Estimate Car Service"})}
+                </div>
+ 
+
+            </div>
+           
+        </section>
+
+
+{/* 
+            <ul>
+                <li><h3>Payment Plans:</h3></li>
+                <li>3-month Payment Plan: $400/month for a total of $1,200.</li>
+                <li>6-month Payment Plan: $210/month for a total of $1,260.</li>
+            </ul> */}
+
+
+
+
+{/* Bundle Discounts:
 
 Save 15% on your total bill when you book Engine Diagnostic, Air Conditioning Service, and Wheel Alignment together.
 Reward Points System:
@@ -71,7 +158,7 @@ Don't forget to take advantage of our referral program by inviting your friends.
 
 At AutoAligners, we value your loyalty. Keep booking with us to unlock more exciting rewards and discounts!
 
-Please note that the above numbers and content are entirely fictional and should not be used as financial advice. They are provided for illustrative purposes only to demonstrate how the financial options could be presented within the car appointment booking application.
+Please note that the above numbers and content are entirely fictional and should not be used as financial advice. They are provided for illustrative purposes only to demonstrate how the financial options could be presented within the car appointment booking application. */}
             </section>
             <Footer/>
         </main>

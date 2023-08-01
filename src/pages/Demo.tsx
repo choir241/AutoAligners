@@ -18,7 +18,7 @@ export default function Demo(){
 
     return(
         <main>
-            <Nav/>
+            <Nav pageHeading = {""}/>
 
             <form>        
               {Input({type: "email", onChange: (e:string)=> "",  name: "email", placeholder: email, disabled : true})}

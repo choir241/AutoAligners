@@ -39,7 +39,7 @@ export default function ServiceEstimate(){
     return (
         <main>
 
-        <Nav/>
+        <Nav pageHeading = ""/>
 
         <h1>Estimate Car Service</h1>
 

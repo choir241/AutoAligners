@@ -14,7 +14,7 @@ export default function ManageAppointments(){
 
     return(
         <main>
-            <Nav/>
+            <Nav pageHeading = ""/>
             <h1>Manage Appointments</h1>
             <section className = "flex">
                 <i className="fa-solid fa-list appointmentContainer" onClick = {()=>setClassNameContainer("listAppointmentContainer")}></i>

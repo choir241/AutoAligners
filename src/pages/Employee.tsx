@@ -8,7 +8,7 @@ import {updateAccountEmail, handleDeleteAccount, updateAccountName, updateAccoun
 export function EmployeeButtons(){
     return(
         <main className = "flex flex-col justifyBetween">
-                <Nav/>
+                <Nav pageHeading = {""}/>
             <section className = "flex flex-col alignCenter" id = "employee">
             <h1 className = "textAlignCenter">Employee Hub</h1>
                 <nav>
@@ -51,7 +51,7 @@ export function EmployeeHub(){
     return(
       <main>
           
-          <Nav/>
+          <Nav pageHeading = {""}/>
   
           {user? <h1>Welcome {user.name}</h1> : <h1>Login</h1>}
   

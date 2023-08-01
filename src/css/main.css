@@ -1,14 +1,16 @@
 /* Home
    ========================================================================== */
 
-#home .hero section{
+#home .hero section, #finance section section{
     line-height: 5rem;
     padding: 1rem;
+}
+
+#home .hero section{
     width: 60%;
 }
 
 #home .hero .button{
-    margin: 0rem;
     margin-top: 4rem;
 }
 
@@ -23,11 +25,67 @@
 
 #home .imageContainer img{
     width: 100%;
-    border-radius: 5px;
+    border-radius: 5px; 
 }
-/* body *{
-    border: 3px solid black;
-} */
+
+/* Finance
+   ========================================================================== */
+
+#finance header{
+    margin-bottom: 4rem;
+}
+
+#finance section section{
+    margin-bottom: 2rem;
+}
+
+#finance .buttonContainer{
+    width: 30%;
+}
+
+#finance .blueCard{
+    transform: rotate(3deg);
+}
+
+#finance .imageContainer{
+    width: 20%;
+    position: relative;
+}
+
+#finance .imageContainer p{
+    position: absolute;
+    padding: 2rem;
+    width: 100%;
+    background: white;
+}
+
+#finance p:hover{
+    color: black;
+}
+
+#finance .imageContainer i{
+    margin-bottom: 1rem;
+}
+
+#finance .goldCardContainer{
+    width: 18%;
+}
+
+
+#finance .blueCardContainer{
+    width: 21.5%;
+}
+
+#finance .imageContainer img{
+    width: 100%;
+}
+
+#finance .imageContainer img:hover{
+    cursor: pointer;
+}
+
+
+
 
 /* Main
    ========================================================================== */
@@ -44,6 +102,13 @@ nav ul li{
 
 nav li a{
     font-size: 2rem;
+}
+
+/* Header
+   ========================================================================== */
+
+header h2{
+    margin-top: 2rem;
 }
 
 /* Footer
@@ -64,12 +129,16 @@ footer li a{
     text-align: center;
 }
 
+.textAlignRight{
+    text-align: right;
+}
+
 html{
     font-size: 62.5%;
 }
 
 h1{
-    font-size: 5rem;
+    font-size: 6rem;
 }
 
 h2{
@@ -131,7 +200,6 @@ a:hover{
     color: white;
     font-size: 2rem;
     padding: .8rem 2rem;
-    margin: 1rem;
     cursor: pointer;
 }
 
@@ -208,6 +276,10 @@ a:hover{
 
 .justifyStart{
     justify-content: flex-start;
+}
+
+.justifyEnd{
+    justify-content: flex-end;
 }
 
 .alignStart{

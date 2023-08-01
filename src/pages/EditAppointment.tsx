@@ -44,7 +44,7 @@ export default function EditAppointment(){
         
     return(
         <main>
-            <Nav/>
+            <Nav pageHeading = {""}/>
 
             <h1>Edit Appointment</h1>
 
