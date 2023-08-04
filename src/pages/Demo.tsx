@@ -2,7 +2,7 @@ import React, {useMemo, useState} from "react"
 import Nav from "../components/Nav"
 import {Input, handleLogin, GetUsers, User} from "../hooks/LoginHooks"
 import {ButtonSubmit} from "../components/Button"
-
+import Footer from "../components/Footer"
 export default function Demo(){
 
     const name = "Helena Blavatsky"
@@ -17,20 +17,27 @@ export default function Demo(){
     },[])
 
     return(
-        <main>
-            <Nav pageHeading = {""}/>
+        <main id = "auth">
+            <Nav pageHeading = {"Demo Account Login"}/>
 
-            <form>        
-              {Input({type: "email", onChange: (e:string)=> "",  name: "email", placeholder: email, disabled : true})}
-              {Input({type: "text", onChange: (e:string)=> "", name: "employeeId", placeholder: employeeID, disabled : true})}
-              {Input({type: "text", onChange: (e:string)=> "", name: "name", placeholder: name, disabled : true})}
-              {Input({type: "password",onChange: (e:string)=> "",  name: "password", placeholder: password, disabled : true})}
 
-            </form>
+            <section className="flex flex-col alignCenter justifyCenter">
+                <form className = "flex flex-col alignCenter">        
+                  {Input({type: "email", onChange: (e:string)=> "",  name: "email", placeholder: email, disabled : true})}
+                  {Input({type: "text", onChange: (e:string)=> "", name: "employeeId", placeholder: employeeID, disabled : true})}
+                  {Input({type: "text", onChange: (e:string)=> "", name: "name", placeholder: name, disabled : true})}
+                  {Input({type: "password",onChange: (e:string)=> "",  name: "password", placeholder: password, disabled : true})}
 
-            {listOfUsers.length && listOfUsers ? 
-            ButtonSubmit({handleButtonClick: ()=>handleLogin({email:email, name: name, password: password, employeeId: employeeID, listOfUsers: listOfUsers}), text: "Login"})
-            : <h1>...Loading</h1>}
+
+
+                  {listOfUsers.length && listOfUsers ? 
+                ButtonSubmit({handleButtonClick: ()=>handleLogin({email:email, name: name, password: password, employeeId: employeeID, listOfUsers: listOfUsers}), text: "Login"})
+                : <h1>...Loading</h1>}
+                </form>
+            </section>
+          
+            <Footer/>
+
         </main>
     )
 

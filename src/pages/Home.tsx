@@ -7,7 +7,7 @@ import Assets from "../components/Assets"
 export default function Home(){
 
     return(
-        <main className = "flex flex-col justifyBetween" id = "home">
+        <main id = "home">
             <Nav pageHeading = ""/>
                 <section className = "flex hero">
                     <section className = "flex flex-col justifyCenter alignStart">

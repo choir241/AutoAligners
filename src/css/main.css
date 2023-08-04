@@ -1,3 +1,56 @@
+/* Service Estimate
+   ========================================================================== */
+
+#serviceEstimate form, #serviceEstimate section, #serviceEstimate form div{
+    width: 100%;
+}
+
+#serviceEstimate header{
+    margin-bottom: 4rem;
+}
+
+
+select{
+    padding: 2rem 4rem;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    background: transparent;
+}
+
+label{
+    font-size: 4rem;
+    margin: 2rem;
+}
+
+.radioButtons label{
+    margin-right: 8rem;
+}
+
+#serviceEstimate .radioButtons section{
+    width:50%;
+}
+
+#serviceEstimate .contact{
+    width: 95%;
+}
+
+#serviceEstimate .section-1{
+    padding: 0rem;
+    margin: 0rem;
+}
+
+#serviceEstimate form .button{
+    width: 20%;
+}
+
+#serviceEstimate .submit{
+    margin-top: 4rem;
+}
+
+#serviceEstimate form{
+    margin-bottom: 3rem;
+}
+
 /* Home
    ========================================================================== */
 
@@ -85,6 +138,23 @@
 }
 
 
+/* Auth
+   ========================================================================== */
+
+input{
+    font-size: 2rem;
+    padding: 1rem 4rem;
+    margin-bottom: 2rem;
+}
+
+#auth section .button{
+    width: 50%;
+    padding: 2rem 4rem;
+}
+
+#auth section.flex.flex-col.alignCenter.justifyBetween{
+    height: 30vh;
+}
 
 
 /* Main
@@ -92,6 +162,9 @@
 
 main{
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 /* Nav
@@ -258,6 +331,7 @@ a:hover{
     align-items: center;
 }
 
+
 .justifyAround{
     justify-content: space-around;
 }
@@ -316,6 +390,19 @@ textarea{
 
 #employee ul, #employee nav{
     height: 20rem;
+}
+
+
+#employeeSettings section{
+    margin-bottom: 5rem;
+}
+
+#employeeSettings .goBack{
+    margin-bottom: 2rem;
+}
+
+#employeeSettings .settings{
+    margin-top: 6rem;
 }
 
 /* Calendar
@@ -386,9 +473,25 @@ h1.expired{
 .deleteAccount{
     width: 50%;
     border-radius: 5px;
-    background-color: rgb(255, 46, 46);
     padding: 2rem;
     transition: 1s;
+}
+
+.deleteAccount div.justifyCenter h3{
+    margin-right: 2rem;
+}
+
+.deleteAccount div.justifyCenter{
+    margin-bottom: 2rem;
+}
+
+.deleteAccount:hover{
+    background: none;
+    color: black;
+}
+
+.deleteButton{
+    background-color: rgb(221, 46, 46);
 }
 
 /* Display

@@ -1,9 +1,8 @@
 import Nav from "../components/Nav"
-import {ButtonLink} from "../components/Button"
 import Footer from "../components/Footer"
 import React, {useState, useEffect, useMemo} from "react"
-import {ButtonSubmit, Button} from "../components/Button"
-import {updateAccountEmail, handleDeleteAccount, updateAccountName, updateAccountPassword, User, GenerateNewEmployee, handleLogin, GetAccount, GetUsers, DisplayUsers, Input, handleSignUp} from "../hooks/LoginHooks"
+import {ButtonSubmit, Button, ButtonLink} from "../components/Button"
+import {User, GenerateNewEmployee, handleLogin, GetAccount, GetUsers, DisplayUsers, Input, handleSignUp} from "../hooks/LoginHooks"
 
 export function EmployeeButtons(){
     return(
@@ -28,8 +27,6 @@ export function EmployeeHub(){
 
     const [email, setEmail] = useState<string>("");
     const [generatedPassword, setGeneratedPassword] = useState<string>("");
-    const [displayDelete, setDisplayDelete] = useState<boolean>(false);
-    const [oldPassword, setOldPassword] = useState<string>("");
     const [employeeId, setEmployeeId] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [name, setName] = useState<string>("");
@@ -47,18 +44,22 @@ export function EmployeeHub(){
     },[])
   
     //example employee id 649c8a408d41d5c02f5c
+
+    function test(user: User | undefined):string{
+      return user ? `Welcome ${user.name}` : "Login"
+    }
   
     return(
-      <main>
-          
-          <Nav pageHeading = {""}/>
-  
-          {user? <h1>Welcome {user.name}</h1> : <h1>Login</h1>}
-  
+      <main id = "auth">
+          <Nav pageHeading = {test(user)}/>
+    
+
+          <section className = "flex flex-col alignCenter justifyBetween">
+
           {user ? 
             ""
           :
-          <form>        
+          <form className = "flex flex-col alignCenter">        
             {Input({type: "email",  name: "email", onChange: (e)=>setEmail(e), placeholder: "Your Email"})}
             {Input({type: "text", name: "employeeId",  onChange: (e)=>setEmployeeId(e), placeholder: "Your EmployeeId"})}
             {Input({type: "text", name: "name",  onChange: (e)=>setName(e), placeholder: "Your Full Name"})}
@@ -93,47 +94,30 @@ export function EmployeeHub(){
           </section>
   
         :
-          <section>
             <h3>Employee Hub</h3>
-          </section>
         
         :
         ""
       }
-  
+
+
+      {user? 
+        ButtonLink({text: "Inventory", domain: "/inventory"})
+        : ""
+      }
+
+
       {user ? 
-      <section>
-        <section>
-          {Input({type: "text", name: "text", onChange: (e)=>setName(e), placeholder: user?.name})}
-          {Button({text: "Update User's Name", handleButtonClick: ()=>updateAccountName(name)})}
-        </section>
-  
-        <section>
-        {Input({type: "password", name: "password", onChange: (e)=>setOldPassword(e), placeholder: "Old Password Here"})}
-        {Input({type: "password", name: "password", onChange: (e)=>setPassword(e), placeholder: "New Password Here"})}
-          {Button({text: "Update User's Password", handleButtonClick: ()=>updateAccountPassword(password, oldPassword)})}
-        </section>
-  
-        <section>
-        {Input({type: "email", name: "email", onChange: (e)=>setEmail(e), placeholder: user?.email})}
-        {Input({type: "password", name: "password", onChange: (e)=>setPassword(e), placeholder: "Type your password here"})}
-          {Button({text: "Update User's Email", handleButtonClick: ()=>updateAccountEmail(email, password)})}
-        </section>
-  
-        <section>
-          {Button({text: "Delete User's Account", handleButtonClick: ()=>setDisplayDelete(!displayDelete)})}
-  
-  
-          <div className = {`${displayDelete ? "show" : "hidden"} deleteAccount`}>
-            <h3>Are you sure you want to delete your account?</h3>
-            {Button({text: "Delete Account", handleButtonClick: ()=>handleDeleteAccount(user)})}
-          </div>
-  
-        </section>
-      </section>
+        ButtonLink({text: "Settings", domain: "/settings"})
       :
       ""
       }
+          
+  
+     
+          </section>
+
+      <Footer/>
   
       </main>
     )

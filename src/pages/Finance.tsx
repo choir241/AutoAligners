@@ -24,7 +24,7 @@ export default function Finance(){
     }
 
     return(
-        <main className = "flex flex-col justifyBetween" id = "finance">
+        <main id = "finance">
             <Nav pageHeading = {"Financial Options for Car Services"}/>
 
             <section>

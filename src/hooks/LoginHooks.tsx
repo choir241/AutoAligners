@@ -322,7 +322,7 @@ export async function updateAccountEmail(email: string, password: string){
   }
 }
 
-export async function handleDeleteAccount(user: User){
+export async function handleDeleteAccount(user: User | undefined){
   try{
     await axios.delete(`https://car-app-backend-0ejb.onrender.com/deleteUser/${user?.$id}`)
     localStorage.setItem("email","");

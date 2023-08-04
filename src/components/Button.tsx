@@ -3,7 +3,8 @@ import {Link} from "react-router-dom"
 
 interface ButtonProps{
     text: string,
-    handleButtonClick: ()=>void
+    handleButtonClick: ()=>void,
+    classNames?: string
 }
 
 interface ButtonSubmitProps{
@@ -13,7 +14,8 @@ interface ButtonSubmitProps{
 
 interface ButtonLinkProps{
     domain: string,
-    text: string
+    text: string,
+    classNames?: string
 }
 
 export function ButtonSubmit (props: ButtonSubmitProps) {
@@ -32,7 +34,7 @@ export function ButtonSubmit (props: ButtonSubmitProps) {
 export function Button (props: ButtonProps) {
     return(
         <button 
-        className = "button"
+        className = {`button ${props.classNames}`}
         onClick = {()=>props.handleButtonClick()}
         >
             {props.text}
@@ -43,7 +45,7 @@ export function Button (props: ButtonProps) {
 export function ButtonLink (props: ButtonLinkProps):React.JSX.Element{
     return(
        <Link 
-       className = "button"
+       className = {`button ${props.classNames}`}
        to = {`${props.domain}`}>
             {props.text}
        </Link>

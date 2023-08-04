@@ -27,7 +27,7 @@ export function displayAppointments(appointments: Appointment[], classNameContai
          return(
              <div key = {i} className = {`${classNameContainer} ${(appointmentDate > fullCurrentDate) || (appointmentDate === fullCurrentDate && appointmentTime <= currentHours) ? "" : "expired"}`}>
                 <section className = {classNameContainer === "appointmentContainer" ? "flex flex-col" : "flex justifyBetween"}>
-                 <div className = "flex">
+                 <div className = "flex alignCenter">
                     <h1>{appointment.firstName} {appointment.lastName}</h1>
                     <i className="fa-regular fa-trash-can button" onClick= {()=>handleDeleteAppointment(appointment.$id)}></i>
                     <Link to = "/editAppointment" className="fa-regular fa-pen-to-square button" onClick = {()=>localStorage.setItem("id", appointment.$id || "")}></Link>
