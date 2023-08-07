@@ -14,6 +14,7 @@ declare global {
         REACT_APP_PROJECT: string;
         REACT_APP_CAR_API_KEY: string;
         REACT_APP_ENDPOINT: string;
+        REACT_APP_INVENTORY_COLLECTION_ID: string;
         NODE_ENV: "development" | "production";
         PORT?: string;
         PWD: string;
