@@ -100,6 +100,12 @@ export function EmployeeHub(){
         ""
       }
 
+      
+      {user? 
+        ButtonLink({text: "Shop", domain: "/inventoryShop"})
+        : ""
+      }
+
 
       {user? 
         ButtonLink({text: "Inventory", domain: "/inventory"})

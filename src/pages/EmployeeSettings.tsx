@@ -26,26 +26,26 @@ export default function EmployeeSettings():React.JSX.Element{
         <main id = "employeeSettings">
           <Nav pageHeading = {"Settings"}/>
 
-<section className = "flex flex-col alignCenter settings">
+            <section className = "flex flex-col alignCenter settings">
 
-            {ButtonLink({classNames: "goBack", text: "Go Back", domain: "/employee"})}
+              {ButtonLink({classNames: "goBack", text: "Go Back", domain: "/employee"})}
             
-        <section className = "flex flex-col alignCenter justifyCenter">
-          {Input({type: "text", name: "text", onChange: (e)=>setName(e), placeholder: user?.name})}
-          {Button({text: "Update User's Name", handleButtonClick: ()=>updateAccountName(name)})}
-        </section>
+            <section className = "flex flex-col alignCenter justifyCenter">
+              {Input({type: "text", name: "text", onChange: (e)=>setName(e), placeholder: user?.name})}
+              {Button({text: "Update User's Name", handleButtonClick: ()=>updateAccountName(name)})}
+            </section>
   
-        <section className = "flex flex-col alignCenter justifyCenter">
-        {Input({type: "password", name: "password", onChange: (e)=>setOldPassword(e), placeholder: "Old Password Here"})}
-        {Input({type: "password", name: "password", onChange: (e)=>setPassword(e), placeholder: "New Password Here"})}
-          {Button({text: "Update User's Password", handleButtonClick: ()=>updateAccountPassword(password, oldPassword)})}
-        </section>
+            <section className = "flex flex-col alignCenter justifyCenter">
+              {Input({type: "password", name: "password", onChange: (e)=>setOldPassword(e), placeholder: "Old Password Here"})}
+              {Input({type: "password", name: "password", onChange: (e)=>setPassword(e), placeholder: "New Password Here"})}
+              {Button({text: "Update User's Password", handleButtonClick: ()=>updateAccountPassword(password, oldPassword)})}
+            </section>
   
-        <section className = "flex flex-col alignCenter justifyCenter">
-        {Input({type: "email", name: "email", onChange: (e)=>setEmail(e), placeholder: user?.email})}
-        {Input({type: "password", name: "password", onChange: (e)=>setPassword(e), placeholder: "Type your password here"})}
-          {Button({text: "Update User's Email", handleButtonClick: ()=>updateAccountEmail(email, password)})}
-        </section>
+            <section className = "flex flex-col alignCenter justifyCenter">
+              {Input({type: "email", name: "email", onChange: (e)=>setEmail(e), placeholder: user?.email})}
+              {Input({type: "password", name: "password", onChange: (e)=>setPassword(e), placeholder: "Type your password here"})}
+              {Button({text: "Update User's Email", handleButtonClick: ()=>updateAccountEmail(email, password)})}
+            </section>
   
 
 

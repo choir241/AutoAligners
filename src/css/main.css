@@ -18,6 +18,10 @@
     margin-top: 2rem;
    }
 
+   #inventory header + .button{
+    width: 10%;
+   }
+
 /* Service Estimate
    ========================================================================== */
 
@@ -170,11 +174,10 @@ input{
 #auth section .button{
     width: 50%;
     padding: 2rem 4rem;
+    margin: 3rem;
 }
 
-#auth section.flex.flex-col.alignCenter.justifyBetween{
-    height: 30vh;
-}
+
 
 
 /* Main

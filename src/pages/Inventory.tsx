@@ -1,72 +1,56 @@
-import React, {useState} from "react"
+import React, {useState, useEffect} from "react"
 import Nav from "../components/Nav"
 import Footer from "../components/Footer"
 import api from "../api/api"
-import {items} from "../api/inventory"
-import {Button} from "../components/Button"
+import {ButtonLink} from "../components/Button"
 
 interface InventoryItem{
-    itemID: string,
-    itemName: string,
+    $id: string,
+    name: string,
     category: string,
+    quantity: number,
     manufacturer: string,
-    reorderLevel: number,
-    pricePerUnit: number,
+    reOrderLV: number,
+    price: number,
     description: string
 }
 
 export default function Inventory(){
 
     const [inventory, setInventory] = useState([])
-
-    function handlePurchaseItem(itemName: string, price: string, itemManufacturer: string, itemDescription: string){
-        console.log(itemName)
-        console.log(price)
-        console.log(itemManufacturer)
-        console.log(itemDescription)
-    }
-
-    async function getInventory(){
-        try{
-            const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_INVENTORY_COLLECTION_ID)
-            setInventory(data);
-        }catch(err){
-            console.error(err)
-        }
-    }
-
-    function defaultInventory(){
-        if(!inventory.length){
-           return items.map((inventoryItem,i)=>{
-
-            let price = inventoryItem.pricePerUnit.toString()
-            if(inventoryItem.pricePerUnit.toString().includes(".")){
-                const cents = inventoryItem.pricePerUnit.toString().split(".")[1]
-                if(parseInt(cents)<10){
-                    price += "0"
-                }
-            }else{
-                price += ".00"
+    
+    useEffect(()=>{
+        async function getInventory(){
+            try{
+                const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_INVENTORY_COLLECTION_ID)
+                setInventory(data.documents);
+            }catch(err){
+                console.error(err)
             }
-
-            const itemName = inventoryItem.itemName
-            const itemManufacturer = inventoryItem.manufacturer
-            const itemDescription = inventoryItem.description
-
-
-            return(
-                <section key = {i} className = "flex flex-col item">
-                    <div className="flex justifyBetween itemHeading">
-                        <h2>{itemName}</h2>
-                        <h3>${price}</h3>
-                    </div>
-                        <h3>{itemManufacturer}</h3>
-                        <p>{itemDescription}</p>
-                    {Button({text:"Purchase Item", handleButtonClick: ()=>{handlePurchaseItem(itemName, price, itemManufacturer, itemDescription)}})}
-                </section>
-            )  
-            })
         }
+
+        getInventory()
+    },[])
+
+
+
+
+    function currentInventory(){
+            //iterate through inventory
+            //find if there are any duplicates
+            //if there are, don't add them to the array, but instead add 1 to quantity amount      
+
+            return inventory.map((inventoryItems:InventoryItem)=>{
+                return(
+                    <section key = {inventoryItems.$id} className = "flex flex-col item">
+                            <h2>{inventoryItems.name}</h2>
+                            <h2>Quantity: {inventoryItems.quantity}</h2>
+                            <h3>{inventoryItems.manufacturer}</h3>
+                            <p>{inventoryItems.description}</p>
+
+                    </section>
+                )
+            })
     }
 
 
@@ -74,8 +58,14 @@ export default function Inventory(){
     return(
         <main id = "inventory">
             <Nav pageHeading = {"Inventory"}/>
+            <div className="flex justifyCenter">
+            {ButtonLink({classNames: "goBack", text: "Go Back", domain: "/employee"})}
+
+            </div>
+
                 <section className = "itemContainer flex">
-                    {defaultInventory()}
+
+                    {currentInventory()}
                 </section>
             <Footer/>
         </main>
