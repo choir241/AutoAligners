@@ -14,12 +14,18 @@
     margin-bottom: 1rem;
    }
 
-   #inventory .item .button{
-    margin-top: 2rem;
-   }
-
    #inventory header + .button{
     width: 10%;
+   }
+   
+   #inventory select{
+    padding: 1rem;
+    margin-top: 1rem;
+   }
+
+   .borderSeperation{
+    border-bottom: 2px solid black;
+    padding-bottom: 2rem;
    }
 
 /* Service Estimate
