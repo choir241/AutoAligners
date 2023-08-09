@@ -19,6 +19,7 @@ const App = () => {
     const EmployeeSettings = lazy(()=>import("./pages/employee/EmployeeSettings.tsx"));
     const Inventory = lazy(()=>import("./pages/employee/Inventory.tsx"));
     const InventoryShop = lazy(()=>import("./pages/employee/InventoryShop.tsx"));
+    const Cart = lazy(()=>import("./pages/employee/Cart"));
 
     return(
         <Suspense fallback = {<h1>Loading...</h1>}>
@@ -35,6 +36,7 @@ const App = () => {
                         <Route path = "/reservation" element = {<Reservation/>}/>
                     </Route>
                     <Route element = {<PrivateRoutes/>}>
+                        <Route path = "/cart" element = {<Cart/>}/>
                         <Route path = "/inventory" element = {<Inventory/>}/>
                         <Route path = "/inventoryShop" element = {<InventoryShop/>}/>
                         <Route path = "/settings" element = {<EmployeeSettings/>}/>
