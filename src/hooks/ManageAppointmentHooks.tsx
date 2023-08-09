@@ -51,21 +51,11 @@ export function displayAppointments(appointments: Appointment[], classNameContai
     
                  </section>
 
-                 <section className = {classNameContainer === "appointmentContainer" ? "flex flex-col" : "flex justifyBetween"}>
 
-                 <h2>Preferred Contact: {appointment.contact}</h2>
-                 <div className = "flex">
-                 <h3>{appointment.phone}</h3>
-                 <h3>{appointment.email}</h3>
-                 </div>
-                 </section>
-
-                
                 {classNameContainer === "appointmentContainer" ?
                  <section className = "flex">
                                         
                  <h3>{appointment.stayLeave}</h3>
-                 <h3>Zip Code: {appointment.zipCode}</h3>
                  <h3>{appointment.comment}</h3>
                  </section>
                  :

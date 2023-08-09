@@ -1,8 +1,8 @@
 import React, {useState, useMemo} from "react"
-import Nav from "../components/Nav"
-import {getAppointmentData, Appointment, DisplayTimeDateAppointments, GetCarData, SelectCarMakeInput, SelectCarModelInput, SelectCarYearInput, ChooseCarService, Input, TextBoxInput} from "../hooks/ReservationHooks"
-import { EditChooseTwoInput, handleEditAppointment, checkDate, getEditAppointmentData } from "../hooks/EditAppointmentHooks"
-import {Button} from "../components/Button"
+import Nav from "../../components/Nav"
+import {getAppointmentData, Appointment, DisplayTimeDateAppointments, GetCarData, SelectCarMakeInput, SelectCarModelInput, SelectCarYearInput, ChooseCarService, Input, TextBoxInput} from "../../hooks/ReservationHooks"
+import { EditChooseTwoInput, handleEditAppointment, checkDate, getEditAppointmentData } from "../../hooks/EditAppointmentHooks"
+import {Button} from "../../components/Button"
 
 
 export default function EditAppointment(){

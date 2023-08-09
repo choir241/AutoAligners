@@ -1,8 +1,8 @@
 import React, {useMemo, useState} from "react"
-import Nav from "../components/Nav"
-import {Input, handleLogin, GetUsers, User} from "../hooks/LoginHooks"
-import {ButtonSubmit} from "../components/Button"
-import Footer from "../components/Footer"
+import Nav from "../../components/Nav"
+import {Input, handleLogin, GetUsers, User} from "../../hooks/LoginHooks"
+import {ButtonSubmit} from "../../components/Button"
+import Footer from "../../components/Footer"
 export default function Demo(){
 
     const name = "Helena Blavatsky"

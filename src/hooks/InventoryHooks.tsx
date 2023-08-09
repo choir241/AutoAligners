@@ -26,12 +26,45 @@ interface DefaultInventoryDisplay{
     itemQuantity: number | undefined
 }
 
+export interface CartItem{
+    $id: string,
+    itemID: string,
+    category: string,
+    description: string,
+    manufacturer: string,
+    name: string,
+    price: string,
+    email: string
+}
+
 export async function GetInventory(setInventory: (e:InventoryItem[])=>void){
     try{
         const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_INVENTORY_COLLECTION_ID)
         setInventory(data.documents);
     }catch(err){
         console.error(err)
+    }
+}
+
+async function handleAddToCart($id: string | undefined, inventory: InventoryItem[]){
+    try{
+        const findItem = inventory.filter((item:InventoryItem)=>item.$id === $id)
+        const item = {  
+            "itemID": findItem[0].$id,
+            "category": findItem[0].category,
+            "description": findItem[0].description,
+            "manufacturer": findItem[0].manufacturer,
+            "name": findItem[0].name,
+            "price": findItem[0].price,
+            "email": localStorage.getItem("email")
+        }
+       
+        await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID, item, [Permission.read(Role.any())])
+
+        window.location.reload();
+
+    }catch(err){
+        console.error(err);
     }
 }
 
@@ -47,6 +80,7 @@ export function CurrentInventory(inventory: InventoryItem[]){
                     <h2>Quantity: {inventoryItems.quantity}</h2>
                     <h3>{inventoryItems.manufacturer}</h3>
                     <p>{inventoryItems.description}</p>
+                    {Button({classNames: "clearButton", text: "Add To Cart", handleButtonClick: ()=> {handleAddToCart(inventoryItems.$id,inventory)}})}
             </section>
         )
     })
@@ -151,4 +185,13 @@ export function DefaultInventory(props: DefaultInventoryDisplay){
          </section>
      )  
      })
+}
+
+export async function GetCart(setCart: (e:CartItem[])=>void){
+    try{    
+        const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID);
+        setCart(data.documents)
+    }catch(err){
+        console.error(err)
+    }
 }

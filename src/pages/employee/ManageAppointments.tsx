@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react"
-import {Appointment, getAppointmentData} from "../hooks/ReservationHooks"
-import Nav from "../components/Nav"
-import { displayAppointments } from "../hooks/ManageAppointmentHooks"
+import {Appointment, getAppointmentData} from "../../hooks/ReservationHooks"
+import Nav from "../../components/Nav"
+import { displayAppointments } from "../../hooks/ManageAppointmentHooks"
 
 export default function ManageAppointments(){
 

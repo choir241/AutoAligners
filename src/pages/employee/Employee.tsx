@@ -1,8 +1,8 @@
-import Nav from "../components/Nav"
-import Footer from "../components/Footer"
+import Nav from "../../components/Nav"
+import Footer from "../../components/Footer"
 import React, {useState, useEffect, useMemo} from "react"
-import {ButtonSubmit, Button, ButtonLink} from "../components/Button"
-import {User, GenerateNewEmployee, handleLogin, GetAccount, GetUsers, DisplayUsers, Input, handleSignUp} from "../hooks/LoginHooks"
+import {ButtonSubmit, Button, ButtonLink} from "../../components/Button"
+import {User, GenerateNewEmployee, handleLogin, GetAccount, GetUsers, DisplayUsers, Input, handleSignUp} from "../../hooks/LoginHooks"
 
 export function EmployeeButtons(){
     return(

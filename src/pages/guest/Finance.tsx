@@ -1,8 +1,8 @@
 import React,{useState} from "react"
-import Nav from "../components/Nav"
-import Footer from "../components/Footer"
-import {ButtonLink} from "../components/Button"
-import Assets from "../components/Assets"
+import Nav from "../../components/Nav"
+import Footer from "../../components/Footer"
+import {ButtonLink} from "../../components/Button"
+import Assets from "../../components/Assets"
 
 export default function Finance(){
 
