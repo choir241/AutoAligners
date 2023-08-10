@@ -22,6 +22,12 @@ export default function Home(){
                     <div className = "imageContainer">
                         <img src = {Assets.whiteCar} alt = "white car"/>
                     </div>
+
+                    <ul>
+                        <li>
+                            <div></div>
+                        </li>
+                    </ul>
             
                 </section>
             <Footer/>

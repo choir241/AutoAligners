@@ -34,7 +34,8 @@ export interface CartItem{
     manufacturer: string,
     name: string,
     price: string,
-    email: string
+    email: string,
+    quantity: string,
 }
 
 export async function GetInventory(setInventory: (e:InventoryItem[])=>void){
@@ -46,30 +47,68 @@ export async function GetInventory(setInventory: (e:InventoryItem[])=>void){
     }
 }
 
-async function handleAddToCart($id: string | undefined, inventory: InventoryItem[]){
+async function handleAddToCart(cart: CartItem[], $id: string | undefined, inventory: InventoryItem[], quantity: number | undefined){
     try{
         const findItem = inventory.filter((item:InventoryItem)=>item.$id === $id)
-        const item = {  
-            "itemID": findItem[0].$id,
-            "category": findItem[0].category,
-            "description": findItem[0].description,
-            "manufacturer": findItem[0].manufacturer,
-            "name": findItem[0].name,
-            "price": findItem[0].price,
-            "email": localStorage.getItem("email"),
-            "quantity": ""
-        }
-       
-        await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID, item, [Permission.read(Role.any())])
 
-        window.location.reload();
+        const findCartItem = cart.filter((cartItem:CartItem)=>cartItem.name === findItem[0].name && localStorage.getItem("email") === cartItem.email);
+
+        if(!findCartItem.length){
+            const item = {  
+                "itemID": findItem[0].$id,
+                "category": findItem[0].category,
+                "description": findItem[0].description,
+                "manufacturer": findItem[0].manufacturer,
+                "name": findItem[0].name,
+                "price": findItem[0].price,
+                "email": localStorage.getItem("email"),
+                "quantity": quantity ? quantity: 1
+            }
+           
+            await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID, item, [Permission.read(Role.any())])
+    
+            window.location.reload();
+        }else{
+            const item = {  
+                "itemID": findItem[0].$id,
+                "category": findItem[0].category,
+                "description": findItem[0].description,
+                "manufacturer": findItem[0].manufacturer,
+                "name": findItem[0].name,
+                "price": findItem[0].price,
+                "email": localStorage.getItem("email"),
+                "quantity": quantity ? quantity + findCartItem[0].quantity : 1 + findCartItem[0].quantity
+            }
+           
+            await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID, findCartItem[0].$id, item)
+    
+            window.location.reload();
+        }
+ 
 
     }catch(err){
         console.error(err);
     }
 }
 
-export function CurrentInventory(inventory: InventoryItem[]){
+function renderInventoryQuantityOptions(setItemQuantity:(e:number)=>void, quantity: number){
+    const options = []
+    for(let i = 1; i <= quantity; i++){
+        options.push(<option key = {`option-${i}`} value={i}>{i}</option>)
+    }
+    return(
+        <select onChange = {(e)=>setItemQuantity(parseInt(e.target.value))}>
+            {options}
+        </select>
+    )
+}
+
+
+export function EditCart(quantity: number){
+    console.log(quantity)
+}
+
+export function CurrentInventory(cart: CartItem[], inventory: InventoryItem[], setItemQuantity: (e:number)=>void, quantity: number | undefined){
     //iterate through inventory
     //find if there are any duplicates
     //if there are, don't add them to the array, but instead add 1 to quantity amount      
@@ -81,7 +120,8 @@ export function CurrentInventory(inventory: InventoryItem[]){
                     <h2>Quantity: {inventoryItems.quantity}</h2>
                     <h2>${inventoryItems.price}</h2>
                     <p>{inventoryItems.description}</p>
-                    {Button({classNames: "clearButton", text: "Add To Cart", handleButtonClick: ()=> {handleAddToCart(inventoryItems.$id,inventory)}})}
+                    {renderInventoryQuantityOptions((e)=>setItemQuantity(e), inventoryItems.quantity)}
+                    {Button({classNames: "clearButton", text: "Add To Cart", handleButtonClick: ()=> {handleAddToCart(cart, inventoryItems.$id,inventory, quantity)}})}
             </section>
         )
     })

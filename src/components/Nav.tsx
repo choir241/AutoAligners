@@ -21,8 +21,11 @@ export default function Nav(props: nav){
 
     useEffect(()=>{
         if(localStorage.getItem("email") && cart?.length){
-            const countUserItems = cart.filter((item:CartItem)=>item.email === localStorage.getItem("email"));
-            setCartQuantity(countUserItems.length);
+            let sum:number = 0
+
+            cart.forEach((item:CartItem)=>sum += parseInt(item.quantity))
+
+            setCartQuantity(sum);
         }
     },[cart])
     
