@@ -1,3 +1,18 @@
+/* Cart
+   ========================================================================== */
+   #cart .cart .cartContainer{
+    width: 55%;
+    padding: 2rem;
+   }
+
+   #cart .cartContainer section{
+    padding: 2rem;
+   }
+
+   #cart .cart .cartTotal{
+    margin-top: 4rem;
+   }
+
 /* Inventory
    ========================================================================== */
 

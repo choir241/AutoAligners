@@ -56,7 +56,8 @@ async function handleAddToCart($id: string | undefined, inventory: InventoryItem
             "manufacturer": findItem[0].manufacturer,
             "name": findItem[0].name,
             "price": findItem[0].price,
-            "email": localStorage.getItem("email")
+            "email": localStorage.getItem("email"),
+            "quantity": ""
         }
        
         await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID, item, [Permission.read(Role.any())])
@@ -78,7 +79,7 @@ export function CurrentInventory(inventory: InventoryItem[]){
             <section key = {inventoryItems.$id} className = {"flex flex-col item borderSeperation"}>
                     <h2>{inventoryItems.name}</h2>
                     <h2>Quantity: {inventoryItems.quantity}</h2>
-                    <h3>{inventoryItems.manufacturer}</h3>
+                    <h2>${inventoryItems.price}</h2>
                     <p>{inventoryItems.description}</p>
                     {Button({classNames: "clearButton", text: "Add To Cart", handleButtonClick: ()=> {handleAddToCart(inventoryItems.$id,inventory)}})}
             </section>
@@ -106,7 +107,7 @@ export async function HandlePurchaseItem(props: Item){
 
             await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_INVENTORY_COLLECTION_ID, item, [Permission.read(Role.any())])
 
-            window.location.reload();
+            // window.location.reload();
         }else{
             let quantity = 0
             if(props.itemQuantity){
@@ -129,7 +130,7 @@ export async function HandlePurchaseItem(props: Item){
 
             await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_INVENTORY_COLLECTION_ID, checkForDuplicates[0].$id,item)
 
-            window.location.reload();
+            // window.location.reload();
         }
 
        
@@ -138,18 +139,21 @@ export async function HandlePurchaseItem(props: Item){
     }
 }
 
-export function DefaultInventory(props: DefaultInventoryDisplay){
-    function renderQuantityOptions(){
+
+  function renderQuantityOptions(setItemQuantity:(e:number)=>void){
         const options = []
-        for(let i = 1; i < 51; i++){
+        for(let i = 1; i <= 50; i++){
             options.push(<option key = {`option-${i}`} value={i}>{i}</option>)
         }
         return(
-            <select onChange = {(e)=>props.setItemQuantity(parseInt(e.target.value))}>
+            <select onChange = {(e)=>setItemQuantity(parseInt(e.target.value))}>
                 {options}
             </select>
         )
     }
+
+
+export function DefaultInventory(props: DefaultInventoryDisplay){
 
     return items.map((inventoryItem,i)=>{
 
@@ -180,7 +184,7 @@ export function DefaultInventory(props: DefaultInventoryDisplay){
              </div>
                 <h3>Quantity: {findItem[0]?.quantity ? findItem[0]?.quantity: 0}</h3>
                 <p>{itemDescription}</p>
-                {renderQuantityOptions()}
+                {renderQuantityOptions((e:number)=>props.setItemQuantity(e))}
              {Button({text:"Purchase Item", handleButtonClick: ()=>{HandlePurchaseItem({itemQuantity: props.itemQuantity, inventory: {name: itemName, category: itemCategory, quantity: quantity, manufacturer: itemManufacturer, reOrderLV: itemReorderLV, price: price, description: itemDescription}})}})}
          </section>
      )  
