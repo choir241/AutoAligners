@@ -11,7 +11,13 @@
 
    #cart .cart .cartTotal{
     margin-top: 4rem;
+    width: 50%;
    }
+
+   #cart div .button{
+    margin-bottom: 2rem;
+   }
+
 
 /* Inventory
    ========================================================================== */

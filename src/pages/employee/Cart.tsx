@@ -2,11 +2,13 @@ import React, {useState, useEffect} from "react"
 import {GetCart, CartItem, EditCart, GetInventory, InventoryItem} from "../../hooks/InventoryHooks"
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
+import {ButtonLink} from "../../components/Button"
 
 export default function Cart(){
 
     const [cart, setCart] = useState<CartItem[]>([])
     const [inventory, setInventory] = useState<InventoryItem[]>([])
+    const [cartQuantity, setCartQuantity] = useState<string>()
     
     useEffect(()=>{
         GetCart((e:CartItem[])=>setCart(e))
@@ -22,15 +24,11 @@ export default function Cart(){
         const findItem = inventory.filter((item:InventoryItem)=>item.name === name)
 
         for(let i = 1;i < findItem[0].quantity; i++){
-            if(i !== parseInt(quantity)){
                 cartQuantity.push(<option key = {`k-${i}`}>{i}</option>)
-            }else{
-                cartQuantity.push(<option key = {`k-${i}`} selected>{i}</option>)
-            }
         }
         
         return(
-            <select name="" id="">
+            <select name="" id="" value = {quantity} onChange = {(e)=>setCartQuantity(e.target.value)}>
                 {cartQuantity}
             </select>
         )
@@ -119,12 +117,27 @@ export default function Cart(){
 
 
             })
+        }else{
+                return(
+                    <section className = "flex flex-col">
+                        <h2>No items in the cart currently</h2>
+                    </section>
+                )
+
         }
     }
 
     return(
         <main id = "cart">
             <Nav pageHeading = {"Cart"}/>
+            
+            <div className="flex flex-col alignStart">
+            {ButtonLink({classNames: "goBack", text: "Inventory", domain: "/inventory"})}
+            {ButtonLink({classNames: "goBack", text: "Employee Shop", domain: "/inventoryShop"})}
+            {ButtonLink({classNames: "goBack", text: "Settings", domain: "/settings"})}
+
+            </div>
+
             <section className = "flex justifyBetween cart">
 
                 <section className = "flex flex-col cartContainer">

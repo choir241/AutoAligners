@@ -91,8 +91,15 @@ async function handleAddToCart(cart: CartItem[], $id: string | undefined, invent
     }
 }
 
-function renderInventoryQuantityOptions(setItemQuantity:(e:number)=>void, quantity: number){
+function renderInventoryQuantityOptions(itemName: string, cart: CartItem[], setItemQuantity:(e:number)=>void, quantity: number){
     const options = []
+    const findItemInCart = cart.filter((item: CartItem)=>item.name === itemName);
+
+    if(findItemInCart.length){
+        const cartItemQuantity = parseInt(findItemInCart[0].quantity)
+        quantity -= cartItemQuantity
+    }
+
     for(let i = 1; i <= quantity; i++){
         options.push(<option key = {`option-${i}`} value={i}>{i}</option>)
     }
@@ -114,13 +121,16 @@ export function CurrentInventory(cart: CartItem[], inventory: InventoryItem[], s
     //if there are, don't add them to the array, but instead add 1 to quantity amount      
 
     return inventory.map((inventoryItems:InventoryItem,i:number)=>{
+
+        const findItemInCart = cart.filter((item: CartItem)=>item.name === inventoryItems.name);
+        const cartItemQuantity = parseInt(findItemInCart[0]?.quantity)
         return(
             <section key = {inventoryItems.$id} className = {"flex flex-col item borderSeperation"}>
                     <h2>{inventoryItems.name}</h2>
-                    <h2>Quantity: {inventoryItems.quantity}</h2>
+                    <h2>Quantity: {findItemInCart.length ? inventoryItems.quantity - cartItemQuantity : inventoryItems.quantity}</h2>
                     <h2>${inventoryItems.price}</h2>
                     <p>{inventoryItems.description}</p>
-                    {renderInventoryQuantityOptions((e)=>setItemQuantity(e), inventoryItems.quantity)}
+                    {renderInventoryQuantityOptions(inventoryItems.name, cart, (e)=>setItemQuantity(e), inventoryItems.quantity)}
                     {Button({classNames: "clearButton", text: "Add To Cart", handleButtonClick: ()=> {handleAddToCart(cart, inventoryItems.$id,inventory, quantity)}})}
             </section>
         )
