@@ -2,7 +2,8 @@ import React, {useState, useEffect} from "react"
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
 import {ButtonLink} from "../../components/Button"
-import {GetInventory, InventoryItem, CurrentInventory, CartItem, GetCart} from "../../hooks/InventoryHooks"
+import {GetInventory, InventoryItem, CurrentInventory} from "../../hooks/InventoryHooks"
+import {CartItem, GetCart} from "../../hooks/CartHooks"
 
 export default function Inventory(){
 

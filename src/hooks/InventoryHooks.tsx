@@ -3,6 +3,7 @@ import React from "react"
 import {Permission, Role} from "appwrite"
 import {items} from "../api/inventory"
 import {Button} from "../components/Button"
+import {CartItem, handleAddToCart} from "./CartHooks"
 
 export interface InventoryItem{
     $id?: string,
@@ -26,17 +27,6 @@ interface DefaultInventoryDisplay{
     itemQuantity: number | undefined
 }
 
-export interface CartItem{
-    $id: string,
-    itemID: string,
-    category: string,
-    description: string,
-    manufacturer: string,
-    name: string,
-    price: string,
-    email: string,
-    quantity: string,
-}
 
 export async function GetInventory(setInventory: (e:InventoryItem[])=>void){
     try{
@@ -47,49 +37,7 @@ export async function GetInventory(setInventory: (e:InventoryItem[])=>void){
     }
 }
 
-async function handleAddToCart(cart: CartItem[], $id: string | undefined, inventory: InventoryItem[], quantity: number | undefined){
-    try{
-        const findItem = inventory.filter((item:InventoryItem)=>item.$id === $id)
 
-        const findCartItem = cart.filter((cartItem:CartItem)=>cartItem.name === findItem[0].name && localStorage.getItem("email") === cartItem.email);
-
-        if(!findCartItem.length){
-            const item = {  
-                "itemID": findItem[0].$id,
-                "category": findItem[0].category,
-                "description": findItem[0].description,
-                "manufacturer": findItem[0].manufacturer,
-                "name": findItem[0].name,
-                "price": findItem[0].price,
-                "email": localStorage.getItem("email"),
-                "quantity": quantity ? quantity: 1
-            }
-           
-            await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID, item, [Permission.read(Role.any())])
-    
-            window.location.reload();
-        }else{
-            const item = {  
-                "itemID": findItem[0].$id,
-                "category": findItem[0].category,
-                "description": findItem[0].description,
-                "manufacturer": findItem[0].manufacturer,
-                "name": findItem[0].name,
-                "price": findItem[0].price,
-                "email": localStorage.getItem("email"),
-                "quantity": quantity ? quantity + findCartItem[0].quantity : 1 + findCartItem[0].quantity
-            }
-           
-            await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID, findCartItem[0].$id, item)
-    
-            window.location.reload();
-        }
- 
-
-    }catch(err){
-        console.error(err);
-    }
-}
 
 function renderInventoryQuantityOptions(itemName: string, cart: CartItem[], setItemQuantity:(e:number)=>void, quantity: number){
     const options = []
@@ -115,26 +63,6 @@ function renderInventoryQuantityOptions(itemName: string, cart: CartItem[], setI
 }
 
 
-export async function EditCart(item: CartItem){
-    try{
-        const cartItem = {  
-            "itemID": item.$id,
-            "category": item.category,
-            "description": item.description,
-            "manufacturer": item.manufacturer,
-            "name": item.name,
-            "price": item.price,
-            "email": localStorage.getItem("email"),
-            "quantity": item.quantity
-        }
-       
-        await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID, item.$id, cartItem)
-
-        window.location.reload();
-    }catch(err){
-        console.error(err)
-    }
-}
 
 export function CurrentInventory(cart: CartItem[], inventory: InventoryItem[], setItemQuantity: (e:number)=>void, quantity: number | undefined){
     //iterate through inventory
@@ -262,11 +190,3 @@ export function DefaultInventory(props: DefaultInventoryDisplay){
      })
 }
 
-export async function GetCart(setCart: (e:CartItem[])=>void){
-    try{    
-        const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID);
-        setCart(data.documents)
-    }catch(err){
-        console.error(err)
-    }
-}

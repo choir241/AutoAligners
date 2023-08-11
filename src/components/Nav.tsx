@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react"
 import {ButtonLink,ButtonSubmit} from "../components/Button"
 import {handleLogout} from "../hooks/LoginHooks"
 import {Link} from "react-router-dom"
-import {GetCart, CartItem} from "../hooks/InventoryHooks"
+import {GetCart, CartItem} from "../hooks/CartHooks"
 
 interface nav{
     pageHeading: string

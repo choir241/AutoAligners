@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from "react"
-import {GetCart, CartItem, GetInventory, InventoryItem} from "../../hooks/InventoryHooks"
+import {GetInventory, InventoryItem} from "../../hooks/InventoryHooks"
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
 import {ButtonLink} from "../../components/Button"
-import {RenderCart} from "../../hooks/CartHooks"
+import {RenderCart, GetCart, CartItem} from "../../hooks/CartHooks"
 
 export default function Cart(){
 
