@@ -101,7 +101,11 @@ function renderInventoryQuantityOptions(itemName: string, cart: CartItem[], setI
     }
 
     for(let i = 1; i <= quantity; i++){
-        options.push(<option key = {`option-${i}`} value={i}>{i}</option>)
+        if(!quantity){
+            options.push(<option key = {`option-0`} value={0}>{0}</option>)
+        }else{
+            options.push(<option key = {`option-${i}`} value={i}>{i}</option>)
+        }
     }
     return(
         <select onChange = {(e)=>setItemQuantity(parseInt(e.target.value))}>
@@ -111,8 +115,25 @@ function renderInventoryQuantityOptions(itemName: string, cart: CartItem[], setI
 }
 
 
-export function EditCart(quantity: number){
-    console.log(quantity)
+export async function EditCart(item: CartItem){
+    try{
+        const cartItem = {  
+            "itemID": item.$id,
+            "category": item.category,
+            "description": item.description,
+            "manufacturer": item.manufacturer,
+            "name": item.name,
+            "price": item.price,
+            "email": localStorage.getItem("email"),
+            "quantity": item.quantity
+        }
+       
+        await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID, item.$id, cartItem)
+
+        window.location.reload();
+    }catch(err){
+        console.error(err)
+    }
 }
 
 export function CurrentInventory(cart: CartItem[], inventory: InventoryItem[], setItemQuantity: (e:number)=>void, quantity: number | undefined){

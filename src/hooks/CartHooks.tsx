@@ -16,12 +16,12 @@ export function RenderCartQuantity(props: RenderCartQuantity){
 
     const findItem = props?.inventory.filter((item:InventoryItem)=>item.name === props.name)
 
-    for(let i = 1;i < findItem[0].quantity; i++){
+    for(let i = 1;i <= findItem[0].quantity; i++){
             cartQuantity.push(<option key = {`k-${i}`}>{i}</option>)
     }
     
     return(
-        <select name="" id="" defaultValue = {props.cartItemQuantity ? props.cartItemQuantity : props.quantity}onChange = {(e)=>props.setCartItemQuantity(e.target.value)}>
+        <select name="" id="" defaultValue = {props.cartItemQuantity ? props.cartItemQuantity : props?.quantity}onChange = {(e)=>props.setCartItemQuantity(e.target.value)}>
             {cartQuantity}
         </select>
     )
@@ -62,7 +62,8 @@ export function RenderCart(cart: CartItem[], inventory: InventoryItem[], cartIte
                 total += "." + decimals
             }
 
-                    
+            const checkCartQuantity = cartItemQuantity ? cartItemQuantity : item.quantity
+                                
             if(cart.length === 1){
 
                 
@@ -71,7 +72,7 @@ export function RenderCart(cart: CartItem[], inventory: InventoryItem[], cartIte
 
                         <div className="flex justifyBetween">
                         <h2>{item.name} <i className = "fa-solid fa-xmark button"></i></h2>
-                        <h2>Quantity: {RenderCartQuantity({name: item.name, quantity: item.quantity, inventory: inventory, cartItemQuantity: cartItemQuantity, setCartItemQuantity: (e:string)=>setCartItemQuantity(e)})} {Button({text: "Update", handleButtonClick: ()=>EditCart(parseInt(cartItemQuantity ? cartItemQuantity : item.quantity))})}</h2>
+                        <h2>Quantity: {RenderCartQuantity({name: item.name, quantity: item.quantity, inventory: inventory, cartItemQuantity: cartItemQuantity, setCartItemQuantity: (e:string)=>setCartItemQuantity(e)})} {Button({text: "Update", handleButtonClick: ()=>EditCart({name: item.name, price: item.price, email: item.email, quantity: checkCartQuantity, manufacturer: item.manufacturer, description: item.description, category: item.category, $id: item.$id, itemID: item.itemID})})}</h2>
                         <h2>${parseInt(item?.quantity) > 1 ? itemPriceTotal  : item.price}</h2>
                         </div>
                         <div className = "flex cartTotal justifyBetween" key = {total}><h2>Total: </h2> <h2>${total}</h2></div>
@@ -86,7 +87,7 @@ export function RenderCart(cart: CartItem[], inventory: InventoryItem[], cartIte
                     <div className="flex justifyBetween">
                     <h2>{item.name} <i className = "fa-solid fa-xmark button"></i></h2>
                     <h2>${item.price}</h2>
-                    <h2>Quantity: {RenderCartQuantity({name: item.name, quantity: item.quantity, inventory: inventory, cartItemQuantity: cartItemQuantity, setCartItemQuantity: (e:string)=>setCartItemQuantity(e)})} {Button({text: "Update", handleButtonClick: ()=>EditCart(parseInt(cartItemQuantity ? cartItemQuantity : item.quantity))})}</h2>
+                    <h2>Quantity: {RenderCartQuantity({name: item.name, quantity: item.quantity, inventory: inventory, cartItemQuantity: cartItemQuantity, setCartItemQuantity: (e:string)=>setCartItemQuantity(e)})} {Button({text: "Update", handleButtonClick: ()=>EditCart({name: item.name, price: item.price, email: item.email, quantity: checkCartQuantity, manufacturer: item.manufacturer, description: item.description, category: item.category, $id: item.$id, itemID: item.itemID})})}</h2>
                     <h2>${parseInt(item?.quantity) > 1 ? itemPriceTotal  : item.price}</h2>
                     </div>
 
@@ -100,7 +101,7 @@ export function RenderCart(cart: CartItem[], inventory: InventoryItem[], cartIte
                     <div className="flex justifyBetween">
                     <h2>{item.name} <i className = "fa-solid fa-xmark button"></i></h2>
                     <h2>${item.price}</h2>
-                    <h2>Quantity: {RenderCartQuantity({name: item.name, quantity: item.quantity, inventory: inventory, cartItemQuantity: cartItemQuantity, setCartItemQuantity: (e:string)=>setCartItemQuantity(e)})} {Button({text: "Update", handleButtonClick: ()=>EditCart(parseInt(cartItemQuantity ? cartItemQuantity : item.quantity))})}</h2>
+                    <h2>Quantity: {RenderCartQuantity({name: item.name, quantity: item.quantity, inventory: inventory, cartItemQuantity: cartItemQuantity, setCartItemQuantity: (e:string)=>setCartItemQuantity(e)})} {Button({text: "Update", handleButtonClick: ()=>EditCart({name: item.name, price: item.price, email: item.email, quantity: checkCartQuantity, manufacturer: item.manufacturer, description: item.description, category: item.category, $id: item.$id, itemID: item.itemID})})}</h2>
                     <h2>${parseInt(item?.quantity) > 1 ? itemPriceTotal  : item.price}</h2>
 
                     </div>
