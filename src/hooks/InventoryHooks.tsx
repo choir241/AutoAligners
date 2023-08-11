@@ -157,7 +157,7 @@ export async function HandlePurchaseItem(props: Item){
 
             await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_INVENTORY_COLLECTION_ID, item, [Permission.read(Role.any())])
 
-            // window.location.reload();
+            window.location.reload();
         }else{
             let quantity = 0
             if(props.itemQuantity){
@@ -180,7 +180,7 @@ export async function HandlePurchaseItem(props: Item){
 
             await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_INVENTORY_COLLECTION_ID, checkForDuplicates[0].$id,item)
 
-            // window.location.reload();
+            window.location.reload();
         }
 
        
