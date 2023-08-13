@@ -139,6 +139,31 @@ async function handleMakeCartPurchase(item: CartItem[]){
             "cartItems": itemsAsString
         }
 
+        const inventoryData = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_INVENTORY_COLLECTION_ID)
+
+        const list:any  = []
+
+        inventoryData.documents.forEach(async(inventoryItem:CartItem)=>{
+            for(let i = 0; i < item.length; i++){
+                if(item[i].name === inventoryItem.name){
+                    const quantity = Number(inventoryItem.quantity) - Number(item[i].quantity)
+                    const inventoryID = inventoryItem.$id
+
+                    const cartItem = {
+                        name: inventoryItem.name,
+                        price: inventoryItem.price,
+                        manufacturer: inventoryItem.manufacturer,
+                        description: inventoryItem.description,
+                        category: inventoryItem.category,
+                        quantity: quantity
+                    } 
+
+                    await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_INVENTORY_COLLECTION_ID, inventoryID, cartItem)
+
+                }
+            }
+        })
+
         const data = await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PURCHASES_COLLECTION_ID, cartItems, [Permission.read(Role.any())])
 
         for(let i = 0; i<item.length;i++){
@@ -171,8 +196,7 @@ export function RenderCart(cart: CartItem[], inventory: InventoryItem[], cartIte
             cartTotal += parseInt(itemPriceTotal.toString().split(".")[0])
 
             if(itemPriceTotal.toString().includes(".")){
-                decimalTotal += parseInt(itemPriceTotal.toString().split(".")[1]) 
-
+                decimalTotal += parseInt(itemPriceTotal.toFixed(2).toString().split(".")[1]) 
             }
 
             if(i === cart.length-1){
@@ -191,17 +215,17 @@ export function RenderCart(cart: CartItem[], inventory: InventoryItem[], cartIte
             }
 
             const checkCartQuantity = cartItemQuantity ? cartItemQuantity : item.quantity
-                                
+            total = Number(total).toFixed(2)
+
             if(cart.length === 1){
 
-                
-                return(
+            return(
                     <section className = "flex flex-col" key = {i}>
 
                         <div className="flex justifyBetween">
                         <h2>{item.name} <i className = "fa-solid fa-xmark button" onClick = {()=>handleDeleteCartItem(item.$id)}></i></h2>
                         <h2>Quantity: {RenderCartQuantity({name: item.name, quantity: item.quantity, inventory: inventory, cartItemQuantity: cartItemQuantity, setCartItemQuantity: (e:string)=>setCartItemQuantity(e)})} {Button({text: "Update", handleButtonClick: ()=>EditCart({name: item.name, price: item.price, email: item.email, quantity: checkCartQuantity, manufacturer: item.manufacturer, description: item.description, category: item.category, $id: item.$id, itemID: item.itemID})})}</h2>
-                        <h2>${parseInt(item?.quantity) > 1 ? itemPriceTotal  : item.price}</h2>
+                        <h2>${parseInt(item?.quantity) > 1 ? itemPriceTotal.toFixed(2)  : item.price}</h2>
                         </div>
                         <div className = "flex cartTotal justifyBetween" key = {total}><h2>Total: </h2> <h2>${total}</h2></div>
 
@@ -217,7 +241,7 @@ export function RenderCart(cart: CartItem[], inventory: InventoryItem[], cartIte
                     <h2>{item.name} <i className = "fa-solid fa-xmark button" onClick = {()=>handleDeleteCartItem(item.$id)}></i></h2>
                     <h2>${item.price}</h2>
                     <h2>Quantity: {RenderCartQuantity({name: item.name, quantity: item.quantity, inventory: inventory, cartItemQuantity: cartItemQuantity, setCartItemQuantity: (e:string)=>setCartItemQuantity(e)})} {Button({text: "Update", handleButtonClick: ()=>EditCart({name: item.name, price: item.price, email: item.email, quantity: checkCartQuantity, manufacturer: item.manufacturer, description: item.description, category: item.category, $id: item.$id, itemID: item.itemID})})}</h2>
-                    <h2>${parseInt(item?.quantity) > 1 ? itemPriceTotal  : item.price}</h2>
+                    <h2>${parseInt(item?.quantity) > 1 ? itemPriceTotal.toFixed(2)   : item.price}</h2>
                     </div>
 
                 </section>
@@ -231,7 +255,7 @@ export function RenderCart(cart: CartItem[], inventory: InventoryItem[], cartIte
                     <h2>{item.name} <i className = "fa-solid fa-xmark button" onClick = {()=>handleDeleteCartItem(item.$id)}></i></h2>
                     <h2>${item.price}</h2>
                     <h2>Quantity: {RenderCartQuantity({name: item.name, quantity: item.quantity, inventory: inventory, cartItemQuantity: cartItemQuantity, setCartItemQuantity: (e:string)=>setCartItemQuantity(e)})} {Button({text: "Update", handleButtonClick: ()=>EditCart({name: item.name, price: item.price, email: item.email, quantity: checkCartQuantity, manufacturer: item.manufacturer, description: item.description, category: item.category, $id: item.$id, itemID: item.itemID})})}</h2>
-                    <h2>${parseInt(item?.quantity) > 1 ? itemPriceTotal  : item.price}</h2>
+                    <h2>${parseInt(item?.quantity) > 1 ? itemPriceTotal.toFixed(2)   : item.price}</h2>
 
                     </div>
 
