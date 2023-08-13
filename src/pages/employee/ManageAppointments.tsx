@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react"
 import {Appointment, getAppointmentData} from "../../hooks/ReservationHooks"
 import Nav from "../../components/Nav"
 import { displayAppointments } from "../../hooks/ManageAppointmentHooks"
+import EmployeeNav from "../../components/EmployeeNav"
 
 export default function ManageAppointments(){
 
@@ -14,8 +15,9 @@ export default function ManageAppointments(){
 
     return(
         <main>
-            <Nav pageHeading = ""/>
-            <h1>Manage Appointments</h1>
+            <Nav pageHeading = "Manage Appointments"/>
+            <EmployeeNav/>
+
             <section className = "flex">
                 <i className="fa-solid fa-list appointmentContainer" onClick = {()=>setClassNameContainer("listAppointmentContainer")}></i>
                 <i className="fa-solid fa-grip appointmentContainer" onClick = {()=>setClassNameContainer("appointmentContainer")}></i>

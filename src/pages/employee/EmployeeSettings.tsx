@@ -3,7 +3,7 @@ import Nav from "../../components/Nav"
 import React, {useState, useEffect} from "react"
 import {Button, ButtonLink} from "../../components/Button"
 import {updateAccountEmail, GetAccount, handleDeleteAccount, updateAccountName, updateAccountPassword, Input, User} from "../../hooks/LoginHooks"
-
+import EmployeeNav from "../../components/EmployeeNav"
 
 export default function EmployeeSettings():React.JSX.Element{
 
@@ -25,6 +25,7 @@ export default function EmployeeSettings():React.JSX.Element{
     return(
         <main id = "employeeSettings">
           <Nav pageHeading = {"Settings"}/>
+          <EmployeeNav/>
 
             <section className = "flex flex-col alignCenter settings">
 

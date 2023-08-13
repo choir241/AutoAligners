@@ -3,6 +3,7 @@ import {Button} from "../components/Button"
 import api from "../api/api"
 import {InventoryItem} from "./InventoryHooks"
 import {Permission, Role} from "appwrite"
+import {toast} from "react-toastify"
 
 export interface CartItem{
     $id: string,
@@ -141,9 +142,9 @@ async function handleMakeCartPurchase(item: CartItem[]){
 
         const inventoryData = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_INVENTORY_COLLECTION_ID)
 
-        const list:any  = []
+        if(item){
 
-        inventoryData.documents.forEach(async(inventoryItem:CartItem)=>{
+        inventoryData.documents.forEach(async(inventoryItem:InventoryItem)=>{
             for(let i = 0; i < item.length; i++){
                 if(item[i].name === inventoryItem.name){
                     const quantity = Number(inventoryItem.quantity) - Number(item[i].quantity)
@@ -160,6 +161,21 @@ async function handleMakeCartPurchase(item: CartItem[]){
 
                     await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_INVENTORY_COLLECTION_ID, inventoryID, cartItem)
 
+
+                    if(inventoryItem.reOrderLV >= quantity){
+
+                        const updateCartItem = {
+                            name: inventoryItem.name,
+                            price: inventoryItem.price,
+                            manufacturer: inventoryItem.manufacturer,
+                            description: inventoryItem.description,
+                            category: inventoryItem.category,
+                            quantity: quantity + inventoryItem.reOrderLV
+                        } 
+    
+
+                        await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_INVENTORY_COLLECTION_ID, inventoryID, updateCartItem)
+                    }
                 }
             }
         })
@@ -173,6 +189,10 @@ async function handleMakeCartPurchase(item: CartItem[]){
 
         if(data){
             window.location.reload();
+        }
+
+        }else{
+            toast.error("Please add item to cart")
         }
 
     }catch(err){
@@ -223,8 +243,10 @@ export function RenderCart(cart: CartItem[], inventory: InventoryItem[], cartIte
                     <section className = "flex flex-col" key = {i}>
 
                         <div className="flex justifyBetween">
-                        <h2>{item.name} <i className = "fa-solid fa-xmark button" onClick = {()=>handleDeleteCartItem(item.$id)}></i></h2>
-                        <h2>Quantity: {RenderCartQuantity({name: item.name, quantity: item.quantity, inventory: inventory, cartItemQuantity: cartItemQuantity, setCartItemQuantity: (e:string)=>setCartItemQuantity(e)})} {Button({text: "Update", handleButtonClick: ()=>EditCart({name: item.name, price: item.price, email: item.email, quantity: checkCartQuantity, manufacturer: item.manufacturer, description: item.description, category: item.category, $id: item.$id, itemID: item.itemID})})}</h2>
+                            <div className="flex justifyBetween alignCenter">
+                                <h2>{item.name}</h2><i className = "fa-solid fa-xmark button" onClick = {()=>handleDeleteCartItem(item.$id)}></i>
+                            </div>
+                                <h2>Quantity: {RenderCartQuantity({name: item.name, quantity: item.quantity, inventory: inventory, cartItemQuantity: cartItemQuantity, setCartItemQuantity: (e:string)=>setCartItemQuantity(e)})} {Button({text: "Update", handleButtonClick: ()=>EditCart({name: item.name, price: item.price, email: item.email, quantity: checkCartQuantity, manufacturer: item.manufacturer, description: item.description, category: item.category, $id: item.$id, itemID: item.itemID})})}</h2>
                         <h2>${parseInt(item?.quantity) > 1 ? itemPriceTotal.toFixed(2)  : item.price}</h2>
                         </div>
                         <div className = "flex cartTotal justifyBetween" key = {total}><h2>Total: </h2> <h2>${total}</h2></div>

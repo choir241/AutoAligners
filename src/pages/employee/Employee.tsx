@@ -3,11 +3,15 @@ import Footer from "../../components/Footer"
 import React, {useState, useEffect, useMemo} from "react"
 import {ButtonSubmit, Button, ButtonLink} from "../../components/Button"
 import {User, GenerateNewEmployee, handleLogin, GetAccount, GetUsers, DisplayUsers, Input, handleSignUp} from "../../hooks/LoginHooks"
+import EmployeeNav from "../../components/EmployeeNav"
 
 export function EmployeeButtons(){
     return(
         <main className = "flex flex-col justifyBetween">
-                <Nav pageHeading = {""}/>
+                <Nav pageHeading = {"Employee Hub"}/>
+
+                <EmployeeNav/>
+
             <section className = "flex flex-col alignCenter" id = "employee">
             <h1 className = "textAlignCenter">Employee Hub</h1>
                 <nav>

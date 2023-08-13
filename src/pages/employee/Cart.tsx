@@ -2,8 +2,8 @@ import React, {useState, useEffect} from "react"
 import {GetInventory, InventoryItem} from "../../hooks/InventoryHooks"
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
-import {ButtonLink} from "../../components/Button"
 import {RenderCart, GetCart, CartItem} from "../../hooks/CartHooks"
+import EmployeeNav from "../../components/EmployeeNav"
 
 export default function Cart(){
 
@@ -24,12 +24,7 @@ export default function Cart(){
         <main id = "cart">
             <Nav pageHeading = {"Cart"}/>
             
-            <div className="flex flex-col alignStart">
-            {ButtonLink({classNames: "goBack", text: "Inventory", domain: "/inventory"})}
-            {ButtonLink({classNames: "goBack", text: "Employee Shop", domain: "/inventoryShop"})}
-            {ButtonLink({classNames: "goBack", text: "Settings", domain: "/settings"})}
-
-            </div>
+            <EmployeeNav/>
 
             <section className = "flex justifyBetween cart">
 
