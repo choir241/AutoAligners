@@ -42,7 +42,7 @@ ChartJS.register(
   
 
 
-export default function LineGraph(props:GraphLabels){
+export default function BarGraph(props:GraphLabels){
 
     const labels = []
 

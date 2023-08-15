@@ -2,23 +2,48 @@ import React, {useState, useEffect} from "react"
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
 import EmployeeNav from "../../components/EmployeeNav"
-import LineGraph from "../../components/Graph"
+import BarGraph from "../../components/Graphs/BarGraph"
+import LineGraph from "../../components/Graphs/LineGraph"
+import HorizontalBarGraph from "../../components/Graphs/HorizontalBarGraph"
+
 import {GetPurchasedProfit, GetPurchases, PurchasedItem, GetPurchasedQuantities} from "../../hooks/PurchasesHooks"
+import {Button} from "../../components/Button"
 
 export default function Purchases(){
 
     const [purchases,setPurchases]= useState<PurchasedItem[]>([]);
-  
+    const [display, setDisplay] = useState<string>("bar");
+
     useEffect(()=>{
         GetPurchases((e:PurchasedItem[])=>setPurchases(e));
     },[])
+
 
     return(
         <main id = "purchase">
             <Nav pageHeading = {"Purchase History"}/>
             <EmployeeNav/>
-                <section>
-                    <LineGraph cartLength = {purchases.length} profits = {GetPurchasedProfit(purchases)} quantities ={GetPurchasedQuantities(purchases)}/>
+                <section className = "flex flex-col alignCenter justifyBetween">
+
+                    <section className = "flex justifyBetween buttons">
+                        {Button({text:"", handleButtonClick: ()=>setDisplay("bar"), classNames: "fa-solid fa-chart-column"})}
+                        {Button({text:"", handleButtonClick: ()=>setDisplay("line"), classNames: "fa-solid fa-chart-line"})}
+                        {Button({text:"", handleButtonClick: ()=>setDisplay("horizontalBar"), classNames: "fa-solid fa-chart-bar"})}
+
+                    </section>
+
+                    <section className = "lineChart graph">
+                        {display === "bar" ? <BarGraph cartLength = {purchases.length} profits = {GetPurchasedProfit(purchases)} quantities ={GetPurchasedQuantities(purchases)}/> : ""}
+                    </section>
+
+                    <section className = "lineChart graph">
+                        {display === "line" ? <LineGraph cartLength = {purchases.length} profits = {GetPurchasedProfit(purchases)} quantities ={GetPurchasedQuantities(purchases)}/> : ""}
+                    </section>
+
+                    <section className = "pieChart graph">
+                        {display === "horizontalBar" ? <HorizontalBarGraph quantities = {GetPurchasedQuantities(purchases)} label = {"Profit"} cartLength = {purchases.length} profits = {GetPurchasedProfit(purchases)}/> : ""}
+                    </section>
+
                 </section>
             <Footer/>
         </main>

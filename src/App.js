@@ -1,6 +1,6 @@
 import {BrowserRouter} from "react-router-dom"
 import {Route, Routes} from "react-router"
-import {PrivateRoutes, PublicRoutes} from "./middleware/Routes"
+import {PrivateRoutes, PublicRoutes, PurchaseRoutes} from "./middleware/Routes"
 import {lazy, Suspense} from "react"
 import {ToastContainer} from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
@@ -28,7 +28,6 @@ const App = () => {
                 <Routes>
                   <Route exact path = "/" element = {<Home/>}/>
                   <Route path = "/employee" element = {<Employee/>}/>
-
                     <Route element = {<PublicRoutes/>}>
                         <Route path = "/finance" element = {<Finance/>}/>
                         <Route path = "/login" element = {<EmployeeHub/>}/>
@@ -40,10 +39,14 @@ const App = () => {
                         <Route path = "/cart" element = {<Cart/>}/>
                         <Route path = "/inventory" element = {<Inventory/>}/>
                         <Route path = "/inventoryShop" element = {<InventoryShop/>}/>
-                        <Route path = "/purchases" element = {<Purchases/>}/>
                         <Route path = "/settings" element = {<EmployeeSettings/>}/>
                         <Route path = "/manageAppointments" element = {<ManageAppointments/>}/>
                         <Route path = "/editAppointment" element = {<EditAppointment/>}/>
+
+                        <Route element = {<PurchaseRoutes/>}>
+                            <Route path = "/purchases" element = {<Purchases/>}/>
+                        </Route>
+
                     </Route>
                 </Routes>
             </BrowserRouter>

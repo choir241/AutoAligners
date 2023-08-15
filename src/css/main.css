@@ -14,16 +14,37 @@
     border: 2px solid black;
 }
 
+#purchase .buttons{
+   width: 20%;
+}
 
 #purchase .graph{
-    margin-bottom: 2rem;
+    margin-top: 3rem;
 }
+
+#purchase .pieChart{
+    width: 50%;
+}
+
+#purchase .lineChart{
+    width: 70%;
+}
+
 
 /* Cart
    ========================================================================== */
    #cart .cart .cartContainer{
-    width: 100%;
+    width: 70%;
     padding: 2rem;
+   }
+
+   #cart .payment form{
+    margin-top: 2rem;
+    width: 50%;
+   }
+
+   #cart .payment section{
+    width: 60%;
    }
 
    #cart .cartContainer section{
@@ -41,6 +62,32 @@
 
    #cart .fa-xmark.button.fa-solid{
     margin-left: 2rem;
+   }
+
+   
+   #cart .imageContainer{
+    width: 30%;
+   }
+
+   #cart .payment .imageContainer img{
+    width: 100%;
+   }
+
+  
+
+   #cart .payment{
+    width: 100%;    
+    align-self: flex-start;
+   }
+
+   #cart .imageContainer{
+    display: flex;
+    align-items: center;
+   }
+
+   #cart .imageContainer img:hover{
+    cursor: pointer;
+    opacity: 80%;
    }
 
 /* Inventory
@@ -265,6 +312,11 @@ nav span{
 nav .cart{
     position: relative;
 }
+
+.employeeNav, .employeeNav .button{
+    margin-top: 1.5rem;
+}
+
 
 /* Header
    ========================================================================== */

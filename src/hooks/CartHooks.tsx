@@ -4,6 +4,7 @@ import api from "../api/api"
 import {InventoryItem} from "./InventoryHooks"
 import {Permission, Role} from "appwrite"
 import {toast} from "react-toastify"
+import Assets from "../components/Assets"
 
 export interface CartItem{
     $id: string,
@@ -17,6 +18,12 @@ export interface CartItem{
     quantity: string,
 }
 
+export interface CardInfo{
+    cardNumber: number,
+    securityNumber: string,
+    expirationDate: string,
+    type: string,
+}
 
 interface renderCartQuantity{
     name:string, 
@@ -24,6 +31,50 @@ interface renderCartQuantity{
     inventory: InventoryItem[],
     cartItemQuantity: string | undefined,
     setCartItemQuantity: (e:string) => void
+}
+
+export function RenderPaymentForm(cardInfo: CardInfo | undefined, setCardInfo: (e:CardInfo)=>void){
+    return(
+        <section className = "flex payment">
+            <form className = "flex flex-col alignCenter">
+                <input type = "text" defaultValue = {cardInfo?.cardNumber} disabled/>
+                <input type = "text" defaultValue = {cardInfo?.expirationDate} disabled/>
+                <input type = "text" defaultValue = {cardInfo?.securityNumber} maxLength={4} disabled/>
+            </form>
+    
+            <section className = "flex justifyBetween">
+                <div className="imageContainer" 
+                onClick = {()=>
+                    setCardInfo({
+                        "type": "Visa",
+                        "cardNumber": 4716108999716531,
+                        "securityNumber": "257",
+                        "expirationDate": "01/32"})}>
+                    <img src = {Assets.visa} alt = "The logo for VISA, with a purple border on top, gold border on the bottom, the text visa in all capitals in purple text in the center, and a white background."/>
+                </div>
+                <div className="imageContainer" 
+                    onClick = {()=>
+                        setCardInfo({
+                        "type": "Master Card",
+                        "cardNumber": 5281037048916168,
+                        "securityNumber": "043",
+                        "expirationDate": "12/84"})}>
+                    <img src = {Assets.mastercard} alt = "The logo for MasterCard, with a purple background, and a ven diagram where the left circle is red, the right circle is gold, and the text mastercard has the m and c capitalized and in the center of the venn diagram."/>
+                </div>
+                <div className="imageContainer" 
+                    onClick = {()=>
+                        setCardInfo({
+                        "type": "American Express",
+                        "cardNumber": 342498818630298,
+                        "securityNumber": "3156",
+                        "expirationDate": "05/99"
+                        })
+                    }>
+                    <img src = {Assets.amex} alt = "The logo for American Expresss, with a sky blue background, white border encasing the text amex, which is all upper cased and in the center."/>
+                </div>
+            </section> 
+    </section>
+    )
 }
 
 export async function GetCart(setCart: (e:CartItem[])=>void){
@@ -132,8 +183,10 @@ async function handleDeleteCartItem(cartID: string){
     }
 }
 
-async function handleMakeCartPurchase(item: CartItem[]){
+async function handleMakeCartPurchase(item: CartItem[], cardInfo: CardInfo | undefined, total: string){
     try{
+        if(item && cardInfo?.cardNumber){
+
         const itemsAsString = item.map((item:CartItem)=>JSON.stringify(item))
 
         const cartItems = {
@@ -186,13 +239,30 @@ async function handleMakeCartPurchase(item: CartItem[]){
             await api.deleteDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID, item[i].$id);
         }
 
+        const cardNumber = cardInfo?.cardNumber
+        const cardExpiration = cardInfo?.expirationDate
+        const cardSecurity = cardInfo?.securityNumber
+        const cardType = cardInfo?.type
 
-        if(data){
+        const paymentObj ={
+            cardNumber,
+            cardExpiration,
+            cardSecurity,
+            cardType,
+            total
+        }
+
+        const response = await api.createDocument(process.env.REACT_APP_CART_DATABASE_ID, process.env.REACT_APP_PAYMENTS_COLLECTION_ID, paymentObj, [Permission.read(Role.any())])
+
+        if(data && response){
             window.location.reload();
         }
 
+        }
+
+
         }else{
-            toast.error("Please add item to cart")
+            toast.error("Error Occured, please ensure all items are filled out before trying again");
         }
 
     }catch(err){
@@ -200,7 +270,7 @@ async function handleMakeCartPurchase(item: CartItem[]){
     }
 } 
 
-export function RenderCart(cart: CartItem[], inventory: InventoryItem[], cartItemQuantity: string | undefined, setCartItemQuantity: (e:string)=>void){
+export function RenderCart(cart: CartItem[], inventory: InventoryItem[], cartItemQuantity: string | undefined, setCartItemQuantity: (e:string)=>void, cardInfo: CardInfo | undefined, setCardInfo: (e:CardInfo)=>void){
 
     if(cart?.length){
         const findUsersCart = cart.filter((item: CartItem, i: number)=>item.email === localStorage.getItem("email"));
@@ -251,7 +321,9 @@ export function RenderCart(cart: CartItem[], inventory: InventoryItem[], cartIte
                         </div>
                         <div className = "flex cartTotal justifyBetween" key = {total}><h2>Total: </h2> <h2>${total}</h2></div>
 
-                        {Button({text: "Purchase Items", handleButtonClick: ()=>handleMakeCartPurchase(cart)})}
+                        {RenderPaymentForm(cardInfo, (e:CardInfo)=>setCardInfo(e))}
+                
+                        {Button({text: "Purchase Items", handleButtonClick: ()=>handleMakeCartPurchase(cart, cardInfo, total)})}
                     </section>
                 )
 
@@ -282,7 +354,10 @@ export function RenderCart(cart: CartItem[], inventory: InventoryItem[], cartIte
                     </div>
 
                     <div className = "flex cartTotal justifyBetween" key = {total}><h2>Total: </h2><h2>${total}</h2></div>
-                    {Button({text: "Purchase Items", handleButtonClick: ()=>handleMakeCartPurchase(cart)})}
+
+                    {RenderPaymentForm(cardInfo, (e:CardInfo)=>setCardInfo(e))}
+
+                    {Button({text: "Purchase Items", handleButtonClick: ()=>handleMakeCartPurchase(cart, cardInfo, total)})}
 
                 </section>
                 )
