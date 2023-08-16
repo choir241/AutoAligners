@@ -80,7 +80,7 @@ export function CurrentInventory(cart: CartItem[], inventory: InventoryItem[], s
                     <h2>${inventoryItems.price}</h2>
                     <p>{inventoryItems.description}</p>
                     {renderInventoryQuantityOptions(inventoryItems.name, cart, (e)=>setItemQuantity(e), inventoryItems.quantity)}
-                    {Button({classNames: "clearButton", text: "Add To Cart", handleButtonClick: ()=> {handleAddToCart(cart, inventoryItems.$id,inventory, quantity)}})}
+                    {Button({classNames: "clearButton", text: "Add To Cart", handleButtonClick: ()=> {handleAddToCart({cart: cart, $id: inventoryItems.$id,inventory: inventory, quantity: quantity})}})}
             </section>
         )
     })

@@ -19,15 +19,12 @@
 }
 
 #purchase .graph{
-    margin-top: 3rem;
+    width: 100%;
+    margin-top: 1rem;
 }
 
-#purchase .pieChart{
-    width: 50%;
-}
-
-#purchase .lineChart{
-    width: 70%;
+#purchase .clearButton{
+    margin: 2rem 2rem 4rem 2rem;
 }
 
 

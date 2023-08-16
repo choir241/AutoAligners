@@ -10,11 +10,17 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2'
+import PaginatedButtons from './PaginatedButtons';
 
 interface GraphLabels{
   quantities: number[],
   profits: any[],
-  cartLength: number
+  cartLength: number,
+  currentPage: number,
+  setCurrentPage: (e:number) => void,
+  rowsPerPage: number,
+  startIndex: number,
+  endIndex: number
 }
 
 
@@ -33,11 +39,7 @@ ChartJS.register(
     plugins: {
       legend: {
         position: 'top' as const,
-      },
-      title: {
-        display: true,
-        text: 'Chart.js Bar Chart',
-      },
+      }
     },
 
   }
@@ -46,9 +48,13 @@ ChartJS.register(
 
 export default function LineGraph(props:GraphLabels){
 
+  const handlePageChange = (newPage:number) => {
+    props.setCurrentPage(newPage);
+  }
+
     const labels = []
 
-    for(let i = 1; i< props.cartLength; i++){
+    for(let i = 1; i<= props.rowsPerPage; i++){
       labels.push(`Purchase ${i}`)
     }
 
@@ -57,16 +63,22 @@ export default function LineGraph(props:GraphLabels){
         datasets: [
           {
             label: 'Quantities Sold',
-            data: props.quantities,
+            data: props.quantities.slice(props.startIndex, props.endIndex),
             borderColor: 'rgb(75, 192, 192)',
           },
           {
             label: 'Total Profit',
-            data: props.profits,
+            data: props.profits.slice(props.startIndex, props.endIndex),
             borderColor: 'rgb(255, 99, 132)',
           },
         ],
       };
 
-        return <Line data={data} options ={options}/>;
+        return (
+          <section>
+            <PaginatedButtons cartLength = {props.cartLength} setCurrentPage = {(e:number)=>props.setCurrentPage(e)} rowsPerPage={props.rowsPerPage}/>
+            <Line data={data} options ={options}/>
+            <PaginatedButtons cartLength = {props.cartLength} setCurrentPage = {(e:number)=>props.setCurrentPage(e)} rowsPerPage={props.rowsPerPage}/>
+          </section>
+              )
 }

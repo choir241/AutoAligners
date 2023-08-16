@@ -33,6 +33,14 @@ interface renderCartQuantity{
     setCartItemQuantity: (e:string) => void
 }
 
+interface AddToCart{
+    cart: CartItem[], 
+    $id: string | undefined, 
+    inventory: InventoryItem[], 
+    quantity: number | undefined
+}
+
+
 export function RenderPaymentForm(cardInfo: CardInfo | undefined, setCardInfo: (e:CardInfo)=>void){
     return(
         <section className = "flex payment">
@@ -77,49 +85,61 @@ export function RenderPaymentForm(cardInfo: CardInfo | undefined, setCardInfo: (
     )
 }
 
+//Get Cart database data
 export async function GetCart(setCart: (e:CartItem[])=>void){
     try{    
         const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID);
-        setCart(data.documents)
+        setCart(data.documents);
     }catch(err){
-        console.error(err)
+        console.error(err);
+        toast.error(`${err}`);
     }
 }
 
-export async function handleAddToCart(cart: CartItem[], $id: string | undefined, inventory: InventoryItem[], quantity: number | undefined){
+//When user add an item to the cart
+export async function handleAddToCart(props: AddToCart){
     try{
-        const findItem = inventory.filter((item:InventoryItem)=>item.$id === $id)
+        //find item in inventory database
+        const findItem = props.inventory.filter((item:InventoryItem)=>item.$id === props.$id)
 
-        const findCartItem = cart.filter((cartItem:CartItem)=>cartItem.name === findItem[0].name && localStorage.getItem("email") === cartItem.email);
+        //find item in cart using item object in the findItem array && current logged in user
+        const findCartItem = props.cart.filter((cartItem:CartItem)=>cartItem.name === findItem[0].name && localStorage.getItem("email") === cartItem.email);
 
+        const item = findItem[0];
+
+        //if there are no duplicates items currently in the cart using findCartItem 
         if(!findCartItem.length){
-            const item = {  
-                "itemID": findItem[0].$id,
-                "category": findItem[0].category,
-                "description": findItem[0].description,
-                "manufacturer": findItem[0].manufacturer,
-                "name": findItem[0].name,
-                "price": findItem[0].price,
+
+            const cartItem = {  
+                "itemID": item.$id,
+                "category": item.category,
+                "description": item.description,
+                "manufacturer": item.manufacturer,
+                "name": item.name,
+                "price": item.price,
                 "email": localStorage.getItem("email"),
-                "quantity": quantity ? quantity: 1
+                "quantity": props.quantity ? props.quantity: 1
             }
-           
-            await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID, item, [Permission.read(Role.any())])
+
+            //create item and add it to the cart database
+            await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID, cartItem, [Permission.read(Role.any())])
     
             window.location.reload();
         }else{
-            const item = {  
-                "itemID": findItem[0].$id,
-                "category": findItem[0].category,
-                "description": findItem[0].description,
-                "manufacturer": findItem[0].manufacturer,
-                "name": findItem[0].name,
-                "price": findItem[0].price,
+            //if there are duplicates items currently in the cart using findCartItem, add to the current existing quantity of respective item in the cart
+            const cartItem = {  
+                "itemID": item.$id,
+                "category": item.category,
+                "description": item.description,
+                "manufacturer": item.manufacturer,
+                "name": item.name,
+                "price": item.price,
                 "email": localStorage.getItem("email"),
-                "quantity": quantity ? quantity + findCartItem[0].quantity : 1 + findCartItem[0].quantity
+                "quantity": props.quantity ? props.quantity + findCartItem[0].quantity : 1 + findCartItem[0].quantity
             }
            
-            await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID, findCartItem[0].$id, item)
+            //and update the current data for the respective item
+            await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID, item.$id, cartItem)
     
             window.location.reload();
         }
@@ -127,9 +147,11 @@ export async function handleAddToCart(cart: CartItem[], $id: string | undefined,
 
     }catch(err){
         console.error(err);
+        toast.error(`${err}`);
     }
 }
 
+//When user changes quantity of item in the cart
 export async function EditCart(item: CartItem){
     try{
         const cartItem = {  
@@ -143,36 +165,38 @@ export async function EditCart(item: CartItem){
             "quantity": item.quantity
         }
        
-        await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID, item.$id, cartItem)
+        await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID, item.$id, cartItem);
 
         window.location.reload();
     }catch(err){
-        console.error(err)
+        console.error(err);
+        toast.error(`${err}`);
     }
 }
 
+//render select element with option elements from 1 to quantity value
 export function RenderCartQuantity(props: renderCartQuantity){
 
-    const cartQuantity = []
+    const cartQuantity = [];
 
-    const findItem = props?.inventory.filter((item:InventoryItem)=>item.name === props.name)
+    //find item in inventory database
+    const findItem = props?.inventory.filter((item:InventoryItem)=>item.name === props.name);
 
-    for(let i = 1;i <= findItem[0]?.quantity; i++){
-            cartQuantity.push(<option key = {`k-${i}`}>{i}</option>)
-    }
+    for(let i = 1; i <= findItem[0]?.quantity; i++){
+            cartQuantity.push(<option key = {`k-${i}`}>{i}</option>);
+    };
     
     return(
-        <select name="" id="" defaultValue = {props.cartItemQuantity ? props.cartItemQuantity : props?.quantity}onChange = {(e)=>props.setCartItemQuantity(e.target.value)}>
+        <select defaultValue = {props.cartItemQuantity ? props.cartItemQuantity : props?.quantity}onChange = {(e)=>props.setCartItemQuantity(e.target.value)}>
             {cartQuantity}
         </select>
     )
 }
 
+//when the user removes an item from the cart
 async function handleDeleteCartItem(cartID: string){
     try{
         const data = await api.deleteDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID, cartID);
-
-        console.log(data);
 
         if(data){
             window.location.reload();
@@ -180,93 +204,95 @@ async function handleDeleteCartItem(cartID: string){
 
     }catch(err){
         console.error(err);
+        toast.error(`${err}`);
     }
 }
 
-async function handleMakeCartPurchase(item: CartItem[], cardInfo: CardInfo | undefined, total: string){
+//When the user sells the items in the cart
+async function handleMakeCartPurchase(inventory: InventoryItem[], cart: CartItem[], cardInfo: CardInfo | undefined, total: string){
     try{
-        if(item && cardInfo?.cardNumber){
+        if(cart && cardInfo?.cardNumber){
 
-        const itemsAsString = item.map((item:CartItem)=>JSON.stringify(item))
+            //returns an array that converts all objects within the cart as a string
+            const cartAsString = cart.map((item:CartItem)=>JSON.stringify(item));
 
-        const cartItems = {
-            "cartItems": itemsAsString
-        }
+            const cartItems = {
+                "cartItems": cartAsString
+            }
 
-        const inventoryData = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_INVENTORY_COLLECTION_ID)
+            //go through each item in cart and each item in the inventory, and if they match names (because there are no duplicate items in the inventory), update that inventory items' quantity based on the purchase made from the cart
+            inventory.forEach(
+                async(inventoryItem:InventoryItem)=>{
+                    for(let i = 0; i < cart.length; i++){
+                        if(cart[i].name === inventoryItem.name){
 
-        if(item){
+                            const quantity = Number(inventoryItem.quantity) - Number(cart[i].quantity);
+                            const inventoryID = inventoryItem.$id;
 
-        inventoryData.documents.forEach(async(inventoryItem:InventoryItem)=>{
-            for(let i = 0; i < item.length; i++){
-                if(item[i].name === inventoryItem.name){
-                    const quantity = Number(inventoryItem.quantity) - Number(item[i].quantity)
-                    const inventoryID = inventoryItem.$id
+                            const cartItem = {
+                                name: inventoryItem.name,
+                                price: inventoryItem.price,
+                                manufacturer: inventoryItem.manufacturer,
+                                description: inventoryItem.description,
+                                category: inventoryItem.category,
+                                quantity: quantity
+                            } 
 
-                    const cartItem = {
-                        name: inventoryItem.name,
-                        price: inventoryItem.price,
-                        manufacturer: inventoryItem.manufacturer,
-                        description: inventoryItem.description,
-                        category: inventoryItem.category,
-                        quantity: quantity
-                    } 
-
-                    await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_INVENTORY_COLLECTION_ID, inventoryID, cartItem)
+                        await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_INVENTORY_COLLECTION_ID, inventoryID, cartItem);
 
 
-                    if(inventoryItem.reOrderLV >= quantity){
+                        //Upon purchase, if an items' quantity reaches the reOrderLV, or is below the reOrderLV value, update the appropriate cart items' quantity 
+                        if(inventoryItem.reOrderLV >= quantity){
 
-                        const updateCartItem = {
-                            name: inventoryItem.name,
-                            price: inventoryItem.price,
-                            manufacturer: inventoryItem.manufacturer,
-                            description: inventoryItem.description,
-                            category: inventoryItem.category,
-                            quantity: quantity + inventoryItem.reOrderLV
-                        } 
-    
+                            const updateCartItem = {
+                                name: inventoryItem.name,
+                                price: inventoryItem.price,
+                                manufacturer: inventoryItem.manufacturer,
+                                description: inventoryItem.description,
+                                category: inventoryItem.category,
+                                quantity: quantity + inventoryItem.reOrderLV
+                            } 
 
-                        await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_INVENTORY_COLLECTION_ID, inventoryID, updateCartItem)
+                            await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_INVENTORY_COLLECTION_ID, inventoryID, updateCartItem)
+                        }
                     }
                 }
+            })
+
+            const data = await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PURCHASES_COLLECTION_ID, cartItems, [Permission.read(Role.any())])
+
+            //remove all currently purchased items from the cart database
+            for(let i = 0; i<cart.length;i++){
+                await api.deleteDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID, cart[i].$id);
             }
-        })
 
-        const data = await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PURCHASES_COLLECTION_ID, cartItems, [Permission.read(Role.any())])
+            const cardNumber = cardInfo?.cardNumber
+            const cardExpiration = cardInfo?.expirationDate
+            const cardSecurity = cardInfo?.securityNumber
+            const cardType = cardInfo?.type
 
-        for(let i = 0; i<item.length;i++){
-            await api.deleteDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID, item[i].$id);
-        }
+            const paymentObj ={
+                cardNumber,
+                cardExpiration,
+                cardSecurity,
+                cardType,
+                total
+            }
 
-        const cardNumber = cardInfo?.cardNumber
-        const cardExpiration = cardInfo?.expirationDate
-        const cardSecurity = cardInfo?.securityNumber
-        const cardType = cardInfo?.type
+            const response = await api.createDocument(process.env.REACT_APP_CART_DATABASE_ID, process.env.REACT_APP_PAYMENTS_COLLECTION_ID, paymentObj, [Permission.read(Role.any())])
 
-        const paymentObj ={
-            cardNumber,
-            cardExpiration,
-            cardSecurity,
-            cardType,
-            total
-        }
+            if(data && response){
+                window.location.reload();
+            }
 
-        const response = await api.createDocument(process.env.REACT_APP_CART_DATABASE_ID, process.env.REACT_APP_PAYMENTS_COLLECTION_ID, paymentObj, [Permission.read(Role.any())])
+            }else{
+                toast.error("An error has occured, please ensure that all fields are filled out before continuing.")
+            }
 
-        if(data && response){
-            window.location.reload();
-        }
-
-        }
-
-
-        }else{
-            toast.error("Error Occured, please ensure all items are filled out before trying again");
-        }
 
     }catch(err){
-        console.error(err)
+        console.error(err);
+        toast.error(`${err}`);        
     }
 } 
 
@@ -323,7 +349,7 @@ export function RenderCart(cart: CartItem[], inventory: InventoryItem[], cartIte
 
                         {RenderPaymentForm(cardInfo, (e:CardInfo)=>setCardInfo(e))}
                 
-                        {Button({text: "Purchase Items", handleButtonClick: ()=>handleMakeCartPurchase(cart, cardInfo, total)})}
+                        {Button({text: "Purchase Items", handleButtonClick: ()=>handleMakeCartPurchase(inventory, cart, cardInfo, total)})}
                     </section>
                 )
 
@@ -357,7 +383,7 @@ export function RenderCart(cart: CartItem[], inventory: InventoryItem[], cartIte
 
                     {RenderPaymentForm(cardInfo, (e:CardInfo)=>setCardInfo(e))}
 
-                    {Button({text: "Purchase Items", handleButtonClick: ()=>handleMakeCartPurchase(cart, cardInfo, total)})}
+                    {Button({text: "Purchase Items", handleButtonClick: ()=>handleMakeCartPurchase(inventory, cart, cardInfo, total)})}
 
                 </section>
                 )

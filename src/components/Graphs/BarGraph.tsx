@@ -9,13 +9,24 @@ import {
     Tooltip,
     Legend,
   } from 'chart.js';
-
+import PaginatedButtons from "./PaginatedButtons";
   
 interface GraphLabels{
   quantities: number[],
   profits: any[],
-  cartLength: number
+  cartLength: number,
+  currentPage: number,
+  setCurrentPage: (e:number) => void,
+  rowsPerPage: number,
+  startIndex: number,
+  endIndex: number
 }
+
+
+// array of number elements are being passed through for the values of the datasets
+// only show the first 10 elements of that array
+// if the user clicks on button 2, then the next 10 elements of the array will be shown, but the previous 10 elements will be hidden
+
 
 ChartJS.register(
     CategoryScale,
@@ -39,32 +50,44 @@ ChartJS.register(
     },
 
   }
-  
 
 
 export default function BarGraph(props:GraphLabels){
 
-    const labels = []
+  
+  const handlePageChange = (newPage:number) => {
+    props.setCurrentPage(newPage);
+  }
 
-    for(let i = 0; i< props.cartLength; i++){
-      labels.push(`Label ${i}`)
-    }
+  const labels = [];
+
+  for(let i = 1; i <= props.rowsPerPage; i++){
+    labels.push(`Purchase ${i}`)
+  }
 
     const data = {
         labels: labels,
         datasets: [
           {
             label: 'Quantities Sold',
-            data: props.quantities,
+            data: props.quantities.slice(props.startIndex, props.endIndex),
             backgroundColor: 'rgb(75, 192, 192)',
           },
           {
             label: 'Total Profit',
-            data: props.profits,
+            data: props.profits.slice(props.startIndex, props.endIndex),
             backgroundColor: 'rgb(255, 99, 132)',
           },
         ],
       };
 
-        return <Bar data={data} />;
+        return(
+          <section>
+            <PaginatedButtons cartLength = {props.cartLength} setCurrentPage = {(e:number)=>props.setCurrentPage(e)} rowsPerPage={props.rowsPerPage}/>
+              <Bar data={data} />
+              <PaginatedButtons cartLength = {props.cartLength} setCurrentPage = {(e:number)=>props.setCurrentPage(e)} rowsPerPage={props.rowsPerPage}/>
+          </section>
+        )   
+        
+        
 }
