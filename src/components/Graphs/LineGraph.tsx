@@ -48,10 +48,6 @@ ChartJS.register(
 
 export default function LineGraph(props:GraphLabels){
 
-  const handlePageChange = (newPage:number) => {
-    props.setCurrentPage(newPage);
-  }
-
     const labels = []
 
     for(let i = 1; i<= props.rowsPerPage; i++){

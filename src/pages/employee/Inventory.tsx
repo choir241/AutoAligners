@@ -29,7 +29,7 @@ export default function Inventory(){
                 {ButtonLink({classNames: "goBack", text: "Go Back", domain: "/employee"})}
                 </div>
                 <section className = "itemContainer flex">
-                    {CurrentInventory(cart, inventory, (e:number)=>setItemQuantity(e), itemQuantity)}
+                    {CurrentInventory({cart: cart, inventory: inventory, setItemQuantity: (e:number)=>setItemQuantity(e), quantity: itemQuantity})}
                 </section>
             <Footer/>
         </main>

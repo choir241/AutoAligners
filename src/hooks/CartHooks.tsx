@@ -40,6 +40,13 @@ interface AddToCart{
     quantity: number | undefined
 }
 
+interface CartPurchase{
+    inventory: InventoryItem[], 
+    cart: CartItem[], 
+    cardInfo: CardInfo | undefined, 
+    total: string
+}
+
 
 export function RenderPaymentForm(cardInfo: CardInfo | undefined, setCardInfo: (e:CardInfo)=>void){
     return(
@@ -209,24 +216,24 @@ async function handleDeleteCartItem(cartID: string){
 }
 
 //When the user sells the items in the cart
-async function handleMakeCartPurchase(inventory: InventoryItem[], cart: CartItem[], cardInfo: CardInfo | undefined, total: string){
+async function handleMakeCartPurchase(props: CartPurchase){
     try{
-        if(cart && cardInfo?.cardNumber){
+        if(props.cart && props.cardInfo?.cardNumber){
 
             //returns an array that converts all objects within the cart as a string
-            const cartAsString = cart.map((item:CartItem)=>JSON.stringify(item));
+            const cartAsString = props.cart.map((item:CartItem)=>JSON.stringify(item));
 
             const cartItems = {
                 "cartItems": cartAsString
             }
 
             //go through each item in cart and each item in the inventory, and if they match names (because there are no duplicate items in the inventory), update that inventory items' quantity based on the purchase made from the cart
-            inventory.forEach(
+            props.inventory.forEach(
                 async(inventoryItem:InventoryItem)=>{
-                    for(let i = 0; i < cart.length; i++){
-                        if(cart[i].name === inventoryItem.name){
+                    for(let i = 0; i < props.cart.length; i++){
+                        if(props.cart[i].name === inventoryItem.name){
 
-                            const quantity = Number(inventoryItem.quantity) - Number(cart[i].quantity);
+                            const quantity = Number(inventoryItem.quantity) - Number(props.cart[i].quantity);
                             const inventoryID = inventoryItem.$id;
 
                             const cartItem = {
@@ -262,32 +269,29 @@ async function handleMakeCartPurchase(inventory: InventoryItem[], cart: CartItem
             const data = await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PURCHASES_COLLECTION_ID, cartItems, [Permission.read(Role.any())])
 
             //remove all currently purchased items from the cart database
-            for(let i = 0; i<cart.length;i++){
-                await api.deleteDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID, cart[i].$id);
+            for(let i = 0; i<props.cart.length;i++){
+                await api.deleteDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID, props.cart[i].$id);
             }
 
-            const cardNumber = cardInfo?.cardNumber
-            const cardExpiration = cardInfo?.expirationDate
-            const cardSecurity = cardInfo?.securityNumber
-            const cardType = cardInfo?.type
-
-            const paymentObj ={
-                cardNumber,
-                cardExpiration,
-                cardSecurity,
-                cardType,
-                total
+            const payment ={
+                "cardNumber": props.cardInfo?.cardNumber,
+                "cardExpiration": props.cardInfo?.expirationDate,
+                "cardSecurity": props.cardInfo?.securityNumber,
+                "cardType": props.cardInfo?.type,
+                "total": props.total
             }
 
-            const response = await api.createDocument(process.env.REACT_APP_CART_DATABASE_ID, process.env.REACT_APP_PAYMENTS_COLLECTION_ID, paymentObj, [Permission.read(Role.any())])
+
+            //add payment info to payment database
+            const response = await api.createDocument(process.env.REACT_APP_CART_DATABASE_ID, process.env.REACT_APP_PAYMENTS_COLLECTION_ID, payment, [Permission.read(Role.any())])
 
             if(data && response){
                 window.location.reload();
             }
 
-            }else{
-                toast.error("An error has occured, please ensure that all fields are filled out before continuing.")
-            }
+        }else{
+            toast.error("An error has occured, please ensure that all fields are filled out before continuing.")
+        }
 
 
     }catch(err){
@@ -296,6 +300,7 @@ async function handleMakeCartPurchase(inventory: InventoryItem[], cart: CartItem
     }
 } 
 
+//render cart, cart total, item totals, and item quantities
 export function RenderCart(cart: CartItem[], inventory: InventoryItem[], cartItemQuantity: string | undefined, setCartItemQuantity: (e:string)=>void, cardInfo: CardInfo | undefined, setCardInfo: (e:CardInfo)=>void){
 
     if(cart?.length){
@@ -349,7 +354,7 @@ export function RenderCart(cart: CartItem[], inventory: InventoryItem[], cartIte
 
                         {RenderPaymentForm(cardInfo, (e:CardInfo)=>setCardInfo(e))}
                 
-                        {Button({text: "Purchase Items", handleButtonClick: ()=>handleMakeCartPurchase(inventory, cart, cardInfo, total)})}
+                        {Button({text: "Purchase Items", handleButtonClick: ()=>handleMakeCartPurchase({inventory: inventory, cart: cart,cardInfo: cardInfo, total: total})})}
                     </section>
                 )
 
@@ -383,7 +388,7 @@ export function RenderCart(cart: CartItem[], inventory: InventoryItem[], cartIte
 
                     {RenderPaymentForm(cardInfo, (e:CardInfo)=>setCardInfo(e))}
 
-                    {Button({text: "Purchase Items", handleButtonClick: ()=>handleMakeCartPurchase(inventory, cart, cardInfo, total)})}
+                    {Button({text: "Purchase Items", handleButtonClick: ()=>handleMakeCartPurchase({inventory: inventory, cart: cart, cardInfo: cardInfo, total: total})})}
 
                 </section>
                 )
