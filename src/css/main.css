@@ -1,3 +1,14 @@
+/* Estimate
+   ========================================================================== */
+#estimate .estimate{
+  padding: 2rem;
+  width: 80%;
+}
+
+#estimate .estimate h2{
+    padding: .5rem;
+}
+
 /* Purchase
    ========================================================================== */
 #purchase .purchaseItem{
@@ -314,6 +325,18 @@ nav .cart{
     margin-top: 1.5rem;
 }
 
+.employeeNav{
+    background: white;
+    padding:2rem;
+    border-radius: 5px;
+    position: absolute;
+}
+
+.arrow h3:hover{
+    cursor: pointer;
+    transition: .5s;
+    color: rgb(163, 149, 149);
+}
 
 /* Header
    ========================================================================== */

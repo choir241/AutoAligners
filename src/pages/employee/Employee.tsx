@@ -8,12 +8,11 @@ import EmployeeNav from "../../components/EmployeeNav"
 export function EmployeeButtons(){
     return(
         <main className = "flex flex-col justifyBetween">
-                <Nav pageHeading = {"Employee Hub"}/>
+                <Nav pageHeading = {localStorage.getItem("email") ? "Employee Hub" : "Login/Demo"}/>
 
                 <EmployeeNav/>
 
             <section className = "flex flex-col alignCenter" id = "employee">
-            <h1 className = "textAlignCenter">Employee Hub</h1>
                 <nav>
                     <ul className = "flex justifyBetween flex-col">
                         {localStorage.getItem("email") ? "" : <li className = "textAlignCenter">{ButtonLink({domain : "/demo", text: "Demo"})}</li>}

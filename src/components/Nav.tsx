@@ -3,6 +3,7 @@ import {ButtonLink,ButtonSubmit} from "../components/Button"
 import {handleLogout} from "../hooks/LoginHooks"
 import {Link} from "react-router-dom"
 import {GetCart, CartItem} from "../hooks/CartHooks"
+import EmployeeNav from "./EmployeeNav"
 
 interface nav{
     pageHeading: string
@@ -37,7 +38,11 @@ export default function Nav(props: nav){
               <li><Link to = "/">Home</Link></li>
               {localStorage.getItem("email") ? "" : <li><Link to = "/estimate">Estimate Car Service</Link></li>}
               {localStorage.getItem("email") ? "" : <li><Link to = "/finance">Finance</Link></li>}
-              <li><Link to = "/employee">Employee Hub</Link></li>
+              {localStorage.getItem("email") ? 
+              <li>
+                <EmployeeNav/>
+            </li> 
+                : <li><Link to = "/employee">Login/Demo</Link></li>}
               {localStorage.getItem("email") ? <li><Link to = "/manageAppointments">Manage Appointments</Link></li> : ""}
               {localStorage.getItem("email") ? <li className = "cart">{cart?.length && cartQuantity ? <span>{cartQuantity}</span> : ""}<Link to = "/cart"><i className = "fa-solid fa-cart-shopping button"></i></Link></li> : ""}
 

@@ -19,6 +19,7 @@ declare global {
         REACT_APP_PURCHASES_COLLECTION_ID: string;
         REACT_APP_CART_DATABASE_ID: string;
         REACT_APP_PAYMENTS_COLLECTION_ID: string;
+        REACT_APP_ESTIMATES_COLLECTION_ID: string;
         NODE_ENV: "development" | "production";
         PORT?: string;
         PWD: string;
