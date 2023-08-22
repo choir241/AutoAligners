@@ -10,14 +10,14 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2'
-import PaginatedButtons from './PaginatedButtons';
+import PaginatedButtons from "./PaginatedButtons"
 
-interface GraphLabels{
+interface GraphLabels {
   quantities: number[],
-  profits: any[],
+  profits: any[]
   cartLength: number,
   currentPage: number,
-  setCurrentPage: (e:number) => void,
+  setCurrentPage: (e: number) => void,
   rowsPerPage: number,
   startIndex: number,
   endIndex: number

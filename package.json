@@ -1,6 +1,6 @@
 {
   "name": "autoaligners",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -30,8 +30,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/node": "^20.5.0",
-    "appwrite": "^11.0.0",
+    "@types/node": "^20.5.3",
+    "appwrite": "^11.0.1",
     "axios": "^1.4.0",
     "chart.js": "^4.3.3",
     "dotenv": "^16.3.1",
@@ -45,6 +45,6 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@types/react": "^18.2.20"
+    "@types/react": "^18.2.21"
   }
 }

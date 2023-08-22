@@ -2,12 +2,32 @@ import api from "../api/api"
 import React from "react"
 import {Link} from "react-router-dom"
 import {Appointment} from "./ReservationHooks"
+import axios from "axios"
 
 export async function handleDeleteAppointment(id:string | undefined){
     await api.deleteDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID, id);
     window.location.reload();
 }
 
+async function NotifyClient(email:string, service:string, year: string, model: string, make:string){
+        try{
+            const formData = new URLSearchParams();
+            formData.append("email", email)
+            formData.append("service", service)
+            formData.append("carYear", year)
+            formData.append("carModel", model)
+            formData.append("carMake", make)
+
+            const data = await axios.post("https://car-app-backend-0ejb.onrender.com/sendEmail", formData, {})
+            
+            if(data){
+                window.location.reload();
+            }
+
+        }catch(err){    
+            console.error(err)
+        }
+}
 
 export function displayAppointments(appointments: Appointment[], classNameContainer: string):React.JSX.Element[]{
     return appointments.map((appointment: Appointment, i: number)=>{
@@ -64,7 +84,7 @@ export function displayAppointments(appointments: Appointment[], classNameContai
 
                 <div className = "flex alignCenter">
                 {(appointmentDate > fullCurrentDate) || (appointmentDate === fullCurrentDate && appointmentTime <= currentHours) 
-                ? <button className = "button" onClick = {()=>console.log("client was notified")}>Notify client that Car is ready</button>                : 
+                ? <button className = "button" onClick = {()=>NotifyClient(appointment.email, appointment.service, appointment.carYear, appointment.carModel, appointment.carMake)}>Notify client that Car is ready</button>                : 
                    <h2>Expired Apppointment</h2> }
                     <i className = {(appointmentDate > fullCurrentDate) || (appointmentDate === fullCurrentDate && appointmentTime <= currentHours) ? "" : "fa-solid fa-triangle-exclamation"}></i>
                 </div>
