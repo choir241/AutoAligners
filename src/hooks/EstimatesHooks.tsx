@@ -30,7 +30,7 @@ async function NotifyClient(props: Estimate, price: string){
         formData.append("carMake", props.carMake)
         formData.append("price", price);
 
-        const data = await axios.post("https://car-app-backend-0ejb.onrender.com/sendEmail", formData, {})
+        const data = await axios.post("https://car-app-backend-0ejb.onrender.com/sendEstimateEmail", formData, {})
         
         if(data){
             window.location.reload();
