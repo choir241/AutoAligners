@@ -50,7 +50,7 @@ export default function EmployeeSettings():React.JSX.Element{
   
 
 
-        {user?.email !== "helena24@gmail.com" ?
+        {user?.email !== "helena24@gmail.com" && user?.email !== "bobTheBuilder@gmail.com" ?
         <section className = "flex flex-col alignCenter justifyCenter">
           {Button({text: "Delete User's Account", handleButtonClick: ()=>setDisplayDelete(!displayDelete)})}
   

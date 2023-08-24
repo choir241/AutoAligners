@@ -15,6 +15,7 @@ export function EmployeeButtons(){
             <section className = "flex flex-col alignCenter" id = "employee">
                 <nav>
                     <ul className = "flex justifyBetween flex-col">
+                        {localStorage.getItem("email") ? "" : <li className = "textAlignCenter">{ButtonLink({domain : "/adminDemo", text: "Admin Demo"})}</li>}
                         {localStorage.getItem("email") ? "" : <li className = "textAlignCenter">{ButtonLink({domain : "/demo", text: "Demo"})}</li>}
                         {localStorage.getItem("email") ? "" : <li className = "textAlignCenter">{ButtonLink({domain: "/login", text: "Login"})}</li>}
                     </ul>
@@ -77,7 +78,7 @@ export function EmployeeHub(){
   
   
         {user ? 
-        user?.$id === "649c8a408d41d5c02f5c" ? 
+        user?.$id === "649c8a408d41d5c02f5c" || user?.$id === "64e51b2e84f09ed015ec" ? 
           <section>
             <h3>Admin Hub</h3>
   
@@ -104,25 +105,6 @@ export function EmployeeHub(){
       }
 
       
-      {user? 
-        ButtonLink({text: "Shop", domain: "/inventoryShop"})
-        : ""
-      }
-
-
-      {user? 
-        ButtonLink({text: "Inventory", domain: "/inventory"})
-        : ""
-      }
-
-
-      {user ? 
-        ButtonLink({text: "Settings", domain: "/settings"})
-      :
-      ""
-      }
-          
-  
      
           </section>
 

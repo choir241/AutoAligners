@@ -9,6 +9,29 @@
     padding: .5rem;
 }
 
+.submitEstimateButton{
+    background: grey;
+    padding: 1rem 2rem;
+    box-shadow: 2px 2px 2px black;
+    font-size: 2rem;
+}
+
+.submitEstimateButton:hover{
+    cursor: pointer;
+    color: white;
+    box-shadow: 0px 0px 0px black;
+}
+
+#estimate .estimate:hover{
+    background: none;
+    color: black;
+}
+
+#estimate form{
+    padding: 4rem;
+}
+
+
 /* Purchase
    ========================================================================== */
 #purchase .purchaseItem{
