@@ -17,7 +17,7 @@ export interface Estimate{
     comment?: string;
 }
 
-async function NotifyClient(props: Estimate){
+async function NotifyClient(props: Estimate, price: string){
     try{
 
         const formData = new URLSearchParams();
@@ -28,7 +28,7 @@ async function NotifyClient(props: Estimate){
         formData.append("carYear", props.carYear)
         formData.append("carModel", props.carModel)
         formData.append("carMake", props.carMake)
-
+        formData.append("price", price);
 
         const data = await axios.post("https://car-app-backend-0ejb.onrender.com/sendEmail", formData, {})
         
@@ -41,14 +41,14 @@ async function NotifyClient(props: Estimate){
     }
 }
 
-export function RenderEstimateForm(props: Estimate){
+export function RenderEstimateForm(props: Estimate, price: string, setPrice: (e:string)=>void){
     return(
         <form className = "flex flex-col alignCenter">
             <input key = "email" defaultValue = {props.email} disabled></input>
-            <input key = "totalPrice"></input>
+            <input key = "totalPrice" onChange = {(e)=>setPrice(e.target.value)}></input>
             <button className = "submitEstimateButton" onClick = {(e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
                 e.preventDefault(); 
-                NotifyClient({email: props.email, carYear: props.carYear, carModel: props.carModel, carMake: props.carMake, service: props.service, firstName: props.firstName, lastName: props.lastName})}}>Send Client Estimate</button>
+                NotifyClient({email: props.email, carYear: props.carYear, carModel: props.carModel, carMake: props.carMake, service: props.service, firstName: props.firstName, lastName: props.lastName}, price)}}>Send Client Estimate</button>
         </form>
     )
 }
@@ -62,11 +62,11 @@ export async function GetEstimates(setEstimates : (e:Estimate[])=>void){
     }
 }
 
-export function RenderEstimates(estimates: Estimate[], setEstimateFormDisplay: (e:boolean)=>void, estimateFormDisplay: boolean){
+export function RenderEstimates(estimates: Estimate[], setEstimateFormDisplay: (e:boolean)=>void, estimateFormDisplay: boolean, price: string, setPrice: (e:string)=>void){
 
     const renderDisplay = estimates.map((item: Estimate)=>{
         return(
-            <section key = {item.$id} className = "estimate clearButton" onClick = {()=>setEstimateFormDisplay(!estimateFormDisplay)}>
+            <section key = {item.$id} className = "estimate clearButton">
                 <h2>{item.service}</h2>           
                 <h2>{item.firstName} {item.lastName}</h2>    
 
@@ -82,7 +82,9 @@ export function RenderEstimates(estimates: Estimate[], setEstimateFormDisplay: (
                     <h2>{item.contact}</h2>
                 </div>
 
-                {estimateFormDisplay ? RenderEstimateForm({email: item.email, carYear: item.carYear, carModel: item.carModel, carMake: item.carMake, firstName: item.firstName, lastName: item.lastName, service: item.service}) : ""}
+                <button onClick = {()=>setEstimateFormDisplay(!estimateFormDisplay)} className = "button">Show Estimate Form</button>
+
+                {estimateFormDisplay ? RenderEstimateForm({email: item.email, carYear: item.carYear, carModel: item.carModel, carMake: item.carMake, firstName: item.firstName, lastName: item.lastName, service: item.service}, price, (e:string)=>setPrice(e)) : ""}
 
             </section>
         )
