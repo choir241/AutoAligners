@@ -688,7 +688,10 @@ export async function SubmitServiceEstimate(props: ServiceEstimate):Promise<void
     }
 
 
-    await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_SERVICE_COLLECTION_ID, formData, [Permission.read(Role.any())])
+    const data = await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_SERVICE_COLLECTION_ID, formData, [Permission.read(Role.any())])
 
-    window.location.reload();   
+    if(data){
+        window.location.reload();   
+    }
+
 }

@@ -92,7 +92,7 @@ export default function ServiceEstimate(){
             <section className="flex justifyCenter submit">
             <Button
         text = "Submit Service Estimate"
-        handleButtonClick={()=> handleServiceEstimate()}/>
+        handleButtonClick={()=>handleServiceEstimate()}/>
 
             </section>
           

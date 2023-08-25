@@ -7,21 +7,20 @@ import {Estimate, GetEstimates, RenderEstimates} from "../../hooks/EstimatesHook
 export default function Estimates(){
 
     const [estimates, setEstimates] = useState<Estimate[]>([]);
-    const [estimateFormDisplay, setEstimateFormDisplay] = useState<boolean>(false);
     const [price, setPrice] = useState<string>("");
+    const [estimateFormDisplay, setEstimateFormDisplay] = useState<boolean>()
 
     useEffect(()=>{
         GetEstimates((e:Estimate[])=>setEstimates(e));
     },[])
 
- 
 
     return(
         <main id = "estimate">
             <Nav pageHeading = {"Estimates"}/>
             <EmployeeNav/>
             <section>
-                {RenderEstimates(estimates, (e:boolean)=>setEstimateFormDisplay(e), estimateFormDisplay, price, (e:string)=>setPrice(e))}
+                {RenderEstimates(estimates, price, (e:string)=>setPrice(e),estimateFormDisplay, (e:boolean)=>setEstimateFormDisplay(e))}
 
             </section>
             <Footer/>

@@ -35,8 +35,10 @@ export function Button (props: ButtonProps) {
     return(
         <button 
         className = {`button ${props.classNames}`}
-        onClick = {()=>props.handleButtonClick()}
-        >
+        onClick = {(e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
+            e.preventDefault();
+            props.handleButtonClick()}
+        }>
             {props.text}
         </button>
     )

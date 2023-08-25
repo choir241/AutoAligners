@@ -9,17 +9,20 @@ export async function handleDeleteAppointment(id:string | undefined){
     window.location.reload();
 }
 
-async function NotifyClient(email:string, service:string, year: string, model: string, make:string){
+async function NotifyClient(email:string, service:string, year: string, model: string, make:string, estimateId?: string){
         try{
+
             const formData = new URLSearchParams();
             formData.append("email", email)
             formData.append("service", service)
             formData.append("carYear", year)
             formData.append("carModel", model)
             formData.append("carMake", make)
+            
+            await api.deleteDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID, estimateId);
 
             const data = await axios.post("https://car-app-backend-0ejb.onrender.com/sendEmail", formData, {})
-            
+
             if(data){
                 window.location.reload();
             }
@@ -30,6 +33,7 @@ async function NotifyClient(email:string, service:string, year: string, model: s
 }
 
 export function displayAppointments(appointments: Appointment[], classNameContainer: string):React.JSX.Element[]{
+
     return appointments.map((appointment: Appointment, i: number)=>{
     const appointmentDate = appointment.date.split("D")[0];
     const appointmentDayoFWeek = appointment.date.split("D")[1];
@@ -84,7 +88,7 @@ export function displayAppointments(appointments: Appointment[], classNameContai
 
                 <div className = "flex alignCenter">
                 {(appointmentDate > fullCurrentDate) || (appointmentDate === fullCurrentDate && appointmentTime <= currentHours) 
-                ? <button className = "button" onClick = {()=>NotifyClient(appointment.email, appointment.service, appointment.carYear, appointment.carModel, appointment.carMake)}>Notify client that Car is ready</button>                : 
+                ? <button className = "button" onClick = {()=>NotifyClient(appointment.email, appointment.service, appointment.carYear, appointment.carModel, appointment.carMake, appointment.$id)}>Notify client that Car is ready</button>                : 
                    <h2>Expired Apppointment</h2> }
                     <i className = {(appointmentDate > fullCurrentDate) || (appointmentDate === fullCurrentDate && appointmentTime <= currentHours) ? "" : "fa-solid fa-triangle-exclamation"}></i>
                 </div>
