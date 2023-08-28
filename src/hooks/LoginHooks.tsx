@@ -87,7 +87,7 @@ export async function handleDelete(userId: string){
   
 export function DisplayUsers(listOfUsers: User[], currentUser: User){
   try{
-        if(currentUser.$id === "649c8a408d41d5c02f5c"){
+        if(currentUser.$id === "649c8a408d41d5c02f5c" || currentUser.$id === "64e51b2e84f09ed015ec"){
            const users = listOfUsers.map((user:User)=>{
             const createdAtDate = user.$createdAt.split("T")[0];
             let createdAtTimeHours:number = parseInt(user.$createdAt.split("T")[1].split(".")[0].split(":")[0]);
@@ -97,13 +97,12 @@ export function DisplayUsers(listOfUsers: User[], currentUser: User){
             let updatedAtTimeHours:number = parseInt(user.$updatedAt.split("T")[1].split(".")[0].split(":")[0]);
             let updatedAtTimeMinutes:number = parseInt(user.$updatedAt.split("T")[1].split(".")[0].split(":")[1]);
               return(
-                <ul key = {user.$id}>
-                  {user.$id === "649c8a408d41d5c02f5c" ? "" : <li className = "fa-sharp fa-solid fa-trash button" onClick = {()=>handleDelete(user.$id)}></li>}
-                  <li>{user.email}</li>
+                <ul key = {user.$id} className = "flex flex-col alignCenter userDisplays">
+                  <li>{user.name}</li>
                   <li>Employee Id: {user.$id}</li>
                   <li>Created At: {createdAtDate}  {createdAtTimeHours > 12 ? createdAtTimeHours -= 12 : createdAtTimeHours}{":" + createdAtTimeMinutes}{createdAtTimeHours > 12 ? "PM" : "AM"}</li>
                   <li>Updated At: {updatedAtDate} {updatedAtTimeHours > 12 ? updatedAtTimeHours -=12 : updatedAtTimeHours}{":" + updatedAtTimeMinutes}{updatedAtTimeHours > 12 ? "PM" : "AM"}</li>
-                  <li>{user.name}</li>
+                  { user.$id === "64e51b2e84f09ed015ec" ? "" : <li className = "fa-sharp fa-solid fa-trash button" onClick = {()=>handleDelete(user.$id)}></li>}
                 </ul> 
               )
             })

@@ -6,7 +6,8 @@ export interface PurchasedItem{
     name: string,
     price: string,
     quantity: string,
-    cartItems: string
+    cartItems: string,
+    email?: string
 }
 
 //get purchase database

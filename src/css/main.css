@@ -306,9 +306,55 @@ input{
     margin: 3rem;
 }
 
+#auth .purchases{
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+
+#auth .purchases .cartItem{
+    padding: 2.5rem;
+    border-bottom: 2px solid black;
+}
+
+#auth .purchases .cartItem h2{
+    padding: 0rem 2rem;
+}
+
+#auth section .hubButton{
+    width: 100%;
+}
+
+#auth .admin{
+    width: 100%;
+}
+
+#auth .admin h3{
+    padding: 2rem;
+}
+
+#auth .userDisplays li{
+    font-size: 2rem;
+}
+
+#auth .userDisplays{
+    padding-bottom: 2rem;
+    margin-bottom: 4rem;
+    border-bottom: 2px dotted black;
+    width: 30%;
+}
+
+#auth .userDisplays .fa-trash{
+    width: 10%;
+    margin: 0rem;
+    margin-top: 2rem;
+}
 
 
 
+#auth .rightContainer{
+    width: 50%;
+}
 /* Main
    ========================================================================== */
 
