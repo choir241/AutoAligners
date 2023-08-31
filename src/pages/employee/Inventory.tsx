@@ -4,7 +4,6 @@ import Footer from "../../components/Footer"
 import {ButtonLink} from "../../components/Button"
 import {GetInventory, InventoryItem, CurrentInventory} from "../../hooks/InventoryHooks"
 import {CartItem, GetCart} from "../../hooks/CartHooks"
-import EmployeeNav from "../../components/EmployeeNav"
 
 export default function Inventory(){
 
@@ -24,7 +23,6 @@ export default function Inventory(){
     return(
         <main id = "inventory">
             <Nav pageHeading = {"Inventory"}/>
-            <EmployeeNav/>
                 <div className="flex justifyCenter">
                 {ButtonLink({classNames: "goBack", text: "Go Back", domain: "/employee"})}
                 </div>

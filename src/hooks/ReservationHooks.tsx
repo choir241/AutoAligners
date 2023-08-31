@@ -326,7 +326,7 @@ export function DisplayTimeDateAppointments(props: TimeDateAppointments):React.J
         let currentMonth = month;
         let currentDay = day;
         let currentYear = year;
-        let currentDayOfWeek = dayOfWeek
+        let currentDayOfWeek = dayOfWeek;
 
         switch(month){
             case 1:
@@ -336,8 +336,10 @@ export function DisplayTimeDateAppointments(props: TimeDateAppointments):React.J
             case 8:
             case 10:
                 if(currentDay > 31){
+                    day = 1;
                     currentDay = 1;
-                    currentMonth ++;
+                    currentMonth++;
+                    month++;
                 }
                 break;
             case 4:
@@ -345,21 +347,28 @@ export function DisplayTimeDateAppointments(props: TimeDateAppointments):React.J
             case 9:
             case 11:
                 if(currentDay > 30){
+                    day = 1;
                     currentDay = 1;
-                    currentMonth ++;
+                    currentMonth++;
+                    month++;
                 }
                 break;
             case 2:
                 if(currentDay > 28){
+                    day = 1;
                     currentDay = 1;
-                    currentMonth ++;
+                    currentMonth++;
+                    month++;
                 }
                 break;
             case 12:
                 if(currentDay > 31){
+                    day = 1;
                     currentDay = 1;
-                    currentMonth = 1;
-                    currentYear ++;
+                    currentMonth++;
+                    month++;
+                    year++
+                    currentYear++
                 }
                 break;
         }
@@ -374,7 +383,8 @@ export function DisplayTimeDateAppointments(props: TimeDateAppointments):React.J
             currentDayOfWeek = 0
         }
 
-        if(props.date?.split("D")[0] === `${month}/${day}/${year}`){
+
+        if(props.date?.split("D")[0] === `${currentMonth}/${currentDay}/${currentYear}`){
             appt.push(
                 <div className = {`calendar clearButton c-${i} clicked`} key = {`c-${i}`} onClick = {()=>{
                     const date = `${currentMonth}/${currentDay}/${currentYear}`
@@ -382,7 +392,7 @@ export function DisplayTimeDateAppointments(props: TimeDateAppointments):React.J
                     handleRenderCalendar({currentMonth: currentMonth, currentDay: currentDay, currentYear: currentYear, daysOfWeek: daysOfWeek, currentDayOfWeek, setDate: (e:string)=> props.setDate(e), i: i})
                 }}>
                     <h3>{daysOfWeek[currentDayOfWeek]}</h3>
-                    <h3>{`${month}/${day}/${year}`}</h3>
+                    <h3>{`${currentMonth}/${currentDay}/${currentYear}`}</h3>
                 </div>
             )
         }
@@ -395,7 +405,7 @@ export function DisplayTimeDateAppointments(props: TimeDateAppointments):React.J
                     handleRenderCalendar({currentMonth: currentMonth, currentDay: currentDay, currentYear: currentYear, daysOfWeek: daysOfWeek, currentDayOfWeek, setDate: (e:string)=> props.setDate(e), i: i})
                 }}>
                     <h3>{daysOfWeek[currentDayOfWeek]}</h3>
-                    <h3>{`${month}/${day}/${year}`}</h3>
+                    <h3>{`${currentMonth}/${currentDay}/${currentYear}`}</h3>
                 </div>
             )
         }

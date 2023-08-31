@@ -3,7 +3,6 @@ import Footer from "../../components/Footer"
 import React, {useState, useEffect, useMemo} from "react"
 import {ButtonSubmit, Button, ButtonLink} from "../../components/Button"
 import {User, GenerateNewEmployee, handleLogin, GetAccount, GetUsers, DisplayUsers, Input, handleSignUp} from "../../hooks/LoginHooks"
-import EmployeeNav from "../../components/EmployeeNav"
 import { PurchasedItem, GetPurchases } from "../../hooks/PurchasesHooks"
 import { RenderEmployeeAppointments } from "../../hooks/EmployeeHooks"
 
@@ -12,7 +11,6 @@ export function EmployeeButtons(){
         <main className = "flex flex-col justifyBetween">
                 <Nav pageHeading = {localStorage.getItem("email") ? "Employee Hub" : "Login/Demo"}/>
 
-                <EmployeeNav/>
 
             <section className = "flex flex-col alignCenter" id = "employee">
                 <nav>
@@ -57,13 +55,9 @@ export function EmployeeHub(){
   
     //example employee id 649c8a408d41d5c02f5c
 
-    function WelcomeUser(user: User | undefined):string{
-      return user ? `Welcome ${user.name}` : "Login"
-    }
-  
     return(
       <main id = "auth">
-          <Nav pageHeading = {WelcomeUser(user)}/>
+          <Nav pageHeading = {user ? `Welcome ${user.name}` : "Login"}/>
     
 
           <section className = "flex flex-col alignCenter justifyBetween">

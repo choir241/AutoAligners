@@ -3,7 +3,6 @@ import {GetInventory, InventoryItem} from "../../hooks/InventoryHooks"
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
 import {RenderCart, GetCart, CartItem, CardInfo} from "../../hooks/CartHooks"
-import EmployeeNav from "../../components/EmployeeNav"
 
 export default function Cart(){
 
@@ -25,8 +24,6 @@ export default function Cart(){
         <main id = "cart">
             <Nav pageHeading = {"Cart"}/>
             
-            <EmployeeNav/>
-
             <section className = "flex justifyBetween cart">
 
                 <section className = "flex flex-col cartContainer">

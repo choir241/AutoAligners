@@ -32,19 +32,20 @@ async function NotifyClient(email:string, service:string, year: string, model: s
         }
 }
 
-export function displayAppointments(appointments: Appointment[], classNameContainer: string):React.JSX.Element[]{
+export function displayAppointments(appointments: Appointment[], classNameContainer: string, startIndex: number, endIndex: number):React.JSX.Element[]{
 
     return appointments.map((appointment: Appointment, i: number)=>{
-    const appointmentDate = appointment.date.split("D")[0];
-    const appointmentDayoFWeek = appointment.date.split("D")[1];
-    const appointmentTime = parseInt(appointment.time)
 
-    const currentDate = new Date();
-    const currentMonth = currentDate.getMonth()+1;
-    const currentDay = currentDate.getDate();
-    const currentYear = currentDate.getFullYear();
+        const appointmentDate = appointment.date.split("D")[0];
+        const appointmentDayoFWeek = appointment.date.split("D")[1];
+        const appointmentTime = parseInt(appointment.time)
 
-    const currentHours = currentDate.getHours();
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth()+1;
+        const currentDay = currentDate.getDate();
+        const currentYear = currentDate.getFullYear();
+
+        const currentHours = currentDate.getHours();
     
     const fullCurrentDate = `${currentMonth}/${currentDay}/${currentYear}` 
 
@@ -75,17 +76,6 @@ export function displayAppointments(appointments: Appointment[], classNameContai
     
                  </section>
 
-
-                {classNameContainer === "appointmentContainer" ?
-                 <section className = "flex">
-                                        
-                 <h3>{appointment.stayLeave}</h3>
-                 <h3>{appointment.comment}</h3>
-                 </section>
-                 :
-                 ""
-                }
-
                 <div className = "flex alignCenter">
                 {(appointmentDate > fullCurrentDate) || (appointmentDate === fullCurrentDate && appointmentTime <= currentHours) 
                 ? <button className = "button" onClick = {()=>NotifyClient(appointment.email, appointment.service, appointment.carYear, appointment.carModel, appointment.carMake, appointment.$id)}>Notify client that Car is ready</button>                : 
@@ -95,5 +85,6 @@ export function displayAppointments(appointments: Appointment[], classNameContai
            
              </div>
          )
-     })
+     }).slice(startIndex, endIndex);
+     
  }

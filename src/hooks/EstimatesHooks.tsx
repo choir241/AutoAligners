@@ -68,7 +68,7 @@ export async function GetEstimates(setEstimates : (e:Estimate[])=>void){
 }
 
 
-export function RenderEstimates(estimates: Estimate[], price: string, setPrice: (e:string)=>void, estimateFormDisplay: boolean | undefined, setEstimateFormDisplay: (e:boolean)=>void){
+export function RenderEstimates(estimates: Estimate[], price: string, setPrice: (e:string)=>void, estimateFormDisplay: boolean | undefined, setEstimateFormDisplay: (e:boolean)=>void, startIndex: number, endIndex: number){
 
     const renderDisplay = estimates.map((item: Estimate)=>{
 
@@ -96,7 +96,7 @@ export function RenderEstimates(estimates: Estimate[], price: string, setPrice: 
 
             </section>
         )
-    })
+    }).slice(startIndex, endIndex)
 
     return(
         <section className = "flex alignCenter flex-col">

@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from "react"
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
-import EmployeeNav from "../../components/EmployeeNav"
 import BarGraph from "../../components/Graphs/BarGraph"
 import LineGraph from "../../components/Graphs/LineGraph"
 import HorizontalBarGraph from "../../components/Graphs/HorizontalBarGraph"
@@ -27,8 +26,6 @@ export default function Purchases(){
     return(
         <main id = "purchase">
             <Nav pageHeading = {"Purchase History"}/>
-
-            <EmployeeNav/>
 
                 <section className = "flex flex-col alignCenter justifyBetween">
 

@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css"
 import {EmployeeHub} from "./pages/employee/Employee.tsx"
 
 
-const App = () => {
+export default function App(){
 
     const Home = lazy(()=>import("./pages/Home.tsx"));
     const Reservation = lazy(()=>import("./pages/guest/Reservation.tsx"));
@@ -59,4 +59,3 @@ const App = () => {
     )
 }
 
-export default App;

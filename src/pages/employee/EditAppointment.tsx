@@ -3,7 +3,6 @@ import Nav from "../../components/Nav"
 import {getAppointmentData, Appointment, DisplayTimeDateAppointments, GetCarData, SelectCarMakeInput, SelectCarModelInput, SelectCarYearInput, ChooseCarService, Input, TextBoxInput} from "../../hooks/ReservationHooks"
 import { EditChooseTwoInput, handleEditAppointment, checkDate, getEditAppointmentData } from "../../hooks/EditAppointmentHooks"
 import {Button} from "../../components/Button"
-import EmployeeNav from "../../components/EmployeeNav"
 
 export default function EditAppointment(){
 
@@ -45,9 +44,7 @@ export default function EditAppointment(){
     return(
         <main>
             <Nav pageHeading = {""}/>
-
-            <EmployeeNav/>
-
+            
             <h1>Edit Appointment</h1>
 
             {warning ? <h2>{warning}</h2> : ""}

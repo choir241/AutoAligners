@@ -695,6 +695,10 @@ h1.expired{
     font-weight: bold;
 }
 
+.selectedPage{
+    color: white;
+    background: black;
+}
 
 
 /* Account
