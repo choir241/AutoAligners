@@ -1,7 +1,7 @@
 import React from "react"
 import {toast} from "react-toastify"
 import api from "../api/api"
-import {Appointment} from "./ReservationHooks"
+import {Appointment, Alert} from "./ReservationHooks"
 
 export interface ChooseInput{
     defaultValue: string | undefined,
@@ -41,8 +41,8 @@ export function ValidateEditInput(props: Appointment):false|undefined{
             return false;
         }
     }
-  
-    alert("Appointment Edited!");
+    
+    Alert("Appointment Edited!")
 
     HandleSubmitData({$id: props.$id, service: props.service, firstName: props.firstName, lastName: props.lastName, date: props.date, time: props.time, carModel: props.carModel, carMake: props.carMake, carYear: props.carYear, email: props.email, phone: props.phone, zipCode: props.zipCode, contact: props.contact, comment: props.comment, stayLeave:props.stayLeave});
 }

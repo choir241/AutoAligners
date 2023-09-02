@@ -551,6 +551,10 @@ export async function handleSubmitData(props: Appointment):Promise<void>{
             window.location.reload();   
 }
 
+export function Alert(text: string){
+    alert(text)
+}
+
 export function checkInputValidation(props: Appointment):false|undefined{
             if(!props.date){
                 toast.error("Please select a proper date");
@@ -601,7 +605,7 @@ export function checkInputValidation(props: Appointment):false|undefined{
                 return false;
             }
 
-            alert("Appointment Made!");
+            Alert("Appointment Made!")
 
             handleSubmitData({service: props.service, firstName: props.firstName, lastName: props.lastName, date: props.date, time: props.time, carModel: props.carModel, carMake: props.carMake, carYear: props.carYear, email: props.email, phone: props.phone, zipCode: props.zipCode, contact: props.contact, comment: props.comment, stayLeave:props.stayLeave});
 }
@@ -660,7 +664,7 @@ export function validateServiceEstimateInput(props: ServiceEstimate):false|undef
         return false;
     }
 
-    alert("Appointment Made!");
+    Alert("Estimatation Submitted!")
 
     SubmitServiceEstimate({service: props.service, firstName: props.firstName, lastName: props.lastName, carModel: props.carModel, carMake: props.carMake, carYear: props.carYear, email: props.email, phone: props.phone, zipCode: props.zipCode, contact: props.contact, comment: props.comment, stayLeave:props.stayLeave});
 }
