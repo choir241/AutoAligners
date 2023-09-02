@@ -1,8 +1,9 @@
 import React,{useState} from "react"
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
-import {ButtonLink} from "../../components/Button"
+import {ButtonLink, Button} from "../../components/Button"
 import Assets from "../../components/Assets"
+import {renderFinanceDisplay, toggleDisplay } from "../../hooks/Finance"
 
 export default function Finance(){
 
@@ -10,23 +11,25 @@ export default function Finance(){
     const [goldDisplay, setGoldDisplay] = useState<boolean>(false)
     const [silverDisplay, setSilverDisplay] = useState<boolean>(false)
 
-
-    function toggleBronzeDisplay(){
-        setBronzeDisplay(!bronzeDisplay)
-    }
-
-    function toggleGoldDisplay(){
-        setGoldDisplay(!goldDisplay)
-    }
-
-    function toggleSilverDisplay(){
-        setSilverDisplay(!silverDisplay)
-    }
+    const [bronzeFinanceDisplay, setBronzeFinanceDisplay] = useState<boolean>(false)
+    const [silverFinanceDisplay, setSilverFinanceDisplay] = useState<boolean>(false)
+    const [goldFinanceDisplay, setGoldFinanceDisplay] = useState<boolean>(false)
 
     return(
         <main id = "finance">
+
             <Nav pageHeading = {"Financial Options for Car Services"}/>
 
+            {bronzeFinanceDisplay || silverFinanceDisplay || goldFinanceDisplay ? 
+
+                <section>
+                    {bronzeFinanceDisplay ? renderFinanceDisplay("bronze") : ""}
+                    {silverFinanceDisplay ? renderFinanceDisplay("silver") : ""}
+                    {goldFinanceDisplay ? renderFinanceDisplay("gold") : ""}
+
+                </section>
+            :
+            
             <section>
 
             <section className = "flex flex-col">
@@ -34,21 +37,22 @@ export default function Finance(){
 
         <section className="flex justifyAround alignCenter">
                  <div className = "imageContainer flex alignCenter justifyCenter flex-col">
-                    <h3>Bronze Plan <i className = "fa-solid fa-circle-info button" onClick = {()=>toggleBronzeDisplay()}></i></h3>
-                    <img src={Assets.blackCard} alt="generic business black credit card"  onClick = {()=>toggleBronzeDisplay()}/>
-
-                    <p className = {`${bronzeDisplay? "" : "displayNone"} clearButton flex flex-col alignStart`}><i className = "fa-solid fa-xmark button" onClick = {()=>toggleBronzeDisplay()}></i>$75/month includes 3 services per year (Oil Change, Tire Rotation, and 20-point Inspection).</p>
+                    <h3>Bronze Plan <i className = "fa-solid fa-circle-info button" onClick = {()=>toggleDisplay((e:boolean)=>setBronzeDisplay(e), bronzeDisplay)}></i></h3>
+                    <img src={Assets.blackCard} alt="generic business black credit card"  onClick = {()=>toggleDisplay((e:boolean)=>setBronzeDisplay(e),bronzeDisplay)}/>
+                    {Button({text: "Show Bronze Plan Payment Form", handleButtonClick: ()=> toggleDisplay((e:boolean)=>setBronzeFinanceDisplay(e),bronzeFinanceDisplay)})}
+                    <p className = {`${bronzeDisplay? "" : "displayNone"} clearButton flex flex-col alignStart`}><i className = "fa-solid fa-xmark button" onClick = {()=>toggleDisplay((e:boolean)=>setBronzeDisplay(e), bronzeDisplay)}></i>$75/month includes 3 services per year (Oil Change, Tire Rotation, and 20-point Inspection).</p>
                 </div>
                 <div className = "imageContainer blueCardContainer flex alignCenter justifyCenter flex-col">
-                    <h3>Silver Plan <i className = "fa-solid fa-circle-info button" onClick = {()=>toggleSilverDisplay()}></i></h3>
-                    <img src={Assets.blueCard} className = "blueCard" alt="generic blue Visa debit card with a Vivid logo centered on the card"  onClick = {()=>toggleSilverDisplay()}/>
-                    <p className = {`${silverDisplay? "" : "displayNone"} clearButton flex flex-col alignStart`}><i className = "fa-solid fa-xmark button" onClick = {()=>toggleSilverDisplay()}></i>$120/month includes 6 services per year (Silver Subscription + Brake Check, Engine Diagnostic).</p>
+                    <h3>Silver Plan <i className = "fa-solid fa-circle-info button" onClick = {()=>toggleDisplay((e:boolean)=>setSilverDisplay(e), silverDisplay)}></i></h3>
+                    <img src={Assets.blueCard} className = "blueCard" alt="generic blue Visa debit card with a Vivid logo centered on the card"  onClick = {()=>toggleDisplay((e:boolean)=>setSilverDisplay(e), silverDisplay)}/>
+                    {Button({text: "Show Silver Plan Payment Form", handleButtonClick: ()=> toggleDisplay((e:boolean)=>setSilverFinanceDisplay(e),silverFinanceDisplay)})}
+                    <p className = {`${silverDisplay? "" : "displayNone"} clearButton flex flex-col alignStart`}><i className = "fa-solid fa-xmark button" onClick = {()=>toggleDisplay((e:boolean)=>setSilverDisplay(e), silverDisplay)}></i>$120/month includes 6 services per year (Silver Subscription + Brake Check, Engine Diagnostic).</p>
                 </div>
                 <div className = "imageContainer goldCardContainer flex alignCenter justifyCenter flex-col">
-                    <h3>Gold Plan <i className = "fa-solid fa-circle-info button" onClick = {()=>toggleGoldDisplay()}></i></h3>
-                    <img src={Assets.goldCard} alt="generic business gold credit card" onClick = {()=>toggleGoldDisplay()}/>
-                    
-                    <p className = {`${goldDisplay? "": "displayNone"} clearButton flex flex-col alignStart`}><i className = "fa-solid fa-xmark button" onClick = {()=>toggleGoldDisplay()}></i>$199/month includes 12 services/year (Gold + Air Conditioning Service, Wheel Alignment)</p>
+                    <h3>Gold Plan <i className = "fa-solid fa-circle-info button" onClick = {()=>toggleDisplay((e:boolean)=>setGoldDisplay(e), goldDisplay)}></i></h3>
+                    <img src={Assets.goldCard} alt="generic business gold credit card" onClick = {()=>toggleDisplay((e:boolean)=>setGoldDisplay(e), goldDisplay)}/>
+                    {Button({text: "Show Gold Plan Payment Form", handleButtonClick: ()=> toggleDisplay((e:boolean)=>setGoldFinanceDisplay(e),goldDisplay)})}
+                    <p className = {`${goldDisplay? "": "displayNone"} clearButton flex flex-col alignStart`}><i className = "fa-solid fa-xmark button" onClick = {()=>toggleDisplay((e:boolean)=>setGoldDisplay(e), goldDisplay)}></i>$199/month includes 12 services/year (Gold + Air Conditioning Service, Wheel Alignment)</p>
                 </div>
         </section>
             
@@ -160,6 +164,7 @@ At AutoAligners, we value your loyalty. Keep booking with us to unlock more exci
 
 Please note that the above numbers and content are entirely fictional and should not be used as financial advice. They are provided for illustrative purposes only to demonstrate how the financial options could be presented within the car appointment booking application. */}
             </section>
+            }
             <Footer/>
         </main>
     )
