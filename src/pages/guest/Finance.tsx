@@ -17,6 +17,7 @@ export default function Finance(){
     const [goldFinanceDisplay, setGoldFinanceDisplay] = useState<boolean>(false)
 
     const [cardInfo, setCardInfo] = useState<CardInfo>()
+    const [email, setEmail] = useState<string>("");
 
     return(
         <main id = "finance">
@@ -26,9 +27,9 @@ export default function Finance(){
             {bronzeFinanceDisplay || silverFinanceDisplay || goldFinanceDisplay ? 
 
                 <section>
-                    {bronzeFinanceDisplay ? renderFinanceDisplay("bronze", bronzeFinanceDisplay, (e:boolean)=>setBronzeFinanceDisplay(e), cardInfo, (e:CardInfo)=>setCardInfo(e)) : ""}
-                    {silverFinanceDisplay ? renderFinanceDisplay("silver", silverFinanceDisplay, (e:boolean)=>setSilverFinanceDisplay(e), cardInfo, (e:CardInfo)=>setCardInfo(e)) : ""}
-                    {goldFinanceDisplay ? renderFinanceDisplay("gold", goldFinanceDisplay, (e:boolean)=>setGoldFinanceDisplay(e), cardInfo, (e:CardInfo)=>setCardInfo(e)) : ""}
+                    {bronzeFinanceDisplay ? renderFinanceDisplay({text: "bronze", display: bronzeFinanceDisplay, setDisplay: (e:boolean)=>setBronzeFinanceDisplay(e), cardInfo: cardInfo, setCardInfo: (e:CardInfo)=>setCardInfo(e), email: email, setEmail: (e:string)=>setEmail(e)}) : ""}
+                    {silverFinanceDisplay ? renderFinanceDisplay({text: "silver", display: silverFinanceDisplay, setDisplay: (e:boolean)=>setSilverFinanceDisplay(e), cardInfo: cardInfo, setCardInfo: (e:CardInfo)=>setCardInfo(e), email: email, setEmail: (e:string)=>setEmail(e)}) : ""}
+                    {goldFinanceDisplay ? renderFinanceDisplay({text: "gold", display: goldFinanceDisplay, setDisplay: (e:boolean)=>setGoldFinanceDisplay(e), cardInfo: cardInfo, setCardInfo: (e:CardInfo)=>setCardInfo(e), email: email, setEmail: (e:string)=>setEmail(e)}) : ""}
 
                 </section>
             :

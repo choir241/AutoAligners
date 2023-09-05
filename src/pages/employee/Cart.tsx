@@ -27,7 +27,7 @@ export default function Cart(){
             <section className = "flex justifyBetween cart">
 
                 <section className = "flex flex-col cartContainer">
-                    {RenderCart(cart, inventory, cartItemQuantity, (e:string)=>setCartItemQuantity(e), cardInfo, (e:CardInfo)=>setCardInfo(e))}
+                    {RenderCart({cart: cart, inventory: inventory, cartItemQuantity: cartItemQuantity, setCartItemQuantity: (e:string)=>setCartItemQuantity(e), cardInfo: cardInfo, setCardInfo: (e:CardInfo)=>setCardInfo(e)})}
                 </section>
 
             </section>

@@ -47,6 +47,15 @@ interface CartPurchase{
     total: string
 }
 
+interface Cart{
+    cart: CartItem[], 
+    inventory: InventoryItem[], 
+    cartItemQuantity: string | undefined,
+    setCartItemQuantity: (e:string)=>void,
+    cardInfo: CardInfo | undefined,
+    setCardInfo: (e:CardInfo)=>void
+
+}
 
 export function RenderPaymentForm(cardInfo: CardInfo | undefined, setCardInfo: (e:CardInfo)=>void){
     return(
@@ -301,10 +310,10 @@ async function handleMakeCartPurchase(props: CartPurchase){
 } 
 
 //render cart, cart total, item totals, and item quantities
-export function RenderCart(cart: CartItem[], inventory: InventoryItem[], cartItemQuantity: string | undefined, setCartItemQuantity: (e:string)=>void, cardInfo: CardInfo | undefined, setCardInfo: (e:CardInfo)=>void){
+export function RenderCart(props: Cart){
 
-    if(cart?.length){
-        const findUsersCart = cart.filter((item: CartItem, i: number)=>item.email === localStorage.getItem("email"));
+    if(props.cart?.length){
+        const findUsersCart = props.cart.filter((item: CartItem, i: number)=>item.email === localStorage.getItem("email"));
 
         let total = ""
         let cartTotal:number = 0
@@ -320,7 +329,7 @@ export function RenderCart(cart: CartItem[], inventory: InventoryItem[], cartIte
                 decimalTotal += parseInt(itemPriceTotal.toFixed(2).toString().split(".")[1]) 
             }
 
-            if(i === cart.length-1){
+            if(i === props.cart.length-1){
 
                 let decimalNumbers = decimalTotal.toString().split("")
 
@@ -335,10 +344,10 @@ export function RenderCart(cart: CartItem[], inventory: InventoryItem[], cartIte
                 total += "." + decimals
             }
 
-            const checkCartQuantity = cartItemQuantity ? cartItemQuantity : item.quantity
+            const checkCartQuantity = props.cartItemQuantity ? props.cartItemQuantity : item.quantity
             total = Number(total).toFixed(2)
 
-            if(cart.length === 1){
+            if(props.cart.length === 1){
 
             return(
                     <section className = "flex flex-col" key = {i}>
@@ -347,48 +356,48 @@ export function RenderCart(cart: CartItem[], inventory: InventoryItem[], cartIte
                             <div className="flex justifyBetween alignCenter">
                                 <h2>{item.name}</h2><i className = "fa-solid fa-xmark button" onClick = {()=>handleDeleteCartItem(item.$id)}></i>
                             </div>
-                                <h2>Quantity: {RenderCartQuantity({name: item.name, quantity: item.quantity, inventory: inventory, cartItemQuantity: cartItemQuantity, setCartItemQuantity: (e:string)=>setCartItemQuantity(e)})} {Button({text: "Update", handleButtonClick: ()=>EditCart({name: item.name, price: item.price, email: item.email, quantity: checkCartQuantity, manufacturer: item.manufacturer, description: item.description, category: item.category, $id: item.$id, itemID: item.itemID})})}</h2>
+                                <h2>Quantity: {RenderCartQuantity({name: item.name, quantity: item.quantity, inventory: props.inventory, cartItemQuantity: props.cartItemQuantity, setCartItemQuantity: (e:string)=>props.setCartItemQuantity(e)})} {Button({text: "Update", handleButtonClick: ()=>EditCart({name: item.name, price: item.price, email: item.email, quantity: checkCartQuantity, manufacturer: item.manufacturer, description: item.description, category: item.category, $id: item.$id, itemID: item.itemID})})}</h2>
                         <h2>${parseInt(item?.quantity) > 1 ? itemPriceTotal.toFixed(2)  : item.price}</h2>
                         </div>
                         <div className = "flex cartTotal justifyBetween" key = {total}><h2>Total: </h2> <h2>${total}</h2></div>
 
-                        {RenderPaymentForm(cardInfo, (e:CardInfo)=>setCardInfo(e))}
+                        {RenderPaymentForm(props.cardInfo, (e:CardInfo)=>props.setCardInfo(e))}
                 
-                        {Button({text: "Purchase Items", handleButtonClick: ()=>handleMakeCartPurchase({inventory: inventory, cart: cart,cardInfo: cardInfo, total: total})})}
+                        {Button({text: "Purchase Items", handleButtonClick: ()=>handleMakeCartPurchase({inventory: props.inventory, cart: props.cart,cardInfo: props.cardInfo, total: total})})}
                     </section>
                 )
 
-            }else if(cart.length > 1 && i !== cart.length-1){
+            }else if(props.cart.length > 1 && i !== props.cart.length-1){
                 return(
                     <section className = "flex flex-col" key = {i}>
 
                     <div className="flex justifyBetween">
                     <h2>{item.name} <i className = "fa-solid fa-xmark button" onClick = {()=>handleDeleteCartItem(item.$id)}></i></h2>
                     <h2>${item.price}</h2>
-                    <h2>Quantity: {RenderCartQuantity({name: item.name, quantity: item.quantity, inventory: inventory, cartItemQuantity: cartItemQuantity, setCartItemQuantity: (e:string)=>setCartItemQuantity(e)})} {Button({text: "Update", handleButtonClick: ()=>EditCart({name: item.name, price: item.price, email: item.email, quantity: checkCartQuantity, manufacturer: item.manufacturer, description: item.description, category: item.category, $id: item.$id, itemID: item.itemID})})}</h2>
+                    <h2>Quantity: {RenderCartQuantity({name: item.name, quantity: item.quantity, inventory: props.inventory, cartItemQuantity: props.cartItemQuantity, setCartItemQuantity: (e:string)=>props.setCartItemQuantity(e)})} {Button({text: "Update", handleButtonClick: ()=>EditCart({name: item.name, price: item.price, email: item.email, quantity: checkCartQuantity, manufacturer: item.manufacturer, description: item.description, category: item.category, $id: item.$id, itemID: item.itemID})})}</h2>
                     <h2>${parseInt(item?.quantity) > 1 ? itemPriceTotal.toFixed(2)   : item.price}</h2>
                     </div>
 
                 </section>
                 )
 
-            }else if(i === cart.length-1){
+            }else if(i === props.cart.length-1){
                 return(
                     <section className = "flex flex-col" key = {i}>
 
                     <div className="flex justifyBetween">
                     <h2>{item.name} <i className = "fa-solid fa-xmark button" onClick = {()=>handleDeleteCartItem(item.$id)}></i></h2>
                     <h2>${item.price}</h2>
-                    <h2>Quantity: {RenderCartQuantity({name: item.name, quantity: item.quantity, inventory: inventory, cartItemQuantity: cartItemQuantity, setCartItemQuantity: (e:string)=>setCartItemQuantity(e)})} {Button({text: "Update", handleButtonClick: ()=>EditCart({name: item.name, price: item.price, email: item.email, quantity: checkCartQuantity, manufacturer: item.manufacturer, description: item.description, category: item.category, $id: item.$id, itemID: item.itemID})})}</h2>
+                    <h2>Quantity: {RenderCartQuantity({name: item.name, quantity: item.quantity, inventory: props.inventory, cartItemQuantity: props.cartItemQuantity, setCartItemQuantity: (e:string)=>props.setCartItemQuantity(e)})} {Button({text: "Update", handleButtonClick: ()=>EditCart({name: item.name, price: item.price, email: item.email, quantity: checkCartQuantity, manufacturer: item.manufacturer, description: item.description, category: item.category, $id: item.$id, itemID: item.itemID})})}</h2>
                     <h2>${parseInt(item?.quantity) > 1 ? itemPriceTotal.toFixed(2)   : item.price}</h2>
 
                     </div>
 
                     <div className = "flex cartTotal justifyBetween" key = {total}><h2>Total: </h2><h2>${total}</h2></div>
 
-                    {RenderPaymentForm(cardInfo, (e:CardInfo)=>setCardInfo(e))}
+                    {RenderPaymentForm(props.cardInfo, (e:CardInfo)=>props.setCardInfo(e))}
 
-                    {Button({text: "Purchase Items", handleButtonClick: ()=>handleMakeCartPurchase({inventory: inventory, cart: cart, cardInfo: cardInfo, total: total})})}
+                    {Button({text: "Purchase Items", handleButtonClick: ()=>handleMakeCartPurchase({inventory: props.inventory, cart: props.cart, cardInfo: props.cardInfo, total: total})})}
 
                 </section>
                 )
