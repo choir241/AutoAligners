@@ -290,6 +290,31 @@ label{
     cursor: pointer;
 }
 
+#finance .payment{
+    flex-direction: column;
+    align-items: center;
+}
+
+#finance .payment section, #finance .payment{
+    margin-bottom: 0rem;
+    padding: 0rem;
+}
+
+#finance .payment .imageContainer{
+    width: 30%;
+}
+
+#finance .payment section, #finance .payment{
+    width: 50%;
+}
+
+#finance .purchase h1, #finance .purchase p{
+    padding: 1rem;
+}
+
+#finance .purchase div{
+    width: 23%;
+}
 
 /* Auth
    ========================================================================== */
@@ -442,6 +467,7 @@ html{
 
 h1{
     font-size: 6rem;
+    text-transform: capitalize;
 }
 
 h2{
