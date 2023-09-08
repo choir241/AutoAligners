@@ -17,6 +17,7 @@ export default function App(){
     const EditAppointment = lazy(()=>import("./pages/employee/EditAppointment.tsx"));
     const Employee = lazy(()=>import("./pages/employee/Employee.tsx"));
     const Finance = lazy(()=>import("./pages/guest/Finance.tsx"));
+    const ClientFinance = lazy(()=> import("./pages/employee/ClientFinance.tsx"));
     const EmployeeSettings = lazy(()=>import("./pages/employee/EmployeeSettings.tsx"));
     const Inventory = lazy(()=>import("./pages/employee/Inventory.tsx"));
     const InventoryShop = lazy(()=>import("./pages/employee/InventoryShop.tsx"));
@@ -40,6 +41,7 @@ export default function App(){
                         <Route path = "/reservation" element = {<Reservation/>}/>
                     </Route>
                     <Route element = {<PrivateRoutes/>}>
+                        <Route path = "/clientFinance" element = {<ClientFinance/>}/>
                         <Route path = "/cart" element = {<Cart/>}/>
                         <Route path = "/inventory" element = {<Inventory/>}/>
                         <Route path = "/inventoryShop" element = {<InventoryShop/>}/>

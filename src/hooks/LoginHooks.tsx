@@ -64,6 +64,9 @@ export async function GetUsers(setListOfUsers: (e:User[])=>void){
     const [dataResponse] = await Promise.all([
       axios.get("https://car-app-backend-0ejb.onrender.com/getUsers")
     ])
+
+    console.log(dataResponse)
+
     if(dataResponse.data.users.length){
       setListOfUsers(dataResponse.data.users);
     }
@@ -191,6 +194,8 @@ export async function handleLogin(props: Login): Promise<void>{
       const checkEmployee = props?.listOfUsers?.filter((user: User)=>{
         return user.$id === props.employeeId
       })
+
+      console.log(checkEmployee)
     
       const fullName = /^[A-Za-z\s]+$/;
       const mail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;

@@ -1,3 +1,49 @@
+/* Table
+   ========================================================================== */
+table{
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+*, *:before, *:after{
+    box-sizing: inherit;
+}
+
+table thead{
+    border-bottom: 2px solid black;
+}
+
+table .odd{
+    background: #eeeeee;
+}
+
+
+table th{
+    color: #212931;
+    font-family: "Source Sans Pro", Helvetica, sans-serif;
+    font-size: 2rem;
+    font-weight: 900;
+    letter-spacing: 0.075rem;
+    line-height: 1.5;
+    padding: 0 0.75rem 0.75rem 0.75rem;
+    text-align: left;
+    text-transform: uppercase;
+    margin: 0;
+    border: 0;
+    vertical-align: baseline;
+}
+
+table td{
+    padding: 0.75rem 0.75rem;
+    margin: 0;
+    border: 0;
+    vertical-align: baseline;
+    font-size: 2rem;
+}
+
+
+
 /* Estimate
    ========================================================================== */
 #estimate .estimate{
@@ -346,9 +392,6 @@ input{
     padding: 0rem 2rem;
 }
 
-#auth section .hubButton{
-    width: 100%;
-}
 
 #auth .admin{
     width: 100%;

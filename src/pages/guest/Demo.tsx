@@ -16,6 +16,8 @@ export default function Demo(){
         GetUsers((e:User[])=>setListOfUsers(e));
     },[])
 
+    console.log(listOfUsers)
+
     return(
         <main id = "auth">
             <Nav pageHeading = {"Demo Account Login"}/>

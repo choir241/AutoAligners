@@ -3,14 +3,27 @@ import { RenderPaymentForm, CardInfo } from "./CartHooks"
 import api from "../api/api"
 import {Permission, Role} from "appwrite"
 
-interface financeDisplay{
+export interface FinanceDisplay{
     text:string, 
     display: boolean, 
     setDisplay: (e:boolean) => void, 
     cardInfo: CardInfo | undefined, 
     setCardInfo: (e:CardInfo)=>void,
     email: string,
-    setEmail: (e:string) => void
+    setEmail: (e:string) => void,
+}
+
+export interface ClientFinance{
+$id: string,
+$updatedAt: string,
+$createdAt: string,
+cardAmount: number,
+cardNumber: number,
+email: string,
+expirationDate: string,
+financeTotal: string,
+securityNumber: string,
+type: string
 }
 
 export function toggleDisplay(setDisplay: (e:boolean)=>void, display: boolean){
@@ -21,7 +34,7 @@ async function handlePayment(financeTotal: string, email: string, cardInfo: Card
     try{
     const cardAmount = 1000 + Math.ceil(Math.random() * 100000)
 
-    const purchase = {
+    const purchase = {  
         cardAmount,
         email,
         financeTotal,
@@ -39,7 +52,7 @@ async function handlePayment(financeTotal: string, email: string, cardInfo: Card
     }
 }
 
-export function renderFinanceDisplay(props: financeDisplay){
+export function renderFinanceDisplay(props: FinanceDisplay){
 
     let financePlanText = ""
     let financeTotal = ""
@@ -77,5 +90,65 @@ export function renderFinanceDisplay(props: financeDisplay){
 
          
         </section>
+    )
+}
+
+export async function GetClientFinance(setClientFinance: (e:ClientFinance[])=>void){
+    try{
+        const data = await api.listDocuments(process.env.REACT_APP_CART_DATABASE_ID, process.env.REACT_APP_FINANCE_PAYMENTS_COLLECTION_ID);
+
+        setClientFinance(data.documents);
+    }catch(err){
+        console.error(err);
+    }
+}
+
+export function RenderClientFinance(clientFinance: ClientFinance[], startIndex: number, endIndex: number){
+
+    const tableContent = clientFinance.map((client: ClientFinance, i: number)=>{
+        const createdAt = client.$createdAt.split("T")
+        const updatedAt = client.$updatedAt.split("T")
+
+        let currentPlan = ""
+
+        if(client.financeTotal === "199"){
+            currentPlan = "Gold"
+        }else if(client.financeTotal === "120"){
+            currentPlan = "Silver"
+        }else if(client.financeTotal === "75"){
+            currentPlan = "Bronze"
+        }
+
+        return(
+        <tr className = {`${i % 2 === 0 ? "even": "odd"}`} key = {client.$id}>
+            <td>{client.email}</td>
+            <td>${client.financeTotal}/month</td>
+            <td>{currentPlan}</td>
+            <td>{createdAt[0]}</td>
+            <td>{updatedAt[0]}</td>
+            <td><button className = "fa-solid fa-trash clearButton"></button></td>
+            <td><button className = "fa-solid fa-pen-to-square clearButton"></button></td>
+        </tr>
+        )
+    }).slice(startIndex,endIndex)
+
+
+    return(
+        <table>
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Plan Cost</th>
+                    <th>Plan</th>
+                    <th>Created At</th>
+                    <th>Updated At</th>
+                    <th>Delete</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {tableContent}
+            </tbody>
+        </table>
     )
 }

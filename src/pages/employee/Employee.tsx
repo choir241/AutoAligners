@@ -5,6 +5,7 @@ import {ButtonSubmit, Button, ButtonLink} from "../../components/Button"
 import {User, GenerateNewEmployee, handleLogin, GetAccount, GetUsers, DisplayUsers, Input, handleSignUp} from "../../hooks/LoginHooks"
 import { PurchasedItem, GetPurchases } from "../../hooks/PurchasesHooks"
 import { RenderEmployeeAppointments } from "../../hooks/EmployeeHooks"
+import PaginatedButtons from "../../components/Graphs/PaginatedButtons"
 
 export function EmployeeButtons(){
     return(
@@ -38,6 +39,11 @@ export function EmployeeHub(){
     const [listOfUsers, setListOfUsers] = useState<User[]>([]);
     const [purchases, setPurchases] = useState<PurchasedItem[]>([]);
     const [showPurchases, setShowPurchases] = useState<boolean>(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const rowsPerPage = 5;
+
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;  
 
     useEffect(()=>{
       if(localStorage.getItem("email")){
@@ -116,8 +122,9 @@ export function EmployeeHub(){
                   <section className = "flex flex-col alignCenter purchases">
 
                   <button className = {`button ${showPurchases ? "" : "hubButton"}`} onClick = {()=>setShowPurchases(!showPurchases)}>{showPurchases? "Hide Your Sale History" : "Show Your Sale History"}</button>
+                    {showPurchases ? <PaginatedButtons currentPage = {currentPage} cartLength = {purchases.length} setCurrentPage = {(e:number)=>setCurrentPage(e)} rowsPerPage={rowsPerPage}/> : "" }
 
-                    {showPurchases ? RenderEmployeeAppointments(purchases) : ""}
+                    {showPurchases ? RenderEmployeeAppointments(purchases, startIndex, endIndex) : ""}
 
                     {showPurchases ? <button className = "button" onClick = {()=>setShowPurchases(!showPurchases)}>Hide Your Sale History</button> : ""}
 

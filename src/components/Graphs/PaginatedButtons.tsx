@@ -17,7 +17,7 @@ const handlePageChange = (newPage:number) => {
 return(
   <div>
         {Array.from({ length: Math.ceil(props.cartLength / props.rowsPerPage) }, (_, i) => (
-        <button className = {`clearButton ${props.currentPage === i+1 ? "selectedPage" : ""}`}  onClick = {()=>handlePageChange(i+1)}>{i+1}</button> 
+        <button key = {`button-${i}`}className = {`clearButton ${props.currentPage === i+1 ? "selectedPage" : ""}`}  onClick = {()=>handlePageChange(i+1)}>{i+1}</button> 
       ))}
   </div>
 )
