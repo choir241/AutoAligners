@@ -30,7 +30,11 @@ interface EditFinance{
     display: boolean, 
     setDisplay: (e:boolean)=>void, 
     client: string, 
-    clientFinance: ClientFinance[]
+    clientFinance: ClientFinance[],
+    financeTotal: string,
+    setFinanceTotal: (e:string) => void,
+    email: string,
+    setEmail: (e:string) => void
 }
 
 interface TableContent{
@@ -40,7 +44,11 @@ interface TableContent{
     displayFinance: boolean, 
     setDisplayFinance: (e:boolean)=> void,
     client: string,
-    setClient: (e:string)=> void
+    setClient: (e:string)=> void,
+    financeTotal: string,
+    setFinanceTotal: (e:string) => void,
+    email: string,
+    setEmail: (e:string) => void
 }
 
 export function toggleDisplay(setDisplay: (e:boolean)=>void, display: boolean){
@@ -130,10 +138,16 @@ try{
 }
 }
 
-async function editClientFinance(id:string, client: ClientFinance){
+async function editClientFinance(id:string, client: ClientFinance, financeTotal: string, email: string){
 try{
-    console.log(client)
-    console.log(id) 
+    const data = {
+        email,
+        financeTotal        
+    }
+
+    await api.updateDocument(process.env.REACT_APP_CART_DATABASE_ID, process.env.REACT_APP_FINANCE_PAYMENTS_COLLECTION_ID, id, data)
+
+    window.location.reload();
 }catch(err){
     console.error(err)
 }
@@ -152,15 +166,17 @@ export function renderEditFinanceDisplay(props: EditFinance){
 
         <h1>Edit Client Finance</h1>
         
-        <input defaultValue = {findClient[0].email} type = "email"/>
+        <input defaultValue = {findClient[0].email} type = "email" onChange = {(e)=>props.setEmail(e.target.value)}/>
 
-        <select>
-            <option></option>
-            <option></option>
-            <option></option>
+        <h2>Manage Client Finance Plan</h2>
+
+        <select defaultValue = {findClient[0].financeTotal} onChange = {(e)=>props.setFinanceTotal(e.target.value)}>
+            <option>199</option>
+            <option>120</option>
+            <option>75</option>
         </select>
 
-        <button onClick = {()=>editClientFinance(props.client, findClient[0])}></button>
+        <button className = "clearButton" onClick = {()=>editClientFinance(props.client, findClient[0], props.financeTotal, props.email)}>Edit Finance</button>
     </section>
     )
 }
@@ -197,6 +213,8 @@ export function RenderClientFinance(props: TableContent){
                 e.preventDefault();
                 props.setDisplayFinance(!props.displayFinance)
                 props.setClient(client.$id);
+                props.setFinanceTotal(client.financeTotal)
+                props.setEmail(client.email)
             }}></button></td>
         </tr>
         )

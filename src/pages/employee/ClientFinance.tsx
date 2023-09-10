@@ -10,6 +10,9 @@ export default function DisplayClientFinance(){
     const [clientFinance, setClientFinance] = useState<ClientFinance[]>([])
     const [currentPage, setCurrentPage] = useState(1);
     const [client, setClient] = useState<string>("");
+    const [financeTotal, setFinanceTotal] = useState<string>("")
+    const [email, setEmail] = useState<string>("");
+
     const rowsPerPage = 5;
 
     const startIndex = (currentPage - 1) * rowsPerPage;
@@ -26,13 +29,13 @@ export default function DisplayClientFinance(){
             {
             displayFinance ?
             <section>
-                {renderEditFinanceDisplay({display: displayFinance, setDisplay: (e:boolean)=>setDisplayFinance(e), client: client, clientFinance: clientFinance})}
+                {renderEditFinanceDisplay({display: displayFinance, setDisplay: (e:boolean)=>setDisplayFinance(e), client: client, clientFinance: clientFinance, financeTotal, setFinanceTotal: (e:string)=>setFinanceTotal(e), email, setEmail: (e:string)=>setEmail(e)})}
             </section>
             :
             <section>
                 <PaginatedButtons currentPage = {currentPage} cartLength = {clientFinance.length} setCurrentPage = {(e:number)=>setCurrentPage(e)} rowsPerPage={rowsPerPage}/>
 
-                {RenderClientFinance({clientFinance: clientFinance, startIndex: startIndex, endIndex: endIndex, displayFinance: displayFinance, setDisplayFinance: (e:boolean)=>setDisplayFinance(e), client: client, setClient: (e:string)=>setClient(e)})}
+                {RenderClientFinance({clientFinance: clientFinance, startIndex: startIndex, endIndex: endIndex, displayFinance: displayFinance, setDisplayFinance: (e:boolean)=>setDisplayFinance(e), client: client, setClient: (e:string)=>setClient(e), financeTotal, setFinanceTotal: (e:string)=>setFinanceTotal(e), email, setEmail: (e:string)=> setEmail(e)})}
             </section>
             }
             <Footer/>
