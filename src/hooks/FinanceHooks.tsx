@@ -26,6 +26,23 @@ securityNumber: string,
 type: string
 }
 
+interface EditFinance{
+    display: boolean, 
+    setDisplay: (e:boolean)=>void, 
+    client: string, 
+    clientFinance: ClientFinance[]
+}
+
+interface TableContent{
+    clientFinance: ClientFinance[], 
+    startIndex: number,
+    endIndex: number, 
+    displayFinance: boolean, 
+    setDisplayFinance: (e:boolean)=> void,
+    client: string,
+    setClient: (e:string)=> void
+}
+
 export function toggleDisplay(setDisplay: (e:boolean)=>void, display: boolean){
     setDisplay(!display)
 }
@@ -103,9 +120,55 @@ export async function GetClientFinance(setClientFinance: (e:ClientFinance[])=>vo
     }
 }
 
-export function RenderClientFinance(clientFinance: ClientFinance[], startIndex: number, endIndex: number){
+async function deleteClientFinance(id:string){
+try{
+    const data = await api.deleteDocument(process.env.REACT_APP_CART_DATABASE_ID, process.env.REACT_APP_FINANCE_PAYMENTS_COLLECTION_ID, id)
+    console.log(data)
+    window.location.reload();
+}catch(err){
+    console.error(err)
+}
+}
 
-    const tableContent = clientFinance.map((client: ClientFinance, i: number)=>{
+async function editClientFinance(id:string, client: ClientFinance){
+try{
+    console.log(client)
+    console.log(id) 
+}catch(err){
+    console.error(err)
+}
+}
+
+
+
+export function renderEditFinanceDisplay(props: EditFinance){
+
+    const findClient = props.clientFinance.filter((clientFinance: ClientFinance)=>clientFinance.$id === props.client)
+
+    return(
+    <section className = "flex flex-col alignCenter purchase">
+
+        {Button({text: "Go Back", handleButtonClick: ()=>toggleDisplay((e:boolean)=>props.setDisplay(e), props.display)})}
+
+        <h1>Edit Client Finance</h1>
+        
+        <input defaultValue = {findClient[0].email} type = "email"/>
+
+        <select>
+            <option></option>
+            <option></option>
+            <option></option>
+        </select>
+
+        <button onClick = {()=>editClientFinance(props.client, findClient[0])}></button>
+    </section>
+    )
+}
+
+
+export function RenderClientFinance(props: TableContent){
+
+    const tableContent = props.clientFinance.map((client: ClientFinance, i: number)=>{
         const createdAt = client.$createdAt.split("T")
         const updatedAt = client.$updatedAt.split("T")
 
@@ -126,11 +189,18 @@ export function RenderClientFinance(clientFinance: ClientFinance[], startIndex: 
             <td>{currentPlan}</td>
             <td>{createdAt[0]}</td>
             <td>{updatedAt[0]}</td>
-            <td><button className = "fa-solid fa-trash clearButton"></button></td>
-            <td><button className = "fa-solid fa-pen-to-square clearButton"></button></td>
+            <td><button className = "fa-solid fa-trash clearButton" onClick = {(e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
+                e.preventDefault();
+                deleteClientFinance(client.$id);
+            }}></button></td>
+            <td><button className = "fa-solid fa-pen-to-square clearButton" onClick = {(e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
+                e.preventDefault();
+                props.setDisplayFinance(!props.displayFinance)
+                props.setClient(client.$id);
+            }}></button></td>
         </tr>
         )
-    }).slice(startIndex,endIndex)
+    }).slice(props.startIndex,props.endIndex)
 
 
     return(

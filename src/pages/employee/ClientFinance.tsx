@@ -1,13 +1,15 @@
 import React, {useState, useEffect} from "react"
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
-import {GetClientFinance, ClientFinance, RenderClientFinance} from "../../hooks/FinanceHooks"
+import {GetClientFinance, ClientFinance, RenderClientFinance, renderEditFinanceDisplay} from "../../hooks/FinanceHooks"
 import PaginatedButtons from "../../components/Graphs/PaginatedButtons"
 
 export default function DisplayClientFinance(){
 
+    const [displayFinance, setDisplayFinance] = useState<boolean>(false);
     const [clientFinance, setClientFinance] = useState<ClientFinance[]>([])
     const [currentPage, setCurrentPage] = useState(1);
+    const [client, setClient] = useState<string>("");
     const rowsPerPage = 5;
 
     const startIndex = (currentPage - 1) * rowsPerPage;
@@ -21,12 +23,18 @@ export default function DisplayClientFinance(){
         <main>
             <Nav pageHeading = {"Client Finances"}/>
 
+            {
+            displayFinance ?
             <section>
-            <PaginatedButtons currentPage = {currentPage} cartLength = {clientFinance.length} setCurrentPage = {(e:number)=>setCurrentPage(e)} rowsPerPage={rowsPerPage}/>
-
-                {RenderClientFinance(clientFinance, startIndex, endIndex)}
+                {renderEditFinanceDisplay({display: displayFinance, setDisplay: (e:boolean)=>setDisplayFinance(e), client: client, clientFinance: clientFinance})}
             </section>
+            :
+            <section>
+                <PaginatedButtons currentPage = {currentPage} cartLength = {clientFinance.length} setCurrentPage = {(e:number)=>setCurrentPage(e)} rowsPerPage={rowsPerPage}/>
 
+                {RenderClientFinance({clientFinance: clientFinance, startIndex: startIndex, endIndex: endIndex, displayFinance: displayFinance, setDisplayFinance: (e:boolean)=>setDisplayFinance(e), client: client, setClient: (e:string)=>setClient(e)})}
+            </section>
+            }
             <Footer/>
         </main>
     )
