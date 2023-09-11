@@ -103,7 +103,7 @@ export function RenderPaymentForm(cardInfo: CardInfo | undefined, setCardInfo: (
 
 //Get Cart database data
 export async function GetCart(setCart: (e:CartItem[])=>void){
-    try{    
+    try{
         const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID);
         setCart(data.documents);
     }catch(err){

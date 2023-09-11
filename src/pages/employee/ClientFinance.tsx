@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react"
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
-import {GetClientFinance, ClientFinance, RenderClientFinance, renderEditFinanceDisplay} from "../../hooks/FinanceHooks"
+import {checkDate, GetClientFinance, ClientFinance, RenderClientFinance, renderEditFinanceDisplay} from "../../hooks/FinanceHooks"
 import PaginatedButtons from "../../components/Graphs/PaginatedButtons"
 
 export default function DisplayClientFinance(){
@@ -21,6 +21,10 @@ export default function DisplayClientFinance(){
     useEffect(()=>{
         GetClientFinance((e:ClientFinance[])=>setClientFinance(e))
     },[])
+
+    useEffect(()=>{
+        checkDate(clientFinance)
+    })
 
     return (
         <main>

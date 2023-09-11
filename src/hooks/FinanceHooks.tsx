@@ -122,7 +122,9 @@ export async function GetClientFinance(setClientFinance: (e:ClientFinance[])=>vo
     try{
         const data = await api.listDocuments(process.env.REACT_APP_CART_DATABASE_ID, process.env.REACT_APP_FINANCE_PAYMENTS_COLLECTION_ID);
 
-        setClientFinance(data.documents);
+        if(data.documents.length){
+            setClientFinance(data.documents);
+        }
     }catch(err){
         console.error(err);
     }
@@ -138,7 +140,7 @@ try{
 }
 }
 
-async function editClientFinance(id:string, client: ClientFinance, financeTotal: string, email: string){
+async function editClientFinance(id:string, financeTotal: string, email: string){
 try{
     const data = {
         email,
@@ -151,6 +153,36 @@ try{
 }catch(err){
     console.error(err)
 }
+}
+
+export function checkDate(clientFinance: ClientFinance[]){
+    try{
+        const currentDate = new Date();
+        const month = currentDate.getMonth() + 1
+            
+        const financeDates = clientFinance.filter((client:ClientFinance)=>{
+            const financeArray = client.$createdAt.split("T")[0].split("-");
+            
+            if(parseInt(financeArray[1]) < month){
+               return client.financeTotal
+            }
+
+        })
+
+        financeDates.forEach( async (client: ClientFinance)=>{
+
+            client.cardAmount -= parseInt(client.financeTotal)
+
+            const data = {
+                cardAmount: client.cardAmount 
+            }
+
+            await api.updateDocument(process.env.REACT_APP_CART_DATABASE_ID, process.env.REACT_APP_FINANCE_PAYMENTS_COLLECTION_ID, client.$id, data)
+        })
+    
+    }catch(err){
+        console.error(err)
+    }
 }
 
 
@@ -176,7 +208,7 @@ export function renderEditFinanceDisplay(props: EditFinance){
             <option>75</option>
         </select>
 
-        <button className = "clearButton" onClick = {()=>editClientFinance(props.client, findClient[0], props.financeTotal, props.email)}>Edit Finance</button>
+        <button className = "clearButton" onClick = {()=>editClientFinance(props.client, props.financeTotal, props.email)}>Edit Finance</button>
     </section>
     )
 }
