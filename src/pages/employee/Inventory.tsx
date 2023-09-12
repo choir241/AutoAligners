@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from "react"
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
-import {ButtonLink} from "../../components/Button"
 import {GetInventory, InventoryItem, CurrentInventory} from "../../hooks/InventoryHooks"
 import {CartItem, GetCart} from "../../hooks/CartHooks"
 
@@ -22,9 +21,8 @@ export default function Inventory(){
 
     return(
         <main id = "inventory">
-            <Nav pageHeading = {"Inventory"}/>
+            <Nav pageHeading = {"Current Inventory"}/>
                 <div className="flex justifyCenter">
-                {ButtonLink({classNames: "goBack", text: "Go Back", domain: "/employee"})}
                 </div>
                 <section className = "itemContainer flex">
                     {CurrentInventory({cart: cart, inventory: inventory, setItemQuantity: (e:number)=>setItemQuantity(e), quantity: itemQuantity})}

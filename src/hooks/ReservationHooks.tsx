@@ -125,7 +125,9 @@ export function SelectCarMakeInput(props: SelectOptions):React.JSX.Element{
     const [previousCarMake, setPreviousCarMake] = useState<string>(props.carMake);
 
     return(
-        <select onChange = {(e)=>{
+        <select 
+        defaultValue = {props.defaultValue}
+        onChange = {(e)=>{
             props.onChange(e.target.value);
 
             //checks for empty string value for previousCarMake state
@@ -137,15 +139,15 @@ export function SelectCarMakeInput(props: SelectOptions):React.JSX.Element{
             if(previousCarMake !== e.target.value){
                 //resets model and year values to account for changed carMake value
                 //we don't want to reset make, as that would defeat the purpose of selecting new values
-                props.resetModel("");
                 props.resetYear("");
+                props.resetModel("");
 
                 //set previous previousCarMake value to the new current value selected
                 setPreviousCarMake(e.target.value);
             }
 
         }}>
-            <option defaultValue = "default">Select {props.defaultValue}</option>
+            <option value = "default">Select {props.defaultValue}</option>
             {props.options}
         </select>
     )
@@ -157,9 +159,11 @@ export function SelectCarModelInput(props: SelectOptions):React.JSX.Element{
     const [previousCarModel, setPreviousCarModel] = useState<string>(props.carModel);
 
     return(
-        <select onChange = {(e)=>{
+        <select 
+        defaultValue = {props.defaultValue}
+        onChange = {(e)=>{
             props.onChange(e.target.value)
-
+            
             //checks for empty string value for previousCarModel state
             if(!previousCarModel){
                 setPreviousCarModel(e.target.value);
@@ -173,7 +177,7 @@ export function SelectCarModelInput(props: SelectOptions):React.JSX.Element{
                 setPreviousCarModel(e.target.value)
             }
         }}>
-            <option defaultValue = "default">Select {props.defaultValue}</option>
+            <option value = "default">Select {props.defaultValue}</option>
             {props.options}
         </select>
     )
@@ -182,8 +186,10 @@ export function SelectCarModelInput(props: SelectOptions):React.JSX.Element{
 export function SelectCarYearInput(props: SelectOptions):React.JSX.Element{
     return(
         //changing year value does not directly effect carMake and/or carModel, so there is no need to check if value has changed
-        <select onChange = {(e)=>props.onChange(e.target.value)}>
-            <option defaultValue = "default">Select {props.defaultValue}</option>
+        <select 
+        defaultValue = {props.defaultValue}
+        onChange = {(e)=>props.onChange(e.target.value)}>
+            <option value = "default">Select {props.defaultValue}</option>
             {props.options}
         </select>
     )
@@ -220,8 +226,15 @@ export async function GetCarData(props:CarSelectData){
         try{
 
             // sets form options to all car makes
-            const carOptions:React.JSX.Element[] = carData.map((car:Car,i:number)=><option key = {i}>{car.manufacturer}</option>);
+
+            const uniqueCarOptions: string[] = [];
+
+            carData.forEach((car:Car)=>uniqueCarOptions.indexOf(car.manufacturer) === -1 ? uniqueCarOptions.push(car.manufacturer) : "")
+
+            const carOptions:React.JSX.Element[] = uniqueCarOptions.sort((a:string,b:string)=>a.localeCompare(b)).map((car:string,i:number)=><option key = {i}>{car}</option>);
             //onMakeSelect is a setState() here, so we make it a separate function here to prevent re-rendering
+
+         
             const makeSelect = ()=>props.onMakeSelect(carOptions);
             makeSelect();
 
@@ -229,15 +242,19 @@ export async function GetCarData(props:CarSelectData){
 
                 //sets form options to all car models available for selected car make value
                 //returning false is there to 1. prevent the warning to appear that filter method expects a returned value 2. to return a value that won't affect the current existing desired functionality
-                const response = carData.filter((car:Car)=>{
-                   if(car.manufacturer === props.carMake){
+
+                const uniqueCarOptions:string[] = []
+
+               carData.filter((car:Car)=>{
+                   if(car.manufacturer === props.carMake && uniqueCarOptions.indexOf(car.model)===-1){
+                        uniqueCarOptions.push(car.model)
                         return car.model
                    }
-                   return false;
                 })
 
+
                 //returns a new array of react jsx element with new car model values that are respective to selected car make value
-                const carOptions:React.JSX.Element[] = response.map((car:Car,i:number)=>{return <option key = {i}>{car.model}</option>});
+                const carOptions:React.JSX.Element[] = uniqueCarOptions.sort((a:string,b:string)=>a.localeCompare(b)).map((car:string,i:number)=>{return <option key = {i}>{car}</option>});
                 const modelSelect = ()=>props.onModelSelect(carOptions)
                 modelSelect();
             }

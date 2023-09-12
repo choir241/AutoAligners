@@ -59,23 +59,29 @@ export async function GetAccount(setUser: (e:User)=>void){
   }
 }
   
-export async function GetUsers(setListOfUsers: (e:User[])=>void){
-  try{
-    const [dataResponse] = await Promise.all([
-      axios.get("https://car-app-backend-0ejb.onrender.com/getUsers")
-    ])
+export async function GetUsers(setListOfUsers: (e: User[]) => void, setLoading: (e:boolean)=>void) {
+  try {
+    // You can move the API endpoint URL to a separate constant for better maintainability
+    const apiUrl = "https://car-app-backend-0ejb.onrender.com/getUsers";
 
-    console.log(dataResponse)
+    const response = await axios.get(apiUrl);
 
-    if(dataResponse.data.users.length){
-      setListOfUsers(dataResponse.data.users);
+    // Assuming the response format is { data: { users: [] } }
+    const { data } = response;
+
+    if (data && data.users && data.users.length) {
+      // Only update the list of users if data is available
+      console.log(data.users)
+      setListOfUsers(data.users);
+      setLoading(true);
     }
-  }catch(err){
+
+  } catch (err) {
     console.error(err);
-    toast.error(`${err}`);
+    // Handle errors gracefully and provide user-friendly feedback
+    // toast.error("Failed to fetch users. Please try again later.");
   }
 }
-  
   
 export async function handleDelete(userId: string){
     try{

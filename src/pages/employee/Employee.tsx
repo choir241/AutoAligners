@@ -1,6 +1,6 @@
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
-import React, {useState, useEffect, useMemo} from "react"
+import React, {useState, useEffect} from "react"
 import {ButtonSubmit, Button, ButtonLink} from "../../components/Button"
 import {User, GenerateNewEmployee, handleLogin, GetAccount, GetUsers, DisplayUsers, Input, handleSignUp} from "../../hooks/LoginHooks"
 import { PurchasedItem, GetPurchases } from "../../hooks/PurchasesHooks"
@@ -39,7 +39,8 @@ export function EmployeeHub(){
     const [listOfUsers, setListOfUsers] = useState<User[]>([]);
     const [purchases, setPurchases] = useState<PurchasedItem[]>([]);
     const [showPurchases, setShowPurchases] = useState<boolean>(false);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [loading, setLoading] = useState<boolean>(false);
     const rowsPerPage = 5;
 
     const startIndex = (currentPage - 1) * rowsPerPage;
@@ -51,12 +52,14 @@ export function EmployeeHub(){
       }
     },[])
   
-    useMemo(()=>{
-        GetUsers((e:User[])=>setListOfUsers(e));
+    useEffect(()=>{
+        GetUsers((e:User[])=>setListOfUsers(e), (e:boolean)=>setLoading(e));
     },[])
 
     useEffect(()=>{
+      if(localStorage.getItem("email")){
         GetPurchases((e:PurchasedItem[])=>setPurchases(e))
+      }
     },[])
   
     //example employee id 649c8a408d41d5c02f5c
@@ -77,7 +80,7 @@ export function EmployeeHub(){
             {Input({type: "text", name: "name",  onChange: (e)=>setName(e), placeholder: "Your Full Name"})}
             {Input({type: "password", name: "password",  onChange: (e)=>setPassword(e), placeholder: "Your Password"})}
   
-            {listOfUsers && listOfUsers.length ? 
+            {loading? 
             ButtonSubmit({handleButtonClick: (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handleLogin({email:email, name: name, password: password, employeeId: employeeId, listOfUsers: listOfUsers}), text: "Login"})
             : <h1>Loading...</h1>
             }

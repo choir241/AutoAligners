@@ -32,10 +32,10 @@ export default function Nav(props: nav){
     
     return(
         <header>
-             <nav className = "flex justifyBetween">
+             <nav className = "flex justifyBetween alignCenter">
                 <Link to = "/"><h1>AutoAligners</h1></Link>
             <ul className = "flex alignCenter">
-              <li><Link to = "/">Home</Link></li>
+              <li><Link to = "/">{localStorage.getItem("email") ? "Employee Hub" : "Home"}</Link></li>
               {localStorage.getItem("email") ? "" : <li><Link to = "/estimate">Estimate Car Service</Link></li>}
               {localStorage.getItem("email") ? "" : <li><Link to = "/finance">Finance</Link></li>}
               {localStorage.getItem("email") ? 

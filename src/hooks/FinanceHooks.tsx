@@ -161,7 +161,7 @@ export function checkDate(clientFinance: ClientFinance[]){
         const month = currentDate.getMonth() + 1
             
         const financeDates = clientFinance.filter((client:ClientFinance)=>{
-            const financeArray = client.$createdAt.split("T")[0].split("-");
+            const financeArray = client.$updatedAt.split("T")[0].split("-");
             
             if(parseInt(financeArray[1]) < month){
                return client.financeTotal

@@ -31,8 +31,8 @@ export default function App(){
             <BrowserRouter>
                 <Routes>
                   <Route exact path = "/" element = {<Home/>}/>
-                  <Route path = "/employee" element = {<Employee/>}/>
                     <Route element = {<PublicRoutes/>}>
+                        <Route path = "/employee" element = {<Employee/>}/>
                         <Route path = "/finance" element = {<Finance/>}/>
                         <Route path = "/login" element = {<EmployeeHub/>}/>
                         <Route path = "/estimate" element = {<ServiceEstimate/>}/>

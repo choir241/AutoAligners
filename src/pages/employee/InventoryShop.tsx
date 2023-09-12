@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from "react"
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
-import {ButtonLink} from "../../components/Button"
 import {DefaultInventory, InventoryItem, GetInventory} from "../../hooks/InventoryHooks"
 
 export default function InventoryShop(){
@@ -16,11 +15,9 @@ export default function InventoryShop(){
 
     return(
         <main id = "inventory">
-            <Nav pageHeading = {"Inventory"}/>
+            <Nav pageHeading = {"Inventory Shop"}/>
 
             <div className="flex justifyCenter">
-            {ButtonLink({classNames: "goBack", text: "Go Back", domain: "/employee"})}
-
             </div>
 
                 <section className = "itemContainer flex">

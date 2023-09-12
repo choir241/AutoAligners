@@ -3,10 +3,15 @@ import Nav from "../components/Nav"
 import Footer from "../components/Footer"
 import {ButtonLink} from "../components/Button"
 import Assets from "../components/Assets"
+import Employee from "./employee/Employee"
 
 export default function Home(){
 
     return(
+        <>
+        { localStorage.getItem("email") ?
+        <Employee/>
+        :
         <main id = "home">
             <Nav pageHeading = ""/>
                 <section className = "flex hero">
@@ -28,5 +33,7 @@ export default function Home(){
                 </section>
             <Footer/>
         </main>
+        }
+        </>
     )   
 }

@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from "react"
+import React, {useEffect, useState} from "react"
 import Nav from "../../components/Nav"
 import {Input, handleLogin, GetUsers, User} from "../../hooks/LoginHooks"
 import {ButtonSubmit} from "../../components/Button"
@@ -11,12 +11,11 @@ export default function Demo(){
     const password = "isKri8!3"
 
     const [listOfUsers, setListOfUsers] = useState<User[]>([])
+    const [loading, setLoading] = useState<boolean>(false)
 
-    useMemo(()=>{
-        GetUsers((e:User[])=>setListOfUsers(e));
+    useEffect(()=>{
+        GetUsers((e:User[])=>setListOfUsers(e), (e:boolean)=>setLoading(e));
     },[])
-
-    console.log(listOfUsers)
 
     return(
         <main id = "auth">
@@ -32,7 +31,7 @@ export default function Demo(){
 
 
 
-                  {listOfUsers.length && listOfUsers ? 
+                  {loading ? 
                 ButtonSubmit({handleButtonClick: ()=>handleLogin({email:email, name: name, password: password, employeeId: employeeID, listOfUsers: listOfUsers}), text: "Login"})
                 : <h1>...Loading</h1>}
                 </form>

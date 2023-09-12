@@ -371,7 +371,7 @@ input{
     margin-bottom: 2rem;
 }
 
-#auth section .button{
+#auth section form .button, #auth section.purchases .button{
     width: 50%;
     padding: 2rem 4rem;
     margin: 3rem;
@@ -460,6 +460,14 @@ nav .cart{
 
 .employeeNav, .employeeNav .button{
     margin-top: 1.5rem;
+}
+
+.arrow .clearButton{
+    margin-left: 2rem;
+}
+
+.employeeNav i{
+    margin-left: 2rem;
 }
 
 .employeeNav{
@@ -719,7 +727,7 @@ textarea{
 
 .calendarHub{
     padding: 2rem;
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
 }
 
 /* Appointment
