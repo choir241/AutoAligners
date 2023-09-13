@@ -3,7 +3,7 @@ import {Link} from "react-router-dom"
 
 interface ButtonProps{
     text: string,
-    handleButtonClick: ()=>void,
+    handleButtonClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>void,
     classNames?: string
 }
 
@@ -37,7 +37,7 @@ export function Button (props: ButtonProps) {
         className = {`button ${props.classNames}`}
         onClick = {(e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
             e.preventDefault();
-            props.handleButtonClick()}
+            props.handleButtonClick(e)}
         }>
             {props.text}
         </button>

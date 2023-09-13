@@ -59,7 +59,7 @@ interface Cart{
 
 export function RenderPaymentForm(cardInfo: CardInfo | undefined, setCardInfo: (e:CardInfo)=>void){
     return(
-        <section className = "flex payment">
+        <section className = "flex payment alignCenter flex-col">
             <form className = "flex flex-col alignCenter">
                 <input type = "text" defaultValue = {cardInfo?.cardNumber} disabled/>
                 <input type = "text" defaultValue = {cardInfo?.expirationDate} disabled/>
@@ -121,7 +121,7 @@ export async function handleAddToCart(props: AddToCart){
         //find item in cart using item object in the findItem array && current logged in user
         const findCartItem = props.cart.filter((cartItem:CartItem)=>cartItem.name === findItem[0].name && localStorage.getItem("email") === cartItem.email);
 
-        const item = findItem[0];
+        const item = findCartItem[0];
 
         //if there are no duplicates items currently in the cart using findCartItem 
         if(!findCartItem.length){
@@ -154,6 +154,8 @@ export async function handleAddToCart(props: AddToCart){
                 "quantity": props.quantity ? props.quantity + findCartItem[0].quantity : 1 + findCartItem[0].quantity
             }
            
+            console.log(item)
+
             //and update the current data for the respective item
             await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID, item.$id, cartItem)
     
@@ -350,18 +352,20 @@ export function RenderCart(props: Cart){
             if(props.cart.length === 1){
 
             return(
-                    <section className = "flex flex-col" key = {i}>
+                    <section className = "flex flex-col alignCenter" key = {i}>
 
-                        <div className="flex justifyBetween">
-                            <div className="flex justifyBetween alignCenter">
+                        <div className="flex justifyBetween alignCenter">
+                            <div className="flex alignCenter">
                                 <h2>{item.name}</h2><i className = "fa-solid fa-xmark button" onClick = {()=>handleDeleteCartItem(item.$id)}></i>
                             </div>
-                                <h2>Quantity: {RenderCartQuantity({name: item.name, quantity: item.quantity, inventory: props.inventory, cartItemQuantity: props.cartItemQuantity, setCartItemQuantity: (e:string)=>props.setCartItemQuantity(e)})} {Button({text: "Update", handleButtonClick: ()=>EditCart({name: item.name, price: item.price, email: item.email, quantity: checkCartQuantity, manufacturer: item.manufacturer, description: item.description, category: item.category, $id: item.$id, itemID: item.itemID})})}</h2>
-                        <h2>${parseInt(item?.quantity) > 1 ? itemPriceTotal.toFixed(2)  : item.price}</h2>
+                                
+                                <h2>Quantity: {RenderCartQuantity({name: item.name, quantity: item.quantity, inventory: props.inventory, cartItemQuantity: props.cartItemQuantity, setCartItemQuantity: (e:string)=>props.setCartItemQuantity(e)})} 
+                                {Button({text: "Update", handleButtonClick: ()=>EditCart({name: item.name, price: item.price, email: item.email, quantity: checkCartQuantity, manufacturer: item.manufacturer, description: item.description, category: item.category, $id: item.$id, itemID: item.itemID})})}</h2>
+                      
+                                <h2>${parseInt(item?.quantity) > 1 ? itemPriceTotal.toFixed(2)  : item.price}</h2>
                         </div>
-                        <div className = "flex cartTotal justifyBetween" key = {total}><h2>Total: </h2> <h2>${total}</h2></div>
 
-                        {RenderPaymentForm(props.cardInfo, (e:CardInfo)=>props.setCardInfo(e))}
+                        <div className = "flex justifyCenter cartTotal" key = {total}><h2>Total: </h2> <h2>${total}</h2></div>
                 
                         {Button({text: "Purchase Items", handleButtonClick: ()=>handleMakeCartPurchase({inventory: props.inventory, cart: props.cart,cardInfo: props.cardInfo, total: total})})}
                     </section>
@@ -373,7 +377,6 @@ export function RenderCart(props: Cart){
 
                     <div className="flex justifyBetween">
                     <h2>{item.name} <i className = "fa-solid fa-xmark button" onClick = {()=>handleDeleteCartItem(item.$id)}></i></h2>
-                    <h2>${item.price}</h2>
                     <h2>Quantity: {RenderCartQuantity({name: item.name, quantity: item.quantity, inventory: props.inventory, cartItemQuantity: props.cartItemQuantity, setCartItemQuantity: (e:string)=>props.setCartItemQuantity(e)})} {Button({text: "Update", handleButtonClick: ()=>EditCart({name: item.name, price: item.price, email: item.email, quantity: checkCartQuantity, manufacturer: item.manufacturer, description: item.description, category: item.category, $id: item.$id, itemID: item.itemID})})}</h2>
                     <h2>${parseInt(item?.quantity) > 1 ? itemPriceTotal.toFixed(2)   : item.price}</h2>
                     </div>
@@ -383,23 +386,25 @@ export function RenderCart(props: Cart){
 
             }else if(i === props.cart.length-1){
                 return(
-                    <section className = "flex flex-col" key = {i}>
+                    <section className = "flex flex-col alignCenter" key = {i}>
 
-                    <div className="flex justifyBetween">
-                    <h2>{item.name} <i className = "fa-solid fa-xmark button" onClick = {()=>handleDeleteCartItem(item.$id)}></i></h2>
-                    <h2>${item.price}</h2>
-                    <h2>Quantity: {RenderCartQuantity({name: item.name, quantity: item.quantity, inventory: props.inventory, cartItemQuantity: props.cartItemQuantity, setCartItemQuantity: (e:string)=>props.setCartItemQuantity(e)})} {Button({text: "Update", handleButtonClick: ()=>EditCart({name: item.name, price: item.price, email: item.email, quantity: checkCartQuantity, manufacturer: item.manufacturer, description: item.description, category: item.category, $id: item.$id, itemID: item.itemID})})}</h2>
-                    <h2>${parseInt(item?.quantity) > 1 ? itemPriceTotal.toFixed(2)   : item.price}</h2>
+                    <div className="flex justifyBetween alignCenter">
+                        <div className="flex justifyBetween alignCenter">
+                            <h2>{item.name} <i className = "fa-solid fa-xmark button" onClick = {()=>handleDeleteCartItem(item.$id)}></i></h2>
+                        </div>
+
+                        <h2>Quantity: {RenderCartQuantity({name: item.name, quantity: item.quantity, inventory: props.inventory, cartItemQuantity: props.cartItemQuantity, setCartItemQuantity: (e:string)=>props.setCartItemQuantity(e)})} 
+                        {Button({text: "Update", handleButtonClick: ()=>EditCart({name: item.name, price: item.price, email: item.email, quantity: checkCartQuantity, manufacturer: item.manufacturer, description: item.description, category: item.category, $id: item.$id, itemID: item.itemID})})}</h2>
+
+                        <h2>${parseInt(item?.quantity) > 1 ? itemPriceTotal.toFixed(2)   : item.price}</h2>
 
                     </div>
 
-                    <div className = "flex cartTotal justifyBetween" key = {total}><h2>Total: </h2><h2>${total}</h2></div>
+                    <div className = "flex cartTotal" key = {total}><h2>Total: </h2><h2>${total}</h2></div>
 
-                    {RenderPaymentForm(props.cardInfo, (e:CardInfo)=>props.setCardInfo(e))}
+                        {Button({text: "Purchase Items", handleButtonClick: ()=>handleMakeCartPurchase({inventory: props.inventory, cart: props.cart, cardInfo: props.cardInfo, total: total})})}
 
-                    {Button({text: "Purchase Items", handleButtonClick: ()=>handleMakeCartPurchase({inventory: props.inventory, cart: props.cart, cardInfo: props.cardInfo, total: total})})}
-
-                </section>
+                    </section>
                 )
             }
 

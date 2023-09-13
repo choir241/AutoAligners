@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react"
 import {GetInventory, InventoryItem} from "../../hooks/InventoryHooks"
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
-import {RenderCart, GetCart, CartItem, CardInfo} from "../../hooks/CartHooks"
+import {RenderCart, GetCart, CartItem, CardInfo, RenderPaymentForm} from "../../hooks/CartHooks"
 
 export default function Cart(){
 
@@ -24,13 +24,15 @@ export default function Cart(){
         <main id = "cart">
             <Nav pageHeading = {"Cart"}/>
             
-            <section className = "flex justifyBetween cart">
+                <section className = "cartContainer flex justifyBetween">
 
-                <section className = "flex flex-col cartContainer">
+                    <section className = "flex flex-col">
                     {RenderCart({cart: cart, inventory: inventory, cartItemQuantity: cartItemQuantity, setCartItemQuantity: (e:string)=>setCartItemQuantity(e), cardInfo: cardInfo, setCardInfo: (e:CardInfo)=>setCardInfo(e)})}
+                    </section>
+
+                    {RenderPaymentForm(cardInfo, (e:CardInfo)=>setCardInfo(e))}
                 </section>
 
-            </section>
 
             <Footer/>
         </main>

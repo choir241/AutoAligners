@@ -71,7 +71,7 @@ export default function ServiceEstimate(){
 
                 <section className = "flex justifyBetween alignCenter contact">
                 {Input({type: "text", onChange: (e:string)=>setZipCode(e), placeholder: "Postal/Zip Code", minlength: 5, maxlength: 5})}
-
+            
 
                 <div className = "flex flex-col alignCenter contact">
                     <h2 className = "textAlignCenter">Preferred Contact Method</h2>

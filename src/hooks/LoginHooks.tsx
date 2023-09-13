@@ -71,7 +71,6 @@ export async function GetUsers(setListOfUsers: (e: User[]) => void, setLoading: 
 
     if (data && data.users && data.users.length) {
       // Only update the list of users if data is available
-      console.log(data.users)
       setListOfUsers(data.users);
       setLoading(true);
     }
@@ -85,19 +84,20 @@ export async function GetUsers(setListOfUsers: (e: User[]) => void, setLoading: 
   
 export async function handleDelete(userId: string){
     try{
-      const response = await axios.delete(`http://localhost:8000/${userId}`)
-      console.log(response)
+        await axios.delete(`https://car-app-backend-0ejb.onrender.com/deleteUser/${userId}`);
+
+        window.location.reload();
+       
     }catch(err){
       console.error(err)
     }
-  
+         
     
   }
   
-export function DisplayUsers(listOfUsers: User[], currentUser: User){
+export function DisplayUsers(listOfUsers: User[], currentUser: User, startIndex: number, endIndex: number){
   try{
         if(currentUser.$id === "649c8a408d41d5c02f5c" || currentUser.$id === "64e51b2e84f09ed015ec"){
-          console.log(listOfUsers)
 
            const users = listOfUsers.map((user:User)=>{
             const createdAtDate = user.$createdAt.split("T")[0];
@@ -113,12 +113,13 @@ export function DisplayUsers(listOfUsers: User[], currentUser: User){
                   <li>Employee Id: {user.$id}</li>
                   <li>Created At: {createdAtDate}  {createdAtTimeHours > 12 ? createdAtTimeHours -= 12 : createdAtTimeHours}{":" + createdAtTimeMinutes}{createdAtTimeHours > 12 ? "PM" : "AM"}</li>
                   <li>Updated At: {updatedAtDate} {updatedAtTimeHours > 12 ? updatedAtTimeHours -=12 : updatedAtTimeHours}{":" + updatedAtTimeMinutes}{updatedAtTimeHours > 12 ? "PM" : "AM"}</li>
-                  { user.$id === "64e51b2e84f09ed015ec" || user.$id === "64bb01ec8a97c4136079" ? "" : <li className = "fa-sharp fa-solid fa-trash button" onClick = {()=>handleDelete(user.$id)}></li>}
+                  { user.$id === "64e51b2e84f09ed015ec" || user.$id === "64bb01ec8a97c4136079" ? "" :<li className = "fa-solid fa-trash button" onClick = {()=>handleDelete(user.$id)}></li>}
+                  <li className = "button fa-solid fa-user-pen"></li>
                 </ul> 
               )
             })
 
-            return users
+            return users.slice(startIndex, endIndex);
           }
 
     }catch(err){
@@ -167,8 +168,6 @@ export async function handleSignUp(props: SignUp):Promise<void>{
           props.name
       )
 
-      console.log(createAccount);
-
       if(createAccount){
         window.location.reload();
       }
@@ -200,8 +199,6 @@ export async function handleLogin(props: Login): Promise<void>{
       const checkEmployee = props?.listOfUsers?.filter((user: User)=>{
         return user.$id === props.employeeId
       })
-
-      console.log(checkEmployee)
     
       const fullName = /^[A-Za-z\s]+$/;
       const mail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -221,7 +218,6 @@ export async function handleLogin(props: Login): Promise<void>{
       await api.createSession(props.email, props.password);
       const response = await api.getAccount();
       if(response){
-        console.log(response);
         localStorage.setItem("email",props.email);
         window.location.reload()
       }
@@ -237,7 +233,6 @@ export async function handleLogout(): Promise<void>{
   try{
     const user = await api.deleteCurrentSession();
     localStorage.setItem("email", "");
-    console.log(user);
     if(user){
       window.location.reload();
     }

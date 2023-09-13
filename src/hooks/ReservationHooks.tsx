@@ -47,12 +47,13 @@ export interface TextBox{
 //interface type for general inputs
 export interface GeneralInput{
     type: string,
-    onChange: (e:string)=>void,
+    onChange: (e:any)=>void,
     placeholder?: string,
     minlength?: number,
     maxlength?: number,
     value?: string,
-    defaultValue?: string
+    defaultValue?: string,
+    id?: string
 }
 
 export interface ChooseInput{
@@ -199,6 +200,7 @@ export function SelectCarYearInput(props: SelectOptions):React.JSX.Element{
 export function Input(props: GeneralInput):React.JSX.Element{
     return(
         <input
+            id = {props.id}
             value = {props.value}
             defaultValue = {props.defaultValue}
             type = {props.type}
@@ -474,7 +476,7 @@ export function DisplayTimeDateAppointments(props: TimeDateAppointments):React.J
 
 
         return(
-            <section>
+            <section className = "appointmentHub">
                 <section className = "calendarHub flex">
                     {appt}
                 </section>
