@@ -24,7 +24,7 @@ export default function Nav(props: nav){
         if(localStorage.getItem("email") && cart?.length){
             let sum:number = 0
 
-            cart.forEach((item:CartItem)=>sum += parseInt(item.quantity))
+            cart.forEach((item:CartItem)=>item.email === localStorage.getItem("email") ? sum += parseInt(item.quantity) : "")
 
             setCartQuantity(sum);
         }

@@ -69,7 +69,7 @@ export function EmployeeHub(){
       if(localStorage.getItem("email")){
         GetPurchases((e:PurchasedItem[])=>setPurchases(e))
       }
-    },[])
+    },[listOfUsers])
 
     //example employee id 649c8a408d41d5c02f5c
 
@@ -121,7 +121,7 @@ export function EmployeeHub(){
 
               <section className="flex flex-col alignCenter rightContainer">
               <PaginatedButtons currentPage = {currentPage} cartLength = {listOfUsers.length} setCurrentPage = {(e:number)=>setCurrentPage(e)} rowsPerPage={rows}/>
-              {DisplayUsers(listOfUsers, user, start, end)}
+              {loading ? DisplayUsers(listOfUsers, user, start, end) : <h1>Loading...</h1>}
 
               </section>
             

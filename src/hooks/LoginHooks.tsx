@@ -84,15 +84,12 @@ export async function GetUsers(setListOfUsers: (e: User[]) => void, setLoading: 
   
 export async function handleDelete(userId: string){
     try{
+      console.log(userId)
         await axios.delete(`https://car-app-backend-0ejb.onrender.com/deleteUser/${userId}`);
-
-        window.location.reload();
-       
     }catch(err){
       console.error(err)
     }
-         
-    
+        
   }
   
 export function DisplayUsers(listOfUsers: User[], currentUser: User, startIndex: number, endIndex: number){
@@ -265,11 +262,15 @@ export function GenerateNewEmployee(setPassword: (e:string)=>void, setGeneratedP
   password.push(randomNumber.toString());
   const randomIndex = Math.floor(Math.random()*32);
   password.push(symbols[randomIndex]);
+  const randomNumber2 = Math.floor(Math.random()* 10);
+  password.push(randomNumber2.toString());
  }else if(randomizeOrder === 1){
   const randomIndex = Math.floor(Math.random()*32);
   password.push(symbols[randomIndex]);
   const randomNumber = Math.floor(Math.random()* 100);
   password.push(randomNumber.toString());
+  const randomNumber2 = Math.floor(Math.random()* 10);
+  password.push(randomNumber2.toString());
  }else{
   const randomNumber = Math.floor(Math.random()* 10);
   password.push(randomNumber.toString());
