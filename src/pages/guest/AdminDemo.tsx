@@ -16,7 +16,7 @@ export default function AdminDemo(){
 
     useEffect(()=>{
         GetUsers((e:User[])=>setListOfUsers(e), (e:boolean)=>setLoading(e));
-    },[])
+    },[listOfUsers])
 
     return(
         <main id = "auth">

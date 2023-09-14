@@ -118,13 +118,14 @@ export async function handleAddToCart(props: AddToCart){
         //find item in inventory database
         const findItem = props.inventory.filter((item:InventoryItem)=>item.$id === props.$id)
 
-        //find item in cart using item object in the findItem array && current logged in user
-        const findCartItem = props.cart.filter((cartItem:CartItem)=>cartItem.name === findItem[0].name && localStorage.getItem("email") === cartItem.email);
 
-        const item = findCartItem[0];
+        //find item in cart using item object in the findItem array && current logged in user
+        const findCartItem = props.cart.filter((cartItem:CartItem)=>cartItem.name === findItem[0].name && cartItem.email === localStorage.getItem("email"));
 
         //if there are no duplicates items currently in the cart using findCartItem 
         if(!findCartItem.length){
+
+            const item = findItem[0]
 
             const cartItem = {  
                 "itemID": item.$id,
@@ -142,6 +143,8 @@ export async function handleAddToCart(props: AddToCart){
     
             window.location.reload();
         }else{
+            const item = findCartItem[0]
+
             //if there are duplicates items currently in the cart using findCartItem, add to the current existing quantity of respective item in the cart
             const cartItem = {  
                 "itemID": item.$id,
@@ -314,13 +317,12 @@ async function handleMakeCartPurchase(props: CartPurchase){
 //render cart, cart total, item totals, and item quantities
 export function RenderCart(props: Cart){
 
-    if(props.cart?.length){
         const findUsersCart = props.cart.filter((item: CartItem, i: number)=>item.email === localStorage.getItem("email"));
 
         let total = ""
         let cartTotal:number = 0
         let decimalTotal:number = 0
-        return findUsersCart.map((item: CartItem,i: number)=>{
+        const userCart = findUsersCart.map((item: CartItem,i: number)=>{
 
             let itemPriceTotal = 0
             itemPriceTotal = Number(item.price) * parseInt(item.quantity)
@@ -331,7 +333,7 @@ export function RenderCart(props: Cart){
                 decimalTotal += parseInt(itemPriceTotal.toFixed(2).toString().split(".")[1]) 
             }
 
-            if(i === props.cart.length-1){
+            if(i === findUsersCart.length-1){
 
                 let decimalNumbers = decimalTotal.toString().split("")
 
@@ -349,7 +351,7 @@ export function RenderCart(props: Cart){
             const checkCartQuantity = props.cartItemQuantity ? props.cartItemQuantity : item.quantity
             total = Number(total).toFixed(2)
 
-            if(props.cart.length === 1){
+            if(findUsersCart.length === 1){
 
             return(
                     <section className = "flex flex-col alignCenter" key = {i}>
@@ -371,7 +373,7 @@ export function RenderCart(props: Cart){
                     </section>
                 )
 
-            }else if(props.cart.length > 1 && i !== props.cart.length-1){
+            }else if(findUsersCart.length > 1 && i !== findUsersCart.length-1){
                 return(
                     <section className = "flex flex-col" key = {i}>
 
@@ -384,7 +386,7 @@ export function RenderCart(props: Cart){
                 </section>
                 )
 
-            }else if(i === props.cart.length-1){
+            }else if(i === findUsersCart.length-1){
                 return(
                     <section className = "flex flex-col alignCenter" key = {i}>
 
@@ -411,13 +413,17 @@ export function RenderCart(props: Cart){
 
 
         })
-    }else{
+
+        if(userCart.length){
+            return userCart
+        }else{
             return(
                 <section className = "flex flex-col">
                     <h2>No items in the cart currently</h2>
                 </section>
             )
+        }
 
-    }
+
 }
 
