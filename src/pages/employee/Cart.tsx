@@ -19,6 +19,7 @@ export default function Cart(){
         GetInventory((e:InventoryItem[])=>setInventory(e))
     },[])
 
+    console.log(cart)
 
     return(
         <main id = "cart">
@@ -26,7 +27,7 @@ export default function Cart(){
             
                 <section className = "cartContainer flex justifyBetween">
 
-                    <section className = "flex flex-col">
+                    <section className = {`flex flex-col justifyCenter`}>
                     {RenderCart({cart: cart, inventory: inventory, cartItemQuantity: cartItemQuantity, setCartItemQuantity: (e:string)=>setCartItemQuantity(e), cardInfo: cardInfo, setCardInfo: (e:CardInfo)=>setCardInfo(e)})}
                     </section>
 

@@ -58,10 +58,12 @@ function renderInventoryQuantityOptions(props: InventoryQuantity){
     //find inventory item in cart
     const findItemInCart = props.cart.filter((item: CartItem)=>item.name === props.itemName);
 
+    let sum = 0
+    findItemInCart.forEach((item:CartItem)=>sum+=parseInt(item.quantity))
+
     //if a duplicate item exists, change display of item quantity in inventory by subtracting the itme quantity in the cart
     if(findItemInCart.length){
-        const cartItemQuantity = parseInt(findItemInCart[0].quantity)
-        props.quantity -= cartItemQuantity
+        props.quantity -= sum
     }
 
     //render quantity numbers, accounting for undefined/zero values
@@ -82,15 +84,27 @@ function renderInventoryQuantityOptions(props: InventoryQuantity){
 
 //Render the current inventory avaiable, checking for duplicates in the cart
 export function CurrentInventory(props: DisplayCurrentInventory){    
-    return props.inventory.map((inventoryItems:InventoryItem,i:number)=>{
+
+    const itemQuantity:{[key:string]: number} = {}
+
+    props.cart.forEach((item:CartItem)=>itemQuantity[item.name] = 0)
+    props.cart.forEach((item:CartItem)=>itemQuantity[item.name]++)
+    
+    const cartQuantity:{[key:string]:number} = {}
+
+    props.cart.forEach((item:CartItem)=>cartQuantity[item.name] = 0)
+
+    return props.inventory.map((inventoryItems:InventoryItem)=>{
 
         const findItemInCart = props.cart.filter((item: CartItem)=>item.name === inventoryItems.name);
-        const cartItemQuantity = parseInt(findItemInCart[0]?.quantity);
+
+        let sum = 0
+        findItemInCart.forEach((item:CartItem)=>sum+=parseInt(item.quantity))
 
         return(
             <section key = {inventoryItems.$id} className = {"flex flex-col item borderSeperation"}>
                     <h2>{inventoryItems.name}</h2>
-                    <h2>Quantity: {findItemInCart.length ? inventoryItems.quantity - cartItemQuantity : inventoryItems.quantity}</h2>
+                    <h2>Quantity: {findItemInCart.length? inventoryItems.quantity - sum : inventoryItems.quantity}</h2>
                     <h2>${inventoryItems.price}</h2>
                     <p>{inventoryItems.description}</p>
                     {renderInventoryQuantityOptions({itemName: inventoryItems.name, cart: props.cart, setItemQuantity: (e)=>props.setItemQuantity(e), quantity: inventoryItems.quantity})}
