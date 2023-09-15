@@ -1,13 +1,20 @@
 import {PurchasedItem} from "./PurchasesHooks" 
 import {Input} from "./ReservationHooks"
 import api from "../api/api"
+import Nav from "../components/Nav"
+import Footer from "../components/Footer"
+import {ButtonLink} from "../components/Button"
+import {User} from "./LoginHooks"
+import { Permission, Role } from "appwrite"
 
-interface Profile{
+export interface Profile{
     $id: string,
+    email?: string,
+    fileName: string,
     image: string,
-    currentPTO: number,
-    currentSalary: number,
-    currentPosition: string,
+    position: string,
+    PTO: string,
+    salary: string,
     requestedPTO: string
 }
 
@@ -85,4 +92,97 @@ export function EmployeeForm(setSalary:(e:string)=>void,setPosition:(e:string)=>
         {Input({type: "text", onChange: (e)=>setPosition(e), placeholder: "Set Position"})}
         </section>
     )
+}
+
+export async function GetEmployee(setEmployee: (e:Profile)=>void){
+    try{
+        const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID)
+
+        const findUser = data.documents.filter((user:Profile)=>localStorage.getItem("email") === user.email)
+
+        setEmployee(findUser[0])
+
+    }catch(err){
+        console.error(err);
+    }
+}
+
+
+export function EmployeeButtons(){
+    return(
+        <main className = "flex flex-col justifyBetween">
+                <Nav pageHeading = {localStorage.getItem("email") ? "Employee Hub" : "Login/Demo"}/>
+
+
+            <section className = "flex flex-col alignCenter" id = "employee">
+                <nav>
+                    <ul className = "flex justifyBetween flex-col">
+                        {localStorage.getItem("email") ? "" : <li className = "textAlignCenter">{ButtonLink({domain : "/adminDemo", text: "Admin Demo"})}</li>}
+                        {localStorage.getItem("email") ? "" : <li className = "textAlignCenter">{ButtonLink({domain : "/demo", text: "Demo"})}</li>}
+                        {localStorage.getItem("email") ? "" : <li className = "textAlignCenter">{ButtonLink({domain: "/login", text: "Login"})}</li>}
+                    </ul>
+                </nav>
+            </section>
+
+            <Footer/>
+        </main>
+    )
+}
+
+export async function handleEmployeeCustomization(listOfUsers: User[], email: string, salary: string, position: string, PTO: string){
+    try{
+
+        const findUser = listOfUsers.filter((employee:User)=>employee.email===email)[0]
+
+        const data = {
+            userID: findUser.$id,
+            email,
+            salary,
+            position,
+            PTO
+        }
+
+        const employeeList = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID)
+
+        const findEmployee = employeeList.documents.filter((employee:Profile)=>employee.email === email)
+  
+        if(findEmployee.length){
+          await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, findEmployee[0].$id, data)
+          window.location.reload();
+        }else{
+          await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, data, [Permission.read(Role.any())])
+          window.location.reload();
+        }
+        
+    }catch(err){
+        console.error(err);
+    }
+}
+
+export async function handlePTO(listOfUsers: User[], PTO: string){
+    try{
+
+        const findUser = listOfUsers.filter((employee:User)=>employee.email===localStorage.getItem("email"))[0]
+
+        const data = {
+            userID: findUser.$id,
+            email: localStorage.getItem("email"),
+            PTO
+        }
+
+        const employeeList = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID)
+
+        const findEmployee = employeeList.documents.filter((employee:Profile)=>employee.email === localStorage.getItem("email"))
+  
+        if(findEmployee.length){
+          await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, findEmployee[0].$id, data)
+          window.location.reload();
+        }else{
+          await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, data, [Permission.read(Role.any())])
+          window.location.reload();
+        }
+
+    }catch(err){
+        console.error(err);
+    }
 }

@@ -367,12 +367,23 @@ label{
 
 /* Auth
    ========================================================================== */
-#auth .employee{
-    width: 100%;
-}
 
 #auth .profile{
     padding: 2rem;
+    width: 50%;
+    margin-left: 1rem;
+}
+
+#auth .profileImg{
+    width: 100%;
+}
+
+#auth .imgContainer{
+    width: 10%;
+}
+
+#auth .profile h2{
+    float: right;
 }
 
 input{
@@ -401,6 +412,13 @@ input{
     padding: 0rem 2rem;
 }
 
+#auth .widget{
+    margin-top: 2rem;
+}
+
+#auth .profile h2{
+    padding: .5rem;
+}
 
 #auth .admin{
     width: 100%;
@@ -412,13 +430,13 @@ input{
 
 #auth .userDisplays li{
     font-size: 2rem;
+    padding: .5rem;
 }
 
 #auth .userDisplays{
     padding-bottom: 2rem;
     margin-bottom: 4rem;
     border-bottom: 2px dotted black;
-    width: 30%;
 }
 
 #auth .userDisplays .fa-trash{
@@ -428,7 +446,7 @@ input{
 }
 
 #auth .rightContainer{
-    width: 60%;
+    width: 40%;
 }
 
 #auth .leftContainer{
