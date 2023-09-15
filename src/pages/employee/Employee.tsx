@@ -1,33 +1,12 @@
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
 import React, {useState, useEffect} from "react"
-import {ButtonSubmit, Button, ButtonLink} from "../../components/Button"
+import {ButtonSubmit, Button} from "../../components/Button"
 import {User, GenerateNewEmployee, handleLogin, GetAccount, GetUsers, DisplayUsers, Input, handleSignUp} from "../../hooks/LoginHooks"
-import { PurchasedItem, GetPurchases } from "../../hooks/PurchasesHooks"
-import { RenderEmployeeAppointments, RenderEmployeeProfit} from "../../hooks/EmployeeHooks"
+import {PurchasedItem, GetPurchases } from "../../hooks/PurchasesHooks"
+import {handlePTO, EmployeeButtons, RenderEmployeeAppointments, RenderEmployeeProfit, GetEmployee, Profile, handleEmployeeCustomization} from "../../hooks/EmployeeHooks"
 import PaginatedButtons from "../../components/Graphs/PaginatedButtons"
 import ImageUpload from "../../components/Cloudinary/Cloudinary";
-
-export function EmployeeButtons(){
-    return(
-        <main className = "flex flex-col justifyBetween">
-                <Nav pageHeading = {localStorage.getItem("email") ? "Employee Hub" : "Login/Demo"}/>
-
-
-            <section className = "flex flex-col alignCenter" id = "employee">
-                <nav>
-                    <ul className = "flex justifyBetween flex-col">
-                        {localStorage.getItem("email") ? "" : <li className = "textAlignCenter">{ButtonLink({domain : "/adminDemo", text: "Admin Demo"})}</li>}
-                        {localStorage.getItem("email") ? "" : <li className = "textAlignCenter">{ButtonLink({domain : "/demo", text: "Demo"})}</li>}
-                        {localStorage.getItem("email") ? "" : <li className = "textAlignCenter">{ButtonLink({domain: "/login", text: "Login"})}</li>}
-                    </ul>
-                </nav>
-            </section>
-
-            <Footer/>
-        </main>
-    )
-}
 
 export function EmployeeHub(){
 
@@ -43,10 +22,11 @@ export function EmployeeHub(){
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [loading, setLoading] = useState<boolean>(false);
     const [salary, setSalary] = useState<string>("");
+    const [PTO, setPTO] = useState<string>("");
     const [position, setPosition] = useState<string>("");
-    const [employeeForm, setEmployeeForm] = useState<boolean>(false);
+    const [employee, setEmployee] = useState<Profile>();
 
-    const rowsPerPage = 5;
+    const rowsPerPage = 3;
 
     const startIndex = (currentPage - 1) * rowsPerPage;
     const endIndex = startIndex + rowsPerPage;  
@@ -70,6 +50,10 @@ export function EmployeeHub(){
         GetPurchases((e:PurchasedItem[])=>setPurchases(e))
       }
     },[listOfUsers])
+
+    useEffect(()=>{
+      GetEmployee((e:Profile)=>setEmployee(e))
+    },[])
     
     //example employee id 649c8a408d41d5c02f5c
 
@@ -118,6 +102,14 @@ export function EmployeeHub(){
               </form>
             </section>
 
+              <section className = "flex flex-col">
+              {Input({type: "email", name: "email", onChange: (e)=>setEmail(e), placeholder: "Employees Email"})}
+              {Input({type: "text", name: "salary", onChange: (e)=>setSalary(e), placeholder: "Set Employees Salary"})}
+              {Input({type: "text", name: "position", onChange: (e)=>setPosition(e), placeholder: "Set Employees Position"})}
+              {Input({type: "text", name: "PTO", onChange: (e)=>setPTO(e), placeholder: "Set Employees PTO"})}
+
+              {ButtonSubmit({handleButtonClick: (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handleEmployeeCustomization(listOfUsers, email, salary, position, PTO), text: "Customize Employee Information"})}
+              </section>
 
               <section className="flex flex-col alignCenter rightContainer">
               <PaginatedButtons currentPage = {currentPage} cartLength = {listOfUsers.length} setCurrentPage = {(e:number)=>setCurrentPage(e)} rowsPerPage={rows}/>
@@ -131,11 +123,24 @@ export function EmployeeHub(){
             <section className = "flex flex-col employee">
               <h2 className = "flex justifyCenter">Employee Hub</h2>
 
-              <section className="flex justifyBetween">
-                  <section className="flex flex-col profile">
+              <section className="flex justifyBetween alignCenter">
+                      <section className = "imgContainer">
+                      <img src = {employee?.image} className ="profileImg" alt = {employee?.fileName}/>
+                      <ImageUpload user = {user}/>
+                      </section>
+                      <section className="flex flex-col profile">
                       <h2>Email: {user.email}</h2>
                       <h2>Start Date: {user.$createdAt.split("T")[0]}</h2>
                       <h2>Total Sales Made: ${RenderEmployeeProfit(purchases)}</h2>
+                      <h2>Position: {employee?.position}</h2>
+                      <h2>Salary: {employee?.salary}</h2>
+                  </section>
+
+                  <section className = "flex flex-col alignCenter PTO">
+                    <h2>PTO Balance: {employee?.PTO} Hours</h2>
+                    {Input({type: "text", name: "PTO", onChange: (e)=>setPTO(e), placeholder: "Set Employees PTO"})}
+                    {ButtonSubmit({handleButtonClick: (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handlePTO(listOfUsers, PTO), text: "Request PTO"})}
+
                   </section>
 
                   <section className = "flex flex-col alignCenter purchases">
@@ -146,8 +151,6 @@ export function EmployeeHub(){
                     {showPurchases ? RenderEmployeeAppointments(purchases, startIndex, endIndex) : ""}
 
                     {showPurchases ? <button className = "button" onClick = {()=>setShowPurchases(!showPurchases)}>Hide Your Sale History</button> : ""}
-
-                    <ImageUpload/>
                                       
                     </section>
               </section>
