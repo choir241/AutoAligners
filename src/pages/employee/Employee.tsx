@@ -4,8 +4,9 @@ import React, {useState, useEffect} from "react"
 import {ButtonSubmit, Button, ButtonLink} from "../../components/Button"
 import {User, GenerateNewEmployee, handleLogin, GetAccount, GetUsers, DisplayUsers, Input, handleSignUp} from "../../hooks/LoginHooks"
 import { PurchasedItem, GetPurchases } from "../../hooks/PurchasesHooks"
-import { RenderEmployeeAppointments, RenderEmployeeProfit, handleAddProfileImage, FileInput} from "../../hooks/EmployeeHooks"
+import { RenderEmployeeAppointments, RenderEmployeeProfit} from "../../hooks/EmployeeHooks"
 import PaginatedButtons from "../../components/Graphs/PaginatedButtons"
+import ImageUpload from "../../components/Cloudinary/Cloudinary";
 
 export function EmployeeButtons(){
     return(
@@ -41,7 +42,6 @@ export function EmployeeHub(){
     const [showPurchases, setShowPurchases] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [loading, setLoading] = useState<boolean>(false);
-    const [file, setFile] = useState<FileList | null>();
     const [salary, setSalary] = useState<string>("");
     const [position, setPosition] = useState<string>("");
     const [employeeForm, setEmployeeForm] = useState<boolean>(false);
@@ -70,7 +70,7 @@ export function EmployeeHub(){
         GetPurchases((e:PurchasedItem[])=>setPurchases(e))
       }
     },[listOfUsers])
-
+    
     //example employee id 649c8a408d41d5c02f5c
 
     return(
@@ -147,11 +147,9 @@ export function EmployeeHub(){
 
                     {showPurchases ? <button className = "button" onClick = {()=>setShowPurchases(!showPurchases)}>Hide Your Sale History</button> : ""}
 
-                    <label htmlFor = "file" className = "button">Add Image File</label>
-                    {FileInput((e:FileList | null)=>setFile(e))}
-
-                    {Button({text: "Submit Profile Image", handleButtonClick: ()=>handleAddProfileImage(user.$id)})}
-                  </section>
+                    <ImageUpload/>
+                                      
+                    </section>
               </section>
             </section>
         

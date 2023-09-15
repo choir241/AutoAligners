@@ -1,5 +1,6 @@
 import {PurchasedItem} from "./PurchasesHooks" 
 import {Input} from "./ReservationHooks"
+import api from "../api/api"
 
 interface Profile{
     $id: string,
@@ -54,9 +55,9 @@ export function RenderEmployeeProfit(purchases: PurchasedItem[]){
     return cartTotal.toFixed(2)
 }
 
-export async function handleAddProfileImage(id: string){
+export async function handleAddProfileImage(id: string, file: FileList | null | undefined){
     try{
-        console.log(id)
+        api.createImage(id, file)
     }catch(err){
         console.error(err);
     }
