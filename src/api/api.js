@@ -1,4 +1,4 @@
-  import { Client as Appwrite, Databases, Account, Client} from "appwrite";
+  import { Client as Appwrite, Databases, Account, Client, Storage} from "appwrite";
 
   let api = {
     sdk: null,
@@ -11,8 +11,9 @@
       appwrite.setEndpoint(process.env.REACT_APP_ENDPOINT).setProject(process.env.REACT_APP_PROJECT);
       const account = new Account(appwrite);
       const database = new Databases(appwrite);
-      const client = new Client(appwrite)
-      api.sdk = { database, account, client};
+      const client = new Client(appwrite);
+      const storage = new Storage(appwrite);
+      api.sdk = { database, account, client, storage};
       return api.sdk;
     },
     
@@ -62,6 +63,10 @@
     deleteDocument: (databaseId, collectionId, documentId) => {
       return api.provider().database.deleteDocument(databaseId, collectionId, documentId);
     },
+
+    createImage: (ID, file) => {
+      return api.provider().storage.createFile(process.env.REACT_APP_PROFILE_IMAGE, ID, file[0])
+    }
   };
 
   export default api;
