@@ -108,10 +108,10 @@ export function DisplayUsers(listOfUsers: User[], currentUser: User, startIndex:
                 <ul key = {user.$id} className = "flex flex-col alignCenter userDisplays">
                   <li>{user.name}</li>
                   <li>Employee Id: {user.$id}</li>
+                  <li>Employee Email: {user.email}</li>
                   <li>Created At: {createdAtDate}  {createdAtTimeHours > 12 ? createdAtTimeHours -= 12 : createdAtTimeHours}{":" + createdAtTimeMinutes}{createdAtTimeHours > 12 ? "PM" : "AM"}</li>
                   <li>Updated At: {updatedAtDate} {updatedAtTimeHours > 12 ? updatedAtTimeHours -=12 : updatedAtTimeHours}{":" + updatedAtTimeMinutes}{updatedAtTimeHours > 12 ? "PM" : "AM"}</li>
                   { user.$id === "64e51b2e84f09ed015ec" || user.$id === "64bb01ec8a97c4136079" ? "" :<li className = "fa-solid fa-trash button" onClick = {()=>handleDelete(user.$id)}></li>}
-                  <li className = "button fa-solid fa-user-pen"></li>
                 </ul> 
               )
             })
