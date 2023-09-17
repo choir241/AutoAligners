@@ -3,6 +3,7 @@ import {GetInventory, InventoryItem} from "../../hooks/InventoryHooks"
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
 import {RenderCart, GetCart, CartItem, CardInfo, RenderPaymentForm} from "../../hooks/CartHooks"
+import PaginatedButtons from "../../components/Graphs/PaginatedButtons"
 
 export default function Cart(){
 
@@ -10,6 +11,12 @@ export default function Cart(){
     const [inventory, setInventory] = useState<InventoryItem[]>([])
     const [cartItemQuantity, setCartItemQuantity] = useState<string>()
     const [cardInfo, setCardInfo] = useState<CardInfo>()
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const rowsPerPage = 2;
+
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;  
 
     useEffect(()=>{
         GetCart((e:CartItem[])=>setCart(e))
@@ -19,7 +26,6 @@ export default function Cart(){
         GetInventory((e:InventoryItem[])=>setInventory(e))
     },[])
 
-    console.log(cart)
 
     return(
         <main id = "cart">
@@ -27,8 +33,10 @@ export default function Cart(){
             
                 <section className = "cartContainer flex justifyBetween">
 
+                    <PaginatedButtons className = {`flex flex-col alignCenter`} currentPage = {currentPage} cartLength = {cart.length} setCurrentPage = {(e:number)=>setCurrentPage(e)} rowsPerPage={rowsPerPage}/>
+
                     <section className = {`flex flex-col justifyCenter`}>
-                    {RenderCart({cart: cart, inventory: inventory, cartItemQuantity: cartItemQuantity, setCartItemQuantity: (e:string)=>setCartItemQuantity(e), cardInfo: cardInfo, setCardInfo: (e:CardInfo)=>setCardInfo(e)})}
+                        {RenderCart({cart: cart, inventory: inventory, cartItemQuantity: cartItemQuantity, setCartItemQuantity: (e:string)=>setCartItemQuantity(e), cardInfo: cardInfo, setCardInfo: (e:CardInfo)=>setCardInfo(e), startIndex: startIndex, endIndex: endIndex})}
                     </section>
 
                     {RenderPaymentForm(cardInfo, (e:CardInfo)=>setCardInfo(e))}

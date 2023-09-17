@@ -26,6 +26,8 @@ export default function Nav(props: nav){
 
             cart.forEach((item:CartItem)=>item.email === localStorage.getItem("email") ? sum += parseInt(item.quantity) : "")
 
+            cart.forEach((item:CartItem)=>console.log(item.email))
+
             setCartQuantity(sum);
         }
     },[cart])
