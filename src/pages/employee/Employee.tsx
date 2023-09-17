@@ -43,7 +43,7 @@ export function EmployeeHub(){
   
     useEffect(()=>{
         GetUsers((e:User[])=>setListOfUsers(e), (e:boolean)=>setLoading(e));
-    },[])
+    },[listOfUsers])
 
     useEffect(()=>{
       if(localStorage.getItem("email")){
@@ -137,7 +137,7 @@ export function EmployeeHub(){
                   </section>
 
                   <section className = "flex flex-col alignCenter PTO">
-                    <h2>PTO Balance: {employee?.PTO} Hours</h2>
+                    <h2>PTO Balance: {employee?.PTO ? employee?.PTO : 0} Hours</h2>
                     {Input({type: "text", name: "PTO", onChange: (e)=>setPTO(e), placeholder: "Set Employees PTO"})}
                     {ButtonSubmit({handleButtonClick: (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handlePTO(listOfUsers, PTO), text: "Request PTO"})}
 
