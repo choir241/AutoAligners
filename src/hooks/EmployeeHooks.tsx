@@ -5,7 +5,8 @@ import Nav from "../components/Nav"
 import Footer from "../components/Footer"
 import {ButtonLink} from "../components/Button"
 import {User} from "./LoginHooks"
-import { Permission, Role } from "appwrite"
+import {Permission, Role} from "appwrite"
+import {toast} from "react-toastify"
 
 export interface Profile{
     $id: string,
@@ -88,8 +89,8 @@ export function FileInput(setFile: (e:FileList | null)=>void){
 export function EmployeeForm(setSalary:(e:string)=>void,setPosition:(e:string)=>void){
     return(
         <section className = "flex flex-col alignCenter justifyCenter ">
-        {Input({type: "text", onChange: (e)=>setSalary(e), placeholder: "Set Salary"})}
-        {Input({type: "text", onChange: (e)=>setPosition(e), placeholder: "Set Position"})}
+            {Input({type: "text", onChange: (e)=>setSalary(e), placeholder: "Set Salary"})}
+            {Input({type: "text", onChange: (e)=>setPosition(e), placeholder: "Set Position"})}
         </section>
     )
 }
@@ -99,7 +100,7 @@ export async function GetEmployee(setEmployee: (e:Profile)=>void){
         const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID)
 
         const findUser = data.documents.filter((user:Profile)=>localStorage.getItem("email") === user.email)
-
+        
         setEmployee(findUser[0])
 
     }catch(err){
@@ -131,27 +132,31 @@ export function EmployeeButtons(){
 
 export async function handleEmployeeCustomization(listOfUsers: User[], email: string, salary: string, position: string, PTO: string){
     try{
+        if(email && (salary || position || PTO)){
 
-        const findUser = listOfUsers.filter((employee:User)=>employee.email===email)[0]
+            const findUser = listOfUsers.filter((employee:User)=>employee.email===email)[0]
 
-        const data = {
-            userID: findUser.$id,
-            email,
-            salary,
-            position,
-            PTO
-        }
+            const employeeList = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID)
 
-        const employeeList = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID)
+            const findEmployee = employeeList.documents.filter((employee:Profile)=>employee.email === email)
+            
+            const data = {
+                userID: findUser.$id,
+                email,
+                salary: salary ? salary : findEmployee[0].salary ,
+                position: position ? position: findEmployee[0].position,
+                PTO: PTO ? PTO : findEmployee[0].PTO
+            }
 
-        const findEmployee = employeeList.documents.filter((employee:Profile)=>employee.email === email)
-  
-        if(findEmployee.length){
-          await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, findEmployee[0].$id, data)
-          window.location.reload();
+            if(findEmployee.length){
+              await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, findEmployee[0].$id, data)
+              window.location.reload();
+            }else{
+              await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, data, [Permission.read(Role.any())])
+              window.location.reload();
+            }
         }else{
-          await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, data, [Permission.read(Role.any())])
-          window.location.reload();
+                toast.error("Please Fill Out Your Email And At Least The Salary, Position, Or PTO Inputs And Try Again!")
         }
         
     }catch(err){
@@ -164,22 +169,27 @@ export async function handlePTO(listOfUsers: User[], PTO: string){
 
         const findUser = listOfUsers.filter((employee:User)=>employee.email===localStorage.getItem("email"))[0]
 
-        const data = {
-            userID: findUser.$id,
-            email: localStorage.getItem("email"),
-            PTO
-        }
-
         const employeeList = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID)
 
         const findEmployee = employeeList.documents.filter((employee:Profile)=>employee.email === localStorage.getItem("email"))
-  
-        if(findEmployee.length){
-          await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, findEmployee[0].$id, data)
-          window.location.reload();
+
+        if(((Number(findEmployee[0].PTO) - Number(PTO)) >= 0) && Number(PTO) && (Number(PTO) >= Number(findEmployee[0].PTO)) && (Number(PTO) > 0)){
+           
+            const data = {
+                userID: findUser.$id,
+                email: localStorage.getItem("email"),
+                PTO: (parseInt(findEmployee[0].PTO) - parseInt(PTO)).toString()
+            }
+
+            if(findEmployee.length){
+              await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, findEmployee[0].$id, data)
+              window.location.reload();
+            }else{
+              await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, data, [Permission.read(Role.any())])
+              window.location.reload();
+            }
         }else{
-          await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, data, [Permission.read(Role.any())])
-          window.location.reload();
+            toast.error("Please fill out the PTO input with a valid value and try again!")
         }
 
     }catch(err){

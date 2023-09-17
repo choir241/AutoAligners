@@ -14,6 +14,6 @@ export function PublicRoutes(){
 
 export function PurchaseRoutes(){
     return(
-        localStorage.getItem("email") === "richardchoi54@gmail.com" ? <Outlet/> : <Navigate to = "/"/>
+        localStorage.getItem("email").toLowerCase() === "bobthebuilder@gmail.com" ? <Outlet/> : <Navigate to = "/"/>
     )
 }
