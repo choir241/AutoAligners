@@ -31,7 +31,7 @@
   "license": "ISC",
   "dependencies": {
     "@cloudinary/url-gen": "^1.11.2",
-    "@types/node": "^20.6.0",
+    "@types/node": "^20.6.2",
     "appwrite": "^13.0.0",
     "axios": "^1.5.0",
     "chart.js": "^4.4.0",
@@ -40,8 +40,8 @@
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
-    "react-router": "^6.15.0",
-    "react-router-dom": "^6.15.0",
+    "react-router": "^6.16.0",
+    "react-router-dom": "^6.16.0",
     "react-scripts": "^5.0.1",
     "react-toastify": "^9.1.3"
   },

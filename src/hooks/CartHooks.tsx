@@ -53,7 +53,9 @@ interface Cart{
     cartItemQuantity: string | undefined,
     setCartItemQuantity: (e:string)=>void,
     cardInfo: CardInfo | undefined,
-    setCardInfo: (e:CardInfo)=>void
+    setCardInfo: (e:CardInfo)=>void,
+    startIndex: number,
+    endIndex: number
 
 }
 
@@ -105,7 +107,7 @@ export function RenderPaymentForm(cardInfo: CardInfo | undefined, setCardInfo: (
 export async function GetCart(setCart: (e:CartItem[])=>void){
     try{
         const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID);
-        setCart(data.documents);
+        setCart(data.documents.filter((item: CartItem)=>item.email === localStorage.getItem("email")));
     }catch(err){
         console.error(err);
         toast.error(`${err}`);
@@ -317,12 +319,12 @@ async function handleMakeCartPurchase(props: CartPurchase){
 //render cart, cart total, item totals, and item quantities
 export function RenderCart(props: Cart){
 
-        const findUsersCart = props.cart.filter((item: CartItem, i: number)=>item.email === localStorage.getItem("email"));
+        const totalOfCart:React.JSX.Element[] = [];
 
         let total = ""
         let cartTotal:number = 0
         let decimalTotal:number = 0
-        const userCart = findUsersCart.map((item: CartItem,i: number)=>{
+        const userCart = props.cart.map((item: CartItem,i: number)=>{
 
             let itemPriceTotal = 0
             itemPriceTotal = Number(item.price) * parseInt(item.quantity)
@@ -333,7 +335,7 @@ export function RenderCart(props: Cart){
                 decimalTotal += parseInt(itemPriceTotal.toFixed(2).toString().split(".")[1]) 
             }
 
-            if(i === findUsersCart.length-1){
+            if(i === props.cart.length-1){
 
                 let decimalNumbers = decimalTotal.toString().split("")
 
@@ -351,7 +353,14 @@ export function RenderCart(props: Cart){
             const checkCartQuantity = props.cartItemQuantity ? props.cartItemQuantity : item.quantity
             total = Number(total).toFixed(2)
 
-            if(findUsersCart.length === 1){
+            if(props.cart.length === 1){
+
+            totalOfCart.push(           
+                <div className = "flex flex-col alignCenter" key = "cartTotal">
+                    <div className = "flex justifyCenter cartTotal" key = {total}><h2>Total: </h2> <h2>${total}</h2></div>
+        
+                    {Button({text: "Purchase Items", handleButtonClick: ()=>handleMakeCartPurchase({inventory: props.inventory, cart: props.cart,cardInfo: props.cardInfo, total: total})})}
+                </div>)
 
             return(
                     <section className = "flex flex-col alignCenter" key = {i}>
@@ -367,13 +376,10 @@ export function RenderCart(props: Cart){
                                 <h2>${parseInt(item?.quantity) > 1 ? itemPriceTotal.toFixed(2)  : item.price}</h2>
                         </div>
 
-                        <div className = "flex justifyCenter cartTotal" key = {total}><h2>Total: </h2> <h2>${total}</h2></div>
-                
-                        {Button({text: "Purchase Items", handleButtonClick: ()=>handleMakeCartPurchase({inventory: props.inventory, cart: props.cart,cardInfo: props.cardInfo, total: total})})}
                     </section>
                 )
 
-            }else if(findUsersCart.length > 1 && i !== findUsersCart.length-1){
+            }else if(props.cart.length > 1 && i !== props.cart.length-1){
                 return(
                     <section className = "flex flex-col" key = {i}>
 
@@ -386,7 +392,16 @@ export function RenderCart(props: Cart){
                 </section>
                 )
 
-            }else if(i === findUsersCart.length-1){
+            }else if(i === props.cart.length-1){
+
+
+                totalOfCart.push(           
+                    <div className = "flex flex-col alignCenter" key = "cartTotal">
+                        <div className = "flex justifyCenter cartTotal" key = {total}><h2>Total: </h2> <h2>${total}</h2></div>
+            
+                        {Button({text: "Purchase Items", handleButtonClick: ()=>handleMakeCartPurchase({inventory: props.inventory, cart: props.cart,cardInfo: props.cardInfo, total: total})})}
+                    </div>)
+
                 return(
                     <section className = "flex flex-col alignCenter" key = {i}>
 
@@ -401,21 +416,14 @@ export function RenderCart(props: Cart){
                         <h2>${parseInt(item?.quantity) > 1 ? itemPriceTotal.toFixed(2)   : item.price}</h2>
 
                     </div>
-
-                    <div className = "flex cartTotal" key = {total}><h2>Total: </h2><h2>${total}</h2></div>
-
-                        {Button({text: "Purchase Items", handleButtonClick: ()=>handleMakeCartPurchase({inventory: props.inventory, cart: props.cart, cardInfo: props.cardInfo, total: total})})}
-
                     </section>
                 )
             }
 
-
-
-        })
+        }).slice(props.startIndex, props.endIndex)
 
         if(userCart.length){
-            return userCart
+            return [userCart, totalOfCart]
         }else{
             return(
                 <section className = "flex flex-col">

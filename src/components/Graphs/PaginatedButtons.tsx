@@ -4,7 +4,8 @@ interface buttons{
     cartLength: number,
     setCurrentPage: (e:number) => void,
     currentPage: number,
-    rowsPerPage: number
+    rowsPerPage: number,
+    className?: string
 }
 
 
@@ -15,7 +16,7 @@ const handlePageChange = (newPage:number) => {
       }
 
 return(
-  <div>
+  <div className = {props.className}>
         {Array.from({ length: Math.ceil(props.cartLength / props.rowsPerPage) }, (_, i) => (
         <button key = {`button-${i}`}className = {`clearButton ${props.currentPage === i+1 ? "selectedPage" : ""}`}  onClick = {()=>handlePageChange(i+1)}>{i+1}</button> 
       ))}
