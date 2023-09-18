@@ -22,6 +22,193 @@ export async function GetPurchases(setPurchases:(e:PurchasedItem[])=>void){
     }
  }
 
+ //three buttons, week, month, year
+//on click, they trigger their respective functions
+//the month function retrieves the current month
+//the week function retrieves the current week
+//the year function retrieves the current year   
+
+//only list purchases of the current week based on the creation date
+//only list purchases of the current month based on the creation date
+//only list purchases of the current years based on the creation date
+
+interface Date{
+    date: string,
+    quantityTotal: number,
+    totalProfit?: number
+ }
+
+export function DisplayByYear(purchases: PurchasedItem[]){
+    const date = new Date();
+    const currentYear = date.getFullYear();
+    const purchasedDates = GetPurchasedDates(purchases);
+    const filteredDates = purchasedDates.filter((date:Date | undefined)=>date?.date.includes(currentYear.toString()))
+    const tableData = filteredDates.map((date: Date | undefined, i:number)=>{
+        return(
+            <tr key = {`year-${i}`} className = {`${i % 2 === 0 ? "even" : "odd"}`}>
+                <td>{date?.date}</td>
+                <td>{date?.quantityTotal}</td>
+                <td>${date?.totalProfit}</td>
+            </tr>
+        )
+    })
+
+    return(
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Quantities Sold</th>
+                    <th>Profit Made</th>
+                </tr>
+            </thead>
+            <tbody>
+                {tableData}
+            </tbody>
+        </table>
+    )
+ }
+
+ export function DisplayByMonth(purchases: PurchasedItem[]){
+    const date = new Date();
+    const currentMonth = date.getMonth()+1;
+    const currentYear = date.getFullYear();
+    const purchasedDates = GetPurchasedDates(purchases);
+    const filteredDates = purchasedDates.filter((date:Date | undefined)=>date?.date.split("-")[0].includes(currentYear.toString()) && date?.date.split("-")[1].includes(currentMonth.toString()))
+    
+    const tableData = filteredDates.map((date: Date | undefined, i:number)=>{
+        return(
+        <tr key = {`month-${i}`} className = {`${i % 2 === 0 ? "even" : "odd"}`}>
+            <td>{date?.date}</td>
+            <td>{date?.quantityTotal}</td>
+            <td>${date?.totalProfit}</td>
+        </tr>
+        )
+    })
+
+    return(
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Quantities Sold</th>
+                    <th>Profit Made</th>
+                </tr>
+            </thead>
+            <tbody>
+                {tableData}
+            </tbody>
+        </table>
+    )
+ }
+
+
+ export function DisplayByWeek(purchases: PurchasedItem[]){
+    const date = new Date();
+    let currentDay = date.getDate();
+    let currentMonth = date.getMonth()+1;
+    let currentYear = date.getFullYear();
+
+    let currentWeek:number[] = [];
+
+    let i = 0
+    while(i < 7){
+        i ? currentWeek.push(++currentDay) : currentWeek.push(currentDay)
+        i++
+    }
+
+    function filterDate(date:string | undefined){
+        return currentWeek.filter((day:number)=>day===Number(date))
+    }   
+  
+    
+    const purchasedDates = GetPurchasedDates(purchases);
+    const filteredDates = purchasedDates.filter((date:Date | undefined)=>date?.date.split("-")[0].includes(currentYear.toString()) && date?.date.split("-")[1].includes(currentMonth.toString()) && filterDate(date?.date.split("-")[2])[0])
+
+    const tableData = filteredDates.map((date: Date | undefined, i: number)=>{
+        return(
+            <tr key = {`week-${i}`} className = {`${i % 2 === 0 ? "even" : "odd"}`}>
+                <td>{date?.date}</td>
+                <td>{date?.quantityTotal}</td>
+                <td>${date?.totalProfit}</td>
+            </tr>
+        )
+    })
+
+    return(
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Quantities Sold</th>
+                    <th>Profit Made</th>
+                </tr>
+            </thead>
+            <tbody>
+                {tableData}
+            </tbody>
+        </table>
+    )
+ }
+
+
+ //return array that returns a list of the date of the purchase
+ export function GetPurchasedDates(purchases: PurchasedItem[]){
+    return purchases.map((item:PurchasedItem)=>{
+            //total is here to have a variable to return as a string value 
+            let total = ""
+            let cartTotal:number = 0
+            let decimalTotal:number = 0
+            for(let i = 0; i < item.cartItems.length;i++){
+                let quantityTotal = 0
+                const cartItem:PurchasedItem = JSON.parse(item.cartItems[i]);
+
+                let itemPriceTotal = 0
+                itemPriceTotal = Number(cartItem.price) * parseInt(cartItem.quantity)
+
+                //add the values left of the decimal point to the current cart total
+                cartTotal += parseInt(itemPriceTotal.toString().split(".")[0])
+
+                //only if item total has a decimal point, add those decimals values to the decimal total
+                if(itemPriceTotal.toString().includes(".")){
+                    decimalTotal += parseInt(itemPriceTotal.toFixed(2).toString().split(".")[1]) 
+                }
+
+
+                //on the last item of the cart, combine the values of the decimal total and the number total as a string
+                if(i === item.cartItems.length-1){
+
+                    //Take decimal total and change it to a string
+                    let decimalNumbers = decimalTotal.toString().split("")
+    
+                    //if the total of the decimal sum equals a value that supercedes the decimal place, add the number values left of the decimal place to the cart total
+                    if(decimalNumbers.length > 2){
+                        const remainder:string = decimalNumbers.shift() as string
+                        cartTotal += parseInt(remainder)
+                    }
+    
+                    //combine the decimal number remainder and the current cart total, and comine them as one string
+                    const decimals = decimalNumbers.join("")
+                    total = cartTotal.toString()
+                    total += "." + decimals
+                }
+
+                //convert current total as string and return it as a number
+                const totalProfit = parseInt(total) 
+
+                quantityTotal += Number(cartItem.quantity)
+
+                if(totalProfit){
+                    return {
+                        date: cartItem.$createdAt.split("T")[0],
+                        quantityTotal,
+                        totalProfit
+                    }
+                }
+            }
+        })  
+ }
+
 //return array that returns a list of the total quantities of items sold per purchase
  export function GetPurchasedQuantities(purchases: PurchasedItem[]){
     return purchases.map((item:PurchasedItem)=>{
