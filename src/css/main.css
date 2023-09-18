@@ -106,6 +106,9 @@ table td{
     margin: 2rem 2rem 4rem 2rem;
 }
 
+#purchase tr{
+    width: 100%;
+}
 
 /* Cart
    ========================================================================== */
@@ -431,6 +434,10 @@ input{
 #auth .userDisplays li{
     font-size: 2rem;
     padding: .5rem;
+}
+
+#auth .userDisplays .name{
+    text-transform: capitalize;
 }
 
 #auth .userDisplays{

@@ -39,6 +39,7 @@ export const options = {
 interface GraphLabels{
     profits: any[],
     quantities: any[],
+    dates: any[],
     cartLength: number,
     currentPage: number,
     setCurrentPage: (e:number) => void,
@@ -50,15 +51,8 @@ interface GraphLabels{
 
 export default function HorizontalBarGraph(props:GraphLabels){
 
-    const labels = []
-
-    for(let i = 1; i <= props.rowsPerPage; i++){
-      labels.push(`Purchase ${i}`)
-    }
-
-
     const data = {
-        labels: labels,
+        labels: props.dates.slice(props.startIndex, props.endIndex),
         datasets: [
           {
             label: "Quantities",

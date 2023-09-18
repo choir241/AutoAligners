@@ -106,7 +106,7 @@ export function DisplayUsers(listOfUsers: User[], currentUser: User, startIndex:
             let updatedAtTimeMinutes:number = parseInt(user.$updatedAt.split("T")[1].split(".")[0].split(":")[1]);
               return(
                 <ul key = {user.$id} className = "flex flex-col alignCenter userDisplays">
-                  <li>{user.name}</li>
+                  <li className = "name">{user.name}</li>
                   <li>Employee Id: {user.$id}</li>
                   <li>Employee Email: {user.email}</li>
                   <li>Created At: {createdAtDate}  {createdAtTimeHours > 12 ? createdAtTimeHours -= 12 : createdAtTimeHours}{":" + createdAtTimeMinutes}{createdAtTimeHours > 12 ? "PM" : "AM"}</li>

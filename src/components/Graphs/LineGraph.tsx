@@ -14,7 +14,8 @@ import PaginatedButtons from "./PaginatedButtons"
 
 interface GraphLabels {
   quantities: number[],
-  profits: any[]
+  profits: any[],
+  dates: any[],
   cartLength: number,
   currentPage: number,
   setCurrentPage: (e: number) => void,
@@ -48,14 +49,8 @@ ChartJS.register(
 
 export default function LineGraph(props:GraphLabels){
 
-    const labels = []
-
-    for(let i = 1; i<= props.rowsPerPage; i++){
-      labels.push(`Purchase ${i}`)
-    }
-
     const data = {
-        labels: labels,
+        labels: props.dates.slice(props.startIndex, props.endIndex),
         datasets: [
           {
             label: 'Quantities Sold',
