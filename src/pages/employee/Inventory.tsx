@@ -7,7 +7,7 @@ import {CartItem, GetCart} from "../../hooks/CartHooks"
 export default function Inventory(){
 
     const [inventory, setInventory] = useState<InventoryItem[]>([])
-    const [itemQuantity, setItemQuantity] = useState<number>();
+    const [itemQuantity, setItemQuantity] = useState<number>(0);
     const [cart, setCart] = useState<CartItem[]>([]);
 
 

@@ -101,17 +101,20 @@ export function CurrentInventory(props: DisplayCurrentInventory){
         let sum = 0
         findItemInCart.forEach((item:CartItem)=>sum+=parseInt(item.quantity))
 
+        const quantityTotal = findItemInCart.length? inventoryItems.quantity - sum : inventoryItems.quantity
+
         return(
             <section key = {inventoryItems.$id} className = {"flex flex-col item borderSeperation"}>
                     <h2>{inventoryItems.name}</h2>
-                    <h2>Quantity: {findItemInCart.length? inventoryItems.quantity - sum : inventoryItems.quantity}</h2>
+                    <h2>Quantity: {quantityTotal}</h2>
                     <h2>${inventoryItems.price}</h2>
                     <p>{inventoryItems.description}</p>
-                    {renderInventoryQuantityOptions({itemName: inventoryItems.name, cart: props.cart, setItemQuantity: (e)=>props.setItemQuantity(e), quantity: inventoryItems.quantity})}
-                    {Button({classNames: "clearButton", text: "Add To Cart", handleButtonClick: ()=> {handleAddToCart({cart: props.cart, $id: inventoryItems.$id,inventory: props.inventory, quantity: props.quantity})}})}
+                    {quantityTotal ? renderInventoryQuantityOptions({itemName: inventoryItems.name, cart: props.cart, setItemQuantity: (e)=>props.setItemQuantity(e), quantity: inventoryItems.quantity}) : ""}
+                    {quantityTotal ? Button({classNames: "clearButton", text: "Add To Cart", handleButtonClick: ()=> {handleAddToCart({cart: props.cart, $id: inventoryItems.$id,inventory: props.inventory, quantity: props.quantity})}}) : ""}
             </section>
         )
     })
+    
 }
 
 //when the user adds an item from the store to add to the inventory

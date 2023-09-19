@@ -10,7 +10,8 @@ import {
     Legend,
   } from 'chart.js';
 import PaginatedButtons from "./PaginatedButtons";
-  
+import {Date} from "../../hooks/PurchasesHooks";
+
 interface GraphLabels{
   quantities: number[],
   profits: any[],
@@ -55,8 +56,10 @@ ChartJS.register(
 
 export default function BarGraph(props:GraphLabels){
 
+    const date = props.dates.map((date:Date)=>date.date)
+
     const data = {
-        labels: props.dates.slice(props.startIndex, props.endIndex),
+        labels: date.slice(props.startIndex, props.endIndex),
         datasets: [
           {
             label: 'Quantities Sold',
@@ -73,9 +76,9 @@ export default function BarGraph(props:GraphLabels){
 
         return(
           <section>
-              <PaginatedButtons currentPage = {props.currentPage} cartLength = {props.cartLength} setCurrentPage = {(e:number)=>props.setCurrentPage(e)} rowsPerPage={props.rowsPerPage}/>
+              <PaginatedButtons className = "flex" currentPage = {props.currentPage} cartLength = {props.cartLength} setCurrentPage = {(e:number)=>props.setCurrentPage(e)} rowsPerPage={props.rowsPerPage}/>
               <Bar data={data} />
-              <PaginatedButtons currentPage = {props.currentPage} cartLength = {props.cartLength} setCurrentPage = {(e:number)=>props.setCurrentPage(e)} rowsPerPage={props.rowsPerPage}/>
+              <PaginatedButtons className = "flex" currentPage = {props.currentPage} cartLength = {props.cartLength} setCurrentPage = {(e:number)=>props.setCurrentPage(e)} rowsPerPage={props.rowsPerPage}/>
           </section>
         )   
         
