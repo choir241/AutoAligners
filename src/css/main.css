@@ -110,6 +110,10 @@ table td{
     width: 100%;
 }
 
+#purchase table{
+    margin: 2rem 0rem;
+}
+
 /* Cart
    ========================================================================== */
    #cart .cartContainer{

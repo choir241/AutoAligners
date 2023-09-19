@@ -52,8 +52,8 @@
         .database.createDocument(databaseId, collectionId, 'unique()', data, permissions);
     },
 
-    listDocuments: (databaseId, collectionId) => {
-      return api.provider().database.listDocuments(databaseId, collectionId);
+    listDocuments: (databaseId, collectionId,query) => {
+      return api.provider().database.listDocuments(databaseId, collectionId, query);
     },
 
     updateDocument: (databaseId, collectionId, documentId, data) => {

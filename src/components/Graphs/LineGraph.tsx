@@ -11,6 +11,7 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2'
 import PaginatedButtons from "./PaginatedButtons"
+import {Date} from "../../hooks/PurchasesHooks"
 
 interface GraphLabels {
   quantities: number[],
@@ -49,8 +50,10 @@ ChartJS.register(
 
 export default function LineGraph(props:GraphLabels){
 
+    const date = props.dates.map((date:Date)=>date.date)
+
     const data = {
-        labels: props.dates.slice(props.startIndex, props.endIndex),
+        labels: date.slice(props.startIndex, props.endIndex),
         datasets: [
           {
             label: 'Quantities Sold',
@@ -67,7 +70,7 @@ export default function LineGraph(props:GraphLabels){
 
         return (
           <section>
-            <PaginatedButtons currentPage = {props.currentPage} cartLength = {props.cartLength} setCurrentPage = {(e:number)=>props.setCurrentPage(e)} rowsPerPage={props.rowsPerPage}/>
+            <PaginatedButtons className = "flex" currentPage = {props.currentPage} cartLength = {props.cartLength} setCurrentPage = {(e:number)=>props.setCurrentPage(e)} rowsPerPage={props.rowsPerPage}/>
             <Line data={data} options ={options}/>
             <PaginatedButtons currentPage = {props.currentPage} cartLength = {props.cartLength} setCurrentPage = {(e:number)=>props.setCurrentPage(e)} rowsPerPage={props.rowsPerPage}/>
           </section>
