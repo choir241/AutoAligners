@@ -384,7 +384,7 @@ export function DisplayTimeDateAppointments(props: TimeDateAppointments):React.J
                 if(currentDay > 31){
                     day = 1;
                     currentDay = 1;
-                    currentMonth++;
+                    currentMonth =1;
                     month++;
                     year++
                     currentYear++

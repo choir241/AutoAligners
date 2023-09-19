@@ -1,4 +1,5 @@
 import api from "../api/api"
+import {Query} from "appwrite"
 
 export interface PurchasedItem{
     $createdAt: string,
@@ -13,9 +14,24 @@ export interface PurchasedItem{
 //get purchase database
 export async function GetPurchases(setPurchases:(e:PurchasedItem[])=>void){
     try{
-        const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PURCHASES_COLLECTION_ID);
+        const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PURCHASES_COLLECTION_ID, [Query.limit(100)]);
 
-        setPurchases(data.documents);
+        
+        if(data.documents.length > 100){
+            let i = 200
+            let boolean = false
+            while(!boolean){
+                if(data.documents.length > i){
+                    const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PURCHASES_COLLECTION_ID, [Query.limit(100), Query.offset(i)]);
+                    setPurchases(data.documents)
+                    boolean = true;
+                    break;
+                }
+                i+=100
+            }
+        }else if(data.documents.length <= 100){
+            setPurchases(data.documents);
+        }
     }catch(err){
         console.error(err);
 
@@ -32,7 +48,7 @@ export async function GetPurchases(setPurchases:(e:PurchasedItem[])=>void){
 //only list purchases of the current month based on the creation date
 //only list purchases of the current years based on the creation date
 
-interface Date{
+export interface Date{
     date: string,
     quantityTotal: number,
     totalProfit?: number
@@ -76,30 +92,32 @@ export function DisplayByYear(purchases: PurchasedItem[]){
     const purchasedDates = GetPurchasedDates(purchases);
     const filteredDates = purchasedDates.filter((date:Date | undefined)=>date?.date.split("-")[0].includes(currentYear.toString()) && date?.date.split("-")[1].includes(currentMonth.toString()))
     
-    const tableData = filteredDates.map((date: Date | undefined, i:number)=>{
-        return(
-        <tr key = {`month-${i}`} className = {`${i % 2 === 0 ? "even" : "odd"}`}>
-            <td>{date?.date}</td>
-            <td>{date?.quantityTotal}</td>
-            <td>${date?.totalProfit}</td>
-        </tr>
-        )
-    })
+    if(filteredDates.length){
+        const tableData = filteredDates.map((date: Date | undefined, i:number)=>{
+            return(
+            <tr key = {`month-${i}`} className = {`${i % 2 === 0 ? "even" : "odd"}`}>
+                <td>{date?.date}</td>
+                <td>{date?.quantityTotal}</td>
+                <td>${date?.totalProfit}</td>
+            </tr>
+            )
+        })
 
-    return(
-        <table>
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Quantities Sold</th>
-                    <th>Profit Made</th>
-                </tr>
-            </thead>
-            <tbody>
-                {tableData}
-            </tbody>
-        </table>
-    )
+        return(
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Quantities Sold</th>
+                        <th>Profit Made</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {tableData}
+                </tbody>
+            </table>
+        )
+    }
  }
 
 
@@ -113,15 +131,38 @@ export function DisplayByYear(purchases: PurchasedItem[]){
 
     let i = 0
     while(i < 7){
-        i ? currentWeek.push(++currentDay) : currentWeek.push(currentDay)
-        i++
-    }
+
+        if(!currentWeek.length){
+            currentWeek.push(currentDay);
+        }else{
+            if((currentMonth === 1 || currentMonth === 3 || currentMonth === 5 || currentMonth === 7 || currentMonth === 8 || currentMonth === 10) && currentDay > 31){
+                currentDay = 1;
+                ++currentMonth;
+                currentWeek.push(currentDay);
+            }else if((currentMonth === 4 || currentMonth === 6 || currentMonth === 9 || currentMonth === 11) && currentDay > 30){
+                currentDay = 1;
+                ++currentMonth;
+                currentWeek.push(currentDay);
+            }else if(currentMonth === 2 && currentDay > 28){
+                currentDay = 1;
+                ++currentMonth;
+                currentWeek.push(currentDay);
+            }else if(currentMonth === 12 && currentDay > 31){
+                currentDay = 1;
+                ++currentMonth;
+                ++currentYear;
+                currentWeek.push(currentDay);
+            }else{
+                currentWeek.push(++currentDay);
+            }
+            }
+            i++
+        }        
 
     function filterDate(date:string | undefined){
         return currentWeek.filter((day:number)=>day===Number(date))
     }   
-  
-    
+      
     const purchasedDates = GetPurchasedDates(purchases);
     const filteredDates = purchasedDates.filter((date:Date | undefined)=>date?.date.split("-")[0].includes(currentYear.toString()) && date?.date.split("-")[1].includes(currentMonth.toString()) && filterDate(date?.date.split("-")[2])[0])
 
