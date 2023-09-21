@@ -1,5 +1,6 @@
 import api from "../api/api"
 import {Query} from "appwrite"
+import PaginatedButtons from "../components/Graphs/PaginatedButtons"
 
 export interface PurchasedItem{
     $createdAt: string,
@@ -54,10 +55,10 @@ export interface Date{
     totalProfit?: number
  }
 
-export function DisplayByYear(purchases: PurchasedItem[]){
+export function DisplayByYear(props: DisplayBy){
     const date = new Date();
     const currentYear = date.getFullYear();
-    const purchasedDates = GetPurchasedDates(purchases);
+    const purchasedDates = GetPurchasedDates(props.purchases);
     const filteredDates = purchasedDates.filter((date:Date | undefined)=>date?.date.includes(currentYear.toString()))
     const tableData = filteredDates.map((date: Date | undefined, i:number)=>{
         return(
@@ -67,43 +68,12 @@ export function DisplayByYear(purchases: PurchasedItem[]){
                 <td>${date?.totalProfit}</td>
             </tr>
         )
-    })
+    }).slice(props.startIndex, props.endIndex)
 
     return(
-        <table>
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Quantities Sold</th>
-                    <th>Profit Made</th>
-                </tr>
-            </thead>
-            <tbody>
-                {tableData}
-            </tbody>
-        </table>
-    )
- }
-
- export function DisplayByMonth(purchases: PurchasedItem[]){
-    const date = new Date();
-    const currentMonth = date.getMonth()+1;
-    const currentYear = date.getFullYear();
-    const purchasedDates = GetPurchasedDates(purchases);
-    const filteredDates = purchasedDates.filter((date:Date | undefined)=>date?.date.split("-")[0].includes(currentYear.toString()) && date?.date.split("-")[1].includes(currentMonth.toString()))
-    
-    if(filteredDates.length){
-        const tableData = filteredDates.map((date: Date | undefined, i:number)=>{
-            return(
-            <tr key = {`month-${i}`} className = {`${i % 2 === 0 ? "even" : "odd"}`}>
-                <td>{date?.date}</td>
-                <td>{date?.quantityTotal}</td>
-                <td>${date?.totalProfit}</td>
-            </tr>
-            )
-        })
-
-        return(
+        <section>
+            <PaginatedButtons className = "flex" currentPage = {props.currentPage} cartLength = {filteredDates.length} setCurrentPage = {(e:number)=>props.setCurrentPage(e)} rowsPerPage={props.rowsPerPage}/>
+            
             <table>
                 <thead>
                     <tr>
@@ -116,12 +86,60 @@ export function DisplayByYear(purchases: PurchasedItem[]){
                     {tableData}
                 </tbody>
             </table>
+        </section>
+    )
+ }
+
+ export function DisplayByMonth(props: DisplayBy){
+    const date = new Date();
+    const currentMonth = date.getMonth()+1;
+    const currentYear = date.getFullYear();
+    const purchasedDates = GetPurchasedDates(props.purchases);
+    const filteredDates = purchasedDates.filter((date:Date | undefined)=>date?.date.split("-")[0].includes(currentYear.toString()) && date?.date.split("-")[1].includes(currentMonth.toString()))
+    
+    if(filteredDates.length){
+        const tableData = filteredDates.map((date: Date | undefined, i:number)=>{
+            return(
+            <tr key = {`month-${i}`} className = {`${i % 2 === 0 ? "even" : "odd"}`}>
+                <td>{date?.date}</td>
+                <td>{date?.quantityTotal}</td>
+                <td>${date?.totalProfit}</td>
+            </tr>
+            )
+        }).slice(props.startIndex, props.endIndex)
+
+        return(
+            <section>
+                <PaginatedButtons className = "flex" currentPage = {props.currentPage} cartLength = {filteredDates.length} setCurrentPage = {(e:number)=>props.setCurrentPage(e)} rowsPerPage={props.rowsPerPage}/>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Quantities Sold</th>
+                            <th>Profit Made</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {tableData}
+                    </tbody>
+                </table>
+            </section>
+           
         )
     }
  }
 
+ interface DisplayBy{
+    purchases: PurchasedItem[], 
+    startIndex: number, 
+    endIndex: number, 
+    currentPage: number,
+    setCurrentPage: (e:number)=>void,
+    rowsPerPage: number
+ }
 
- export function DisplayByWeek(purchases: PurchasedItem[]){
+ export function DisplayByWeek(props: DisplayBy){
     const date = new Date();
     let currentDay = date.getDate();
     let currentMonth = date.getMonth()+1;
@@ -169,7 +187,7 @@ export function DisplayByYear(purchases: PurchasedItem[]){
         return currentWeek.filter((day:number)=>day===Number(date))
     }   
       
-    const purchasedDates = GetPurchasedDates(purchases);
+    const purchasedDates = GetPurchasedDates(props.purchases);
     const filteredDates = purchasedDates.filter((date:Date | undefined)=>date?.date.split("-")[0].includes(currentYear.toString()) && date?.date.split("-")[1].includes(currentMonth.toString()) && filterDate(date?.date.split("-")[2])[0])
 
     const tableData = filteredDates.map((date: Date | undefined, i: number)=>{
@@ -180,9 +198,11 @@ export function DisplayByYear(purchases: PurchasedItem[]){
                 <td>${date?.totalProfit}</td>
             </tr>
         )
-    })
+    }).slice(props.startIndex, props.endIndex)
 
     return(
+        <section>
+            <PaginatedButtons className = "flex" currentPage = {props.currentPage} cartLength = {filteredDates.length} setCurrentPage = {(e:number)=>props.setCurrentPage(e)} rowsPerPage={props.rowsPerPage}/>
         <table>
             <thead>
                 <tr>
@@ -195,6 +215,8 @@ export function DisplayByYear(purchases: PurchasedItem[]){
                 {tableData}
             </tbody>
         </table>
+        </section>
+     
     )
  }
 

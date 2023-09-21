@@ -2,7 +2,15 @@ import React, {useState, useEffect} from "react"
 import {DisplayByMonth, DisplayByWeek, DisplayByYear, PurchasedItem, GetPurchases} from "../../hooks/PurchasesHooks"
 import {Button} from "../../components/Button"
 
-export default function List(){
+interface ListLabels{
+    currentPage: number,
+    setCurrentPage: (e:number) => void,
+    rowsPerPage: number,
+    startIndex: number,
+    endIndex: number
+}
+
+export default function List(props: ListLabels){
 
     const [purchases,setPurchases]= useState<PurchasedItem[]>([]);
     const [display, setDisplay] = useState<string>("week");
@@ -19,9 +27,10 @@ export default function List(){
                 {Button({text: "Year", handleButtonClick: ()=>setDisplay("year")})}
             </div>
 
-                {display === "week" ? DisplayByWeek(purchases) : ""}
-                {display === "month" ? DisplayByMonth(purchases) : ""}
-                {display === "year" ? DisplayByYear(purchases) : ""}
+
+                {display === "week" ? DisplayByWeek({purchases: purchases, startIndex: props.startIndex, endIndex: props.endIndex, currentPage: props.currentPage, rowsPerPage: props.rowsPerPage, setCurrentPage: (e:number)=>props.setCurrentPage(e)}) : ""}
+                {display === "month" ? DisplayByMonth({purchases: purchases, startIndex: props.startIndex, endIndex: props.endIndex, currentPage: props.currentPage, rowsPerPage: props.rowsPerPage, setCurrentPage: (e:number)=>props.setCurrentPage(e)}) : ""}
+                {display === "year" ? DisplayByYear({purchases: purchases, startIndex: props.startIndex, endIndex: props.endIndex, currentPage: props.currentPage, rowsPerPage: props.rowsPerPage, setCurrentPage: (e:number)=>props.setCurrentPage(e)}) : ""}
 
             
         </section>

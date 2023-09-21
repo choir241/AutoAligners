@@ -1,4 +1,4 @@
-import React, {useState, useMemo} from "react"
+import React, {useState, useEffect} from "react"
 import Nav from "../../components/Nav"
 import {getAppointmentData, Appointment, DisplayTimeDateAppointments, GetCarData, SelectCarMakeInput, SelectCarModelInput, SelectCarYearInput, ChooseCarService, Input, TextBoxInput} from "../../hooks/ReservationHooks"
 import { EditChooseTwoInput, handleEditAppointment, checkDate, getEditAppointmentData } from "../../hooks/EditAppointmentHooks"
@@ -29,7 +29,7 @@ export default function EditAppointment(){
     const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [warning, setWarning] = useState<string>("");
 
-    useMemo(()=>{
+    useEffect(()=>{
         GetCarData({onMakeSelect: setCarMakeOptions, onModelSelect: setCarModelOptions, onYearSelect: setCarYearOptions, carMake: carMake, carModel:carModel});
 
         getAppointmentData((e:Appointment[])=>setAppointments(e))
@@ -57,39 +57,39 @@ export default function EditAppointment(){
                 <div className = "flex justifyBetween">
 
                     <section className = "section-1 flex flex-col alignCenter">
-                        <section className = "flex flex-col alignCenter">
+                     <section className = "flex flex-col alignCenter">
                             {SelectCarMakeInput({defaultValue: data.carMake, options: carMakeOptions, onChange: (e:string)=>setCarMake(e), carMake: carMake, carYear: carYear, carModel: carModel, resetModel: (e:string)=>setCarModel(e), resetYear:(e:string)=>setCarYear(e), resetMake:(e:string)=>setCarMake(e)})}
                             {SelectCarModelInput({defaultValue: data.carModel, options: carModelOptions, onChange: (e:string)=>setCarModel(e), carMake: carMake, carModel: carModel, carYear: carYear, resetModel:(e:string)=>setCarModel(e), resetYear: (e:string)=>setCarYear(e), resetMake:(e:string)=>setCarMake})}
                             {SelectCarYearInput({defaultValue: data.carYear, options: carYearOptions, onChange: (e:string)=>setCarYear(e), carMake: carMake, carModel: carModel, carYear: carYear, resetModel:(e:string)=>setCarModel(e),resetYear:(e:string)=>setCarYear(e),resetMake:(e:string)=>setCarMake(e)})}
                         </section>
-                        
-                    {EditChooseTwoInput({defaultValue: data.stayLeave, text1:"Wait for car",text2: "Drop off car",name: "stayLeave" ,onChange: (e:string)=>setStay_Leave(e)})}
+                 
+                        {EditChooseTwoInput({defaultValue: data.stayLeave, text1:"Wait for car",text2: "Drop off car",name: "stayLeave" ,onChange: (e:string)=>setStay_Leave(e)})}
 
-                    {ChooseCarService((e:string)=>setService(e), data.service)}
+{ChooseCarService((e:string)=>setService(e), data.service)}
 
-                    </section>
+</section>
 
-                    <section className = "section-1 flex flex-col alignCenter">
-                        <section className = "flex justifyBetween contact">
-                            {Input({type: "text", onChange: (e:string)=>setFirstName(e), placeholder: data.firstName, defaultValue: data.firstName})}
-                            {Input({type: "text", onChange: (e:string)=>setLastName(e), placeholder: data.lastName, defaultValue: data.lastName})}
-                        </section>
+<section className = "section-1 flex flex-col alignCenter">
+    <section className = "flex justifyBetween contact">
+        {Input({type: "text", onChange: (e:string)=>setFirstName(e), placeholder: data.firstName, defaultValue: data.firstName})}
+        {Input({type: "text", onChange: (e:string)=>setLastName(e), placeholder: data.lastName, defaultValue: data.lastName})}
+    </section>
 
-                        <section className = "flex justifyBetween contact">
-                            {Input({type: "text", onChange: (e:string)=>setEmail(e), placeholder: data.email, defaultValue: data.email})}
-                            {Input({type: "tel", onChange: (e:string)=>setPhone(e), placeholder: data.phone, minlength: 10, maxlength: 10, defaultValue: data.phone})}
-                        </section>
+    <section className = "flex justifyBetween contact">
+        {Input({type: "text", onChange: (e:string)=>setEmail(e), placeholder: data.email, defaultValue: data.email})}
+        {Input({type: "tel", onChange: (e:string)=>setPhone(e), placeholder: data.phone, minlength: 10, maxlength: 10, defaultValue: data.phone})}
+    </section>
 
-                        {Input({type: "text", onChange: (e:string)=>setZipCode(e), placeholder: data.zipCode, minlength: 5, maxlength: 5, defaultValue: data.zipCode})}
+    {Input({type: "text", onChange: (e:string)=>setZipCode(e), placeholder: data.zipCode, minlength: 5, maxlength: 5, defaultValue: data.zipCode})}
 
-                        <div className="flex flex-col alignCenter contact">
-                            <h2>Preferred Contact Method</h2>
+    <div className="flex flex-col alignCenter contact">
+        <h2>Preferred Contact Method</h2>
 
-                            {EditChooseTwoInput({defaultValue: data.contact, text1:"Email",text2: "Phone",name: "contact" ,onChange: (e:string)=>setContact(e)})}
-                            {TextBoxInput({width: 50, height: 10, onChange: (e:string)=>setComment(e), placeholder: data.comment || "Additional Comments"})}
-                        </div>
+        {EditChooseTwoInput({defaultValue: data.contact, text1:"Email",text2: "Phone",name: "contact" ,onChange: (e:string)=>setContact(e)})}
+        {TextBoxInput({width: 50, height: 10, onChange: (e:string)=>setComment(e), placeholder: data.comment || "Additional Comments"})}
+    </div>
 
-                    </section>
+</section> 
 
 
 
