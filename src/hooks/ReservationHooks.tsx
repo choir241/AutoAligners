@@ -402,7 +402,6 @@ export function DisplayTimeDateAppointments(props: TimeDateAppointments):React.J
             currentDayOfWeek = 0
         }
 
-
         if(props.date?.split("D")[0] === `${currentMonth}/${currentDay}/${currentYear}`){
             appt.push(
                 <div className = {`calendar clearButton c-${i} clicked`} key = {`c-${i}`} onClick = {()=>{
@@ -435,7 +434,6 @@ export function DisplayTimeDateAppointments(props: TimeDateAppointments):React.J
     }
 
 
-
     const filterAppointmentTimes = props.appointments.filter((appointment:Appointment) => appointment.date.split("D")[0] === selectedDate)
  
     const appointmentTimes = filterAppointmentTimes.map((appointment:Appointment) => appointment.time)
@@ -466,13 +464,25 @@ export function DisplayTimeDateAppointments(props: TimeDateAppointments):React.J
         })
 
         //render clear buttons of appointment dates
-        const finalJSX = miliaryTimeConversion.map((jsx,i)=>{return(
+        const finalJSX = miliaryTimeConversion.map((jsx,i)=>{
+            if(jsx[1] === props.time){
+                return(
+                <button 
+                className = {`clearButton t-${i} time clicked`} key = {i}
+                onClick = {(e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handleChangeTime({i: i, e: e, time: jsx[1], setTime: (e:string)=>props.setTime(e)})}>
+                    {jsx[0]}
+                </button>
+                )
+            }else{
+            return(
             <button 
                   className = {`clearButton t-${i} time`} key = {i}
-                  onClick = {(e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handleChangeTime({i: i,e: e,time: jsx[1],setTime: (e:string)=>props.setTime(e)})}>
+                  onClick = {(e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handleChangeTime({i: i, e: e, time: jsx[1], setTime: (e:string)=>props.setTime(e)})}>
                       {jsx[0]}
             </button>
-        )})
+                 )
+            }
+    })
 
 
         return(

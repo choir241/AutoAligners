@@ -48,7 +48,7 @@ export default function Purchases(){
                     </section>
 
                     <section className = "graph">
-                        {display === "list" ? <List/> : ""}
+                        {display === "list" ? <List setCurrentPage={(e:number)=>setCurrentPage(e)} currentPage={currentPage} rowsPerPage = {rowsPerPage} startIndex={startIndex} endIndex={endIndex}/> : ""}
                     </section>
 
                 </section>
