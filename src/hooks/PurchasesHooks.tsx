@@ -126,10 +126,16 @@ export function DisplayByYear(purchases: PurchasedItem[]){
     let currentDay = date.getDate();
     let currentMonth = date.getMonth()+1;
     let currentYear = date.getFullYear();
+    let currentDOW = date.getDay();
 
     let currentWeek:number[] = [];
 
     let i = 0
+
+    if(currentDOW){
+        currentDay -= currentDOW
+    }
+
     while(i < 7){
 
         if(!currentWeek.length){
