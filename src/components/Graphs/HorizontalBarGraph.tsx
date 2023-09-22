@@ -11,6 +11,7 @@ import {
 import { Bar } from 'react-chartjs-2';
 import PaginatedButtons from "./PaginatedButtons"
 import {Date} from "../../hooks/PurchasesHooks"
+import Query_Offset from "./Query_Offset";
 
 ChartJS.register(
   CategoryScale,
@@ -46,7 +47,10 @@ interface GraphLabels{
     setCurrentPage: (e:number) => void,
     rowsPerPage: number,
     startIndex: number,
-    endIndex: number
+    endIndex: number,
+    setLimit: (e:number) => void,
+    limit: number,
+    length: number
   }
   
 
@@ -75,6 +79,7 @@ export default function HorizontalBarGraph(props:GraphLabels){
     return(
       <section>
         <PaginatedButtons className = "flex" currentPage = {props.currentPage} cartLength = {props.cartLength} setCurrentPage = {(e:number)=>props.setCurrentPage(e)} rowsPerPage={props.rowsPerPage}/>
+        {Query_Offset(props.length, props.limit, (e:number)=>props.setLimit(e))}
         <Bar options = {options} data={data}/>
         <PaginatedButtons currentPage = {props.currentPage} cartLength = {props.cartLength} setCurrentPage = {(e:number)=>props.setCurrentPage(e)} rowsPerPage={props.rowsPerPage}/>
         </section>
