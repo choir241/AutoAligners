@@ -13,26 +13,21 @@ export interface PurchasedItem{
 }
 
 //get purchase database
-export async function GetPurchases(setPurchases:(e:PurchasedItem[])=>void){
+export async function GetPurchases(setPurchases:(e:PurchasedItem[])=>void, limit?: number){
     try{
         const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PURCHASES_COLLECTION_ID, [Query.limit(100)]);
 
-        
-        if(data.documents.length > 100){
-            let i = 200
-            let boolean = false
-            while(!boolean){
-                if(data.documents.length > i){
-                    const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PURCHASES_COLLECTION_ID, [Query.limit(100), Query.offset(i)]);
-                    setPurchases(data.documents)
-                    boolean = true;
-                    break;
-                }
-                i+=100
-            }
-        }else if(data.documents.length <= 100){
+        if(limit){
+
+                const response = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PURCHASES_COLLECTION_ID, [Query.limit(limit), Query.offset(limit-25)]);
+
+                const array = response.documents
+                setPurchases(array)
+
+        }else{
             setPurchases(data.documents);
         }
+
     }catch(err){
         console.error(err);
 
