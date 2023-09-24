@@ -164,6 +164,33 @@ export async function handleEmployeeCustomization(listOfUsers: User[], email: st
     }
 }
 
+export async function AutomaticPTO(){
+    try{
+
+        const date = new Date();
+        const currentMonth = date.getMonth() + 1
+        const currentDay = date.getDate();
+
+        if(currentMonth===1 && currentDay === 1){
+            const employeeList = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID)
+
+            employeeList.documents.forEach(async(user:User)=>{
+                const data = {
+                    userID: user.$id,
+                    email: user.email,
+                    PTO: "40"
+                }
+
+                  await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, user.$id, data)
+            })
+        }
+
+
+    }catch(err){
+        console.error(err);
+    }
+}
+
 export async function handlePTO(listOfUsers: User[], PTO: string){
     try{
 
