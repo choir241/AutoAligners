@@ -4,7 +4,7 @@ import React, {useState, useEffect} from "react"
 import {ButtonSubmit, Button} from "../../components/Button"
 import {User, GenerateNewEmployee, handleLogin, GetAccount, GetUsers, DisplayUsers, Input, handleSignUp} from "../../hooks/LoginHooks"
 import {PurchasedItem, GetPurchases } from "../../hooks/PurchasesHooks"
-import {handlePTO, EmployeeButtons, RenderEmployeeAppointments, RenderEmployeeProfit, GetEmployee, Profile, handleEmployeeCustomization} from "../../hooks/EmployeeHooks"
+import {AutomaticPTO, handlePTO, EmployeeButtons, RenderEmployeeAppointments, RenderEmployeeProfit, GetEmployee, Profile, handleEmployeeCustomization} from "../../hooks/EmployeeHooks"
 import PaginatedButtons from "../../components/Graphs/PaginatedButtons"
 import ImageUpload from "../../components/Cloudinary/Cloudinary";
 
@@ -55,6 +55,10 @@ export function EmployeeHub(){
       GetEmployee((e:Profile)=>setEmployee(e))
     },[])
     
+    useEffect(()=>{
+        AutomaticPTO()
+    },[])
+
     //example employee id 649c8a408d41d5c02f5c
 
     return(
