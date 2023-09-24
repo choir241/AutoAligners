@@ -171,7 +171,7 @@ export async function AutomaticPTO(){
         const currentMonth = date.getMonth() + 1
         const currentDay = date.getDate();
 
-        if(currentMonth===1 && currentDay === 1){
+        if(currentMonth===1 && currentDay === 1 && !localStorage.getItem("PTO")){
             const employeeList = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID)
 
             employeeList.documents.forEach(async(user:User)=>{
@@ -183,8 +183,10 @@ export async function AutomaticPTO(){
 
                   await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, user.$id, data)
             })
+            localStorage.setItem("PTO", "Refill done");
+        }else{
+            localStorage.setItem("PTO", "");
         }
-
 
     }catch(err){
         console.error(err);
