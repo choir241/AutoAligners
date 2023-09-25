@@ -4,9 +4,10 @@ import React, {useState, useEffect} from "react"
 import {ButtonSubmit, Button} from "../../components/Button"
 import {User, GenerateNewEmployee, handleLogin, GetAccount, GetUsers, DisplayUsers, Input, handleSignUp} from "../../hooks/LoginHooks"
 import {PurchasedItem, GetPurchases } from "../../hooks/PurchasesHooks"
-import {AutomaticPTO, handlePTO, EmployeeButtons, RenderEmployeeAppointments, RenderEmployeeProfit, GetEmployee, Profile, handleEmployeeCustomization} from "../../hooks/EmployeeHooks"
+import {GetPTORequests, PTO, RenderPTORequests, AutomaticPTO, handlePTO, EmployeeButtons, RenderEmployeeAppointments, RenderEmployeeProfit, GetEmployee, Profile, handleEmployeeCustomization} from "../../hooks/EmployeeHooks"
 import PaginatedButtons from "../../components/Graphs/PaginatedButtons"
 import ImageUpload from "../../components/Cloudinary/Cloudinary";
+import {toggleDisplay} from "../../hooks/FinanceHooks"
 
 export function EmployeeHub(){
 
@@ -20,11 +21,16 @@ export function EmployeeHub(){
     const [purchases, setPurchases] = useState<PurchasedItem[]>([]);
     const [showPurchases, setShowPurchases] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState<number>(1);
+    const [currentPTOPage, setCurrentPTOPage] = useState<number>(1); 
     const [loading, setLoading] = useState<boolean>(false);
     const [salary, setSalary] = useState<string>("");
     const [PTO, setPTO] = useState<string>("");
+    const [startPTODate, setStartPTODate] = useState<string>("");
+    const [endPTODate, setEndPTODate] = useState<string>("");
     const [position, setPosition] = useState<string>("");
     const [employee, setEmployee] = useState<Profile>();
+    const [PTODisplay, setPTODisplay] = useState<boolean>(false);
+    const [PTORequests, setPTORequests] = useState<PTO[]>([]);
 
     const rowsPerPage = 3;
 
@@ -35,9 +41,19 @@ export function EmployeeHub(){
     const start = (currentPage-1) * rows;
     const end = startIndex + rows
 
+    
+    const firstIndex =  (currentPTOPage - 1) * rows;
+    const lastIndex = firstIndex + rows;
+
     useEffect(()=>{
       if(localStorage.getItem("email")){
         GetAccount((e:User) => setUser(e))
+      }
+    },[])
+
+    useEffect(()=>{
+      if(localStorage.getItem("email")){
+        GetPTORequests((e:PTO[]) => setPTORequests(e))
       }
     },[])
   
@@ -60,6 +76,12 @@ export function EmployeeHub(){
     },[])
 
     //example employee id 649c8a408d41d5c02f5c
+
+    const currentDate = new Date();
+    const month = currentDate.getMonth() + 1
+    const currentMonth = currentDate.getMonth() + 1 < 10 ? "0" + month.toString() : month;
+    const currentDay = currentDate.getDate();
+    const currentYear = currentDate.getFullYear();
 
     return(
       <main id = "auth">
@@ -106,6 +128,10 @@ export function EmployeeHub(){
               </form>
             </section>
 
+
+              {PTODisplay ?
+              RenderPTORequests({currentPTOPage: currentPTOPage, setCurrentPTOPage: (e:number)=>setCurrentPTOPage(e), rows: rows, setPTODisplay: (e:boolean)=>setPTODisplay(e), PTODisplay: PTODisplay, PTORequests: PTORequests, lastIndex: lastIndex, firstIndex: firstIndex})
+              :
               <section className = "flex flex-col">
               {Input({type: "email", name: "email", onChange: (e)=>setEmail(e), placeholder: "Employees Email"})}
               {Input({type: "text", name: "salary", onChange: (e)=>setSalary(e), placeholder: "Set Employees Salary"})}
@@ -113,7 +139,12 @@ export function EmployeeHub(){
               {Input({type: "text", name: "PTO", onChange: (e)=>setPTO(e), placeholder: "Set Employees PTO"})}
 
               {ButtonSubmit({handleButtonClick: (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handleEmployeeCustomization(listOfUsers, email, salary, position, PTO), text: "Customize Employee Information"})}
+
+              {Button({text: "Manage PTO Requests", classNames: "PTODisplay", handleButtonClick: () => toggleDisplay((e:boolean)=>setPTODisplay(e), PTODisplay)})}
+
               </section>
+              }
+
 
               <section className="flex flex-col alignCenter rightContainer">
               <PaginatedButtons currentPage = {currentPage} cartLength = {listOfUsers.length} setCurrentPage = {(e:number)=>setCurrentPage(e)} rowsPerPage={rows}/>
@@ -128,7 +159,7 @@ export function EmployeeHub(){
               <h2 className = "flex justifyCenter">Employee Hub</h2>
 
               <section className="flex justifyBetween alignCenter">
-                      <section className = "imgContainer">
+                  <section className = "imgContainer">
                       <img src = {employee?.image} className ="profileImg" alt = {employee?.fileName}/>
                       <ImageUpload user = {user}/>
                       </section>
@@ -142,8 +173,12 @@ export function EmployeeHub(){
 
                   <section className = "flex flex-col alignCenter PTO">
                     <h2>PTO Balance: {employee?.PTO ? employee?.PTO : 0} Hours</h2>
-                    {Input({type: "text", name: "PTO", onChange: (e)=>setPTO(e), placeholder: "Set Employees PTO"})}
-                    {ButtonSubmit({handleButtonClick: (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handlePTO(listOfUsers, PTO), text: "Request PTO"})}
+                    {Input({type: "text", value: PTO, name: "PTO", onChange: (e)=>setPTO(e), placeholder: "Request PTO hours"})}
+                    <h2>Select Start of Vacation Date:</h2>
+                    {Input({value: startPTODate, type: "date", name: "datetime-local", onChange: (e)=>setStartPTODate(e), min: `${currentYear}-${currentMonth}-${currentDay}`, max: `${currentYear+20}-${currentMonth}-${currentDay}`})}
+                    <h2>Select End of Vacation Date:</h2>
+                    {Input({value: endPTODate, type: "date", name: "datetime-local", onChange: (e)=>setEndPTODate(e), min: `${currentYear}-${currentMonth}-${currentDay}`, max: `${currentYear+20}-${currentMonth}-${currentDay}`})}
+                    {ButtonSubmit({handleButtonClick: (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handlePTO(listOfUsers, PTO, startPTODate, endPTODate), text: "Request PTO"})}
 
                   </section>
 

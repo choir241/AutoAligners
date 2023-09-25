@@ -375,6 +375,19 @@ label{
 /* Auth
    ========================================================================== */
 
+#auth .PTODisplay{
+    margin-top: 1rem;
+}
+
+#auth .PTO span, #auth .PTO .button{
+    margin-right: 1rem;
+}
+
+#auth .PTO .userDisplays{
+    margin-bottom: 0rem;
+    padding-bottom: 1rem;
+}
+
 #auth .profile{
     padding: 2rem;
     width: 50%;

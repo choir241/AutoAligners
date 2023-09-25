@@ -10,7 +10,9 @@ interface InputTypes{
     onChange: (e:string)=>void,
     placeholder?: string,
     value?: string,
-    disabled?: boolean
+    disabled?: boolean,
+    min?: string,
+    max?: string
   }
   
 export interface User{
@@ -44,7 +46,16 @@ interface Login{
   
   
 export function Input(props: InputTypes):React.JSX.Element{
-    return(<input type = {props.type} name = {props.name} disabled = {props.disabled} value = {props.value} onChange = {(e)=>props.onChange(e.target.value)} placeholder = {props.placeholder}/>)
+    return(<input 
+      type = {props.type} 
+      name = {props.name} 
+      disabled = {props.disabled} 
+      value = {props.value} 
+      onChange = {(e)=>props.onChange(e.target.value)} 
+      placeholder = {props.placeholder}
+      min = {props.min}
+      max = {props.max}/>
+      )
   }
   
 export async function GetAccount(setUser: (e:User)=>void){
