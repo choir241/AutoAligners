@@ -15,7 +15,6 @@ const handlePageChange = (newPage:number) => {
         props.setCurrentPage(newPage);
       }
 
-
 return(
   <div className = {props.className} key = "buttons">
         {Math.ceil(props.cartLength/props.rowsPerPage) < props.currentPage + 1  ? Array.from({ length: Math.ceil(props.cartLength / props.rowsPerPage) }, (_, i) => (

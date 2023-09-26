@@ -4,7 +4,7 @@ import React, {useState, useEffect} from "react"
 import {ButtonSubmit, Button} from "../../components/Button"
 import {User, GenerateNewEmployee, handleLogin, GetAccount, GetUsers, DisplayUsers, Input, handleSignUp} from "../../hooks/LoginHooks"
 import {PurchasedItem, GetPurchases } from "../../hooks/PurchasesHooks"
-import {GetPTORequests, PTO, RenderPTORequests, AutomaticPTO, handlePTO, EmployeeButtons, RenderEmployeeAppointments, RenderEmployeeProfit, GetEmployee, Profile, handleEmployeeCustomization} from "../../hooks/EmployeeHooks"
+import {RenderRequestHistory, GetPTORequests, PTO, RenderPTORequests, AutomaticPTO, handlePTO, EmployeeButtons, RenderEmployeeAppointments, RenderEmployeeProfit, GetEmployee, Profile, handleEmployeeCustomization} from "../../hooks/EmployeeHooks"
 import PaginatedButtons from "../../components/Graphs/PaginatedButtons"
 import ImageUpload from "../../components/Cloudinary/Cloudinary";
 import {toggleDisplay} from "../../hooks/FinanceHooks"
@@ -31,6 +31,7 @@ export function EmployeeHub(){
     const [employee, setEmployee] = useState<Profile>();
     const [PTODisplay, setPTODisplay] = useState<boolean>(false);
     const [PTORequests, setPTORequests] = useState<PTO[]>([]);
+    const [PTORequestDisplay, setPTORequestDisplay] = useState<boolean>(false);
 
     const rowsPerPage = 3;
 
@@ -82,6 +83,7 @@ export function EmployeeHub(){
     const currentMonth = currentDate.getMonth() + 1 < 10 ? "0" + month.toString() : month;
     const currentDay = currentDate.getDate();
     const currentYear = currentDate.getFullYear();
+
 
     return(
       <main id = "auth">
@@ -138,7 +140,7 @@ export function EmployeeHub(){
               {Input({type: "text", name: "position", onChange: (e)=>setPosition(e), placeholder: "Set Employees Position"})}
               {Input({type: "text", name: "PTO", onChange: (e)=>setPTO(e), placeholder: "Set Employees PTO"})}
 
-              {ButtonSubmit({handleButtonClick: (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handleEmployeeCustomization(listOfUsers, email, salary, position, PTO), text: "Customize Employee Information"})}
+              {ButtonSubmit({handleButtonClick: (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handleEmployeeCustomization({listOfUsers: listOfUsers, email: email, salary: salary, position: position, PTO: PTO}), text: "Customize Employee Information"})}
 
               {Button({text: "Manage PTO Requests", classNames: "PTODisplay", handleButtonClick: () => toggleDisplay((e:boolean)=>setPTODisplay(e), PTODisplay)})}
 
@@ -155,43 +157,75 @@ export function EmployeeHub(){
           </section>
   
         :
-            <section className = "flex flex-col employee">
-              <h2 className = "flex justifyCenter">Employee Hub</h2>
+            <section className = "flex flex-col">
+              <h2 className = "flex justifyCenter heading">Employee Hub</h2>
 
-              <section className="flex justifyBetween alignCenter">
+              <section className="flex justifyBetween alignCenter employee">
                   <section className = "imgContainer">
                       <img src = {employee?.image} className ="profileImg" alt = {employee?.fileName}/>
                       <ImageUpload user = {user}/>
                       </section>
                       <section className="flex flex-col profile">
-                      <h2>Email: {user.email}</h2>
+                      <h2 className = "email">Email: {user.email}</h2>
                       <h2>Start Date: {user.$createdAt.split("T")[0]}</h2>
                       <h2>Total Sales Made: ${RenderEmployeeProfit(purchases)}</h2>
                       <h2>Position: {employee?.position}</h2>
                       <h2>Salary: {employee?.salary}</h2>
                   </section>
 
+
+                {PTODisplay || showPurchases || PTORequestDisplay ? "" :
+                  <section className = "flex flex-col alignCenter justifyBetween buttons">
+                    {Button({text: "Request PTO Hub", handleButtonClick: ()=>toggleDisplay((e:boolean)=>setPTODisplay(e),PTODisplay)})}
+                    {Button({text: "Sales History Hub", handleButtonClick: ()=> toggleDisplay((e:boolean)=>setShowPurchases(e),showPurchases)})}
+                    {Button({text: "PTO Request History Hub", handleButtonClick: ()=>toggleDisplay((e:boolean)=>setPTORequestDisplay(e),PTORequestDisplay)})}
+                  </section>
+                }
+
+
+                {PTODisplay ?
                   <section className = "flex flex-col alignCenter PTO">
                     <h2>PTO Balance: {employee?.PTO ? employee?.PTO : 0} Hours</h2>
                     {Input({type: "text", value: PTO, name: "PTO", onChange: (e)=>setPTO(e), placeholder: "Request PTO hours"})}
-                    <h2>Select Start of Vacation Date:</h2>
-                    {Input({value: startPTODate, type: "date", name: "datetime-local", onChange: (e)=>setStartPTODate(e), min: `${currentYear}-${currentMonth}-${currentDay}`, max: `${currentYear+20}-${currentMonth}-${currentDay}`})}
-                    <h2>Select End of Vacation Date:</h2>
-                    {Input({value: endPTODate, type: "date", name: "datetime-local", onChange: (e)=>setEndPTODate(e), min: `${currentYear}-${currentMonth}-${currentDay}`, max: `${currentYear+20}-${currentMonth}-${currentDay}`})}
-                    {ButtonSubmit({handleButtonClick: (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handlePTO(listOfUsers, PTO, startPTODate, endPTODate), text: "Request PTO"})}
+                      <h2>Vacation Start Date:</h2>
+                      {Input({value: startPTODate, type: "date", name: "datetime-local", onChange: (e)=>setStartPTODate(e), min: `${currentYear}-${currentMonth}-${currentDay}`, max: `${currentYear+20}-${currentMonth}-${currentDay}`})}
+                      <h2>Vacation End Date:</h2>
+                      {Input({value: endPTODate, type: "date", name: "datetime-local", onChange: (e)=>setEndPTODate(e), min: `${currentYear}-${currentMonth}-${currentDay}`, max: `${currentYear+20}-${currentMonth}-${currentDay}`})}
+                 
+
+                    <section className="flex alignCenter">
+                    {Button({text: "Hide Request PTO Hub", classNames: "hide", handleButtonClick: ()=>toggleDisplay((e:boolean)=>setPTODisplay(e),PTODisplay)})}
+                    {ButtonSubmit({handleButtonClick: (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handlePTO(listOfUsers, PTO, startPTODate, endPTODate), text: "Request PTO"})}                     
+
+                    </section>
 
                   </section>
+                :""}
 
-                  <section className = "flex flex-col alignCenter purchases">
+                {PTORequestDisplay ?
+                <section className = "flex flex-col alignCenter justifyCenter PTO">
+                      {Button({text: "Hide PTO History Hub", classNames: "hide", handleButtonClick: ()=>toggleDisplay((e:boolean)=>setPTORequestDisplay(e),PTORequestDisplay)})}
 
-                  <button className = {`button ${showPurchases ? "" : "hubButton"}`} onClick = {()=>setShowPurchases(!showPurchases)}>{showPurchases? "Hide Your Sale History" : "Show Your Sale History"}</button>
-                    {showPurchases ? <PaginatedButtons currentPage = {currentPage} cartLength = {purchases.length} setCurrentPage = {(e:number)=>setCurrentPage(e)} rowsPerPage={rowsPerPage}/> : "" }
+                    {RenderRequestHistory({currentPage: currentPTOPage, setCurrentPage: (e:number)=> setCurrentPTOPage(e),rows: rows, startIndex: firstIndex, endIndex: lastIndex, requests: employee?.requests})}
 
-                    {showPurchases ? RenderEmployeeAppointments(purchases, startIndex, endIndex) : ""}
+                </section>
+                :""
+                }
 
-                    {showPurchases ? <button className = "button" onClick = {()=>setShowPurchases(!showPurchases)}>Hide Your Sale History</button> : ""}
+                {showPurchases ?
+                <section className = "flex flex-col alignCenter purchases">
+
+                    <PaginatedButtons className = {"flex"} currentPage = {currentPage} cartLength = {purchases.length} setCurrentPage = {(e:number)=>setCurrentPage(e)} rowsPerPage={rowsPerPage}/>
+
+                    {RenderEmployeeAppointments(purchases, startIndex, endIndex)}
+
+                    {Button({text: "Hide Sales History Hub", handleButtonClick: ()=>toggleDisplay((e:boolean)=>setShowPurchases(e),showPurchases)})}
                                       
-                    </section>
+                </section>
+                :
+                ""
+                }
+
               </section>
             </section>
         
