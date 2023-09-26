@@ -18,7 +18,8 @@ export interface Profile{
     position: string,
     PTO: string,
     salary: string,
-    requestedPTO: string
+    requestedPTO: string,
+    requests: string[]
 }
 
 export interface PTO{
@@ -28,7 +29,7 @@ export interface PTO{
     userID: string,
     $id: string,
     email: string,
-    name: string
+    name: string,
 }
 
 interface PTORequests{
@@ -42,6 +43,33 @@ interface PTORequests{
     lastIndex: number
 }
 
+
+interface Approve{
+    PTO: string,
+    email: string, 
+    name: string, 
+    userID: string, 
+    startDate: string, 
+    endDate: string,
+    $id: string
+}
+
+interface History{
+    currentPage: number, 
+    setCurrentPage: (e:number)=>void, 
+    rows: number, 
+    startIndex: number, 
+    endIndex: number, 
+    requests?:string[]
+}
+
+interface Customize{
+    listOfUsers: User[], 
+    email: string, 
+    salary: string, 
+    position: string, 
+    PTO: string
+}
 
 export function RenderEmployeeAppointments(purchases: PurchasedItem[], startIndex: number, endIndex: number){
 
@@ -123,9 +151,11 @@ export async function GetEmployee(setEmployee: (e:Profile)=>void){
     try{
         const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID)
 
-        const findUser = data.documents.filter((user:Profile)=>localStorage.getItem("email") === user.email)
+        if(data.documents.length){
+        const findUser = data.documents.filter((user:Profile)=>localStorage.getItem("email") === user.email)[0]
         
-        setEmployee(findUser[0])
+        setEmployee(findUser)
+        }
 
     }catch(err){
         console.error(err);
@@ -154,22 +184,22 @@ export function EmployeeButtons(){
     )
 }
 
-export async function handleEmployeeCustomization(listOfUsers: User[], email: string, salary: string, position: string, PTO: string){
+export async function handleEmployeeCustomization(props: Customize){
     try{
-        if(email && (salary || position || PTO)){
+        if(props.email && (props.salary || props.position || props.PTO)){
 
-            const findUser = listOfUsers.filter((employee:User)=>employee.email===email)[0]
+            const findUser = props.listOfUsers.filter((employee:User)=>employee.email===props.email)[0]
 
             const employeeList = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID)
 
-            const findEmployee = employeeList.documents.filter((employee:Profile)=>employee.email === email)
+            const findEmployee = employeeList.documents.filter((employee:Profile)=>employee.email === props.email)
             
             const data = {
                 userID: findUser.$id,
-                email,
-                salary: salary ? salary : findEmployee[0].salary ,
-                position: position ? position: findEmployee[0].position,
-                PTO: PTO ? PTO : findEmployee[0].PTO
+                email: props.email,
+                salary: props.salary ? props.salary : findEmployee[0].salary ,
+                position: props.position ? props.position: findEmployee[0].position,
+                PTO: props.PTO ? props.PTO : findEmployee[0].PTO
             }
 
             if(findEmployee.length){
@@ -320,16 +350,6 @@ export async function handlePTO(listOfUsers: User[], PTO: string, PTOStartDate: 
     }
 }
 
-interface Approve{
-    PTO: string,
-    email: string, 
-    name: string, 
-    userID: string, 
-    startDate: string, 
-    endDate: string,
-    $id: string
-}
-
 async function ApprovePTO(props: Approve){
     try{
 
@@ -394,7 +414,6 @@ async function DenyPTO(props: Approve){
             const data = {
                 userID: props.userID,
                 email: props.email,
-                PTO: (Number(findEmployee[0].PTO) - Number(props.PTO)).toString(),
                 requests: findEmployee[0].requests ? findEmployee[0].requests : [JSON.stringify({startDate: props.startDate, endDate: props.endDate, status: "denied"})]
             };
 
@@ -405,7 +424,6 @@ async function DenyPTO(props: Approve){
             const data = {
                 userID: props.userID,
                 email: props.email,
-                PTO: (Number(findEmployee[0].PTO) - Number(props.PTO)).toString(),
                 requests: [JSON.stringify({startDate: props.startDate, endDate: props.endDate, status: "denied"})]
             };
 
@@ -456,5 +474,33 @@ export async function GetPTORequests(setPTORequests: (e:PTO[])=>void){
         setPTORequests(data.documents);
     }catch(err){
         console.error(err);
+    }
+}
+
+export function RenderRequestHistory(props: History){
+    if(props.requests){
+        if(props.requests.length){
+
+            let i = 0;
+            const requestDisplay = props.requests.map((request:string)=>{
+                const parse = JSON.parse(request)
+                return(
+                    <section key = {i++}>
+                        <h2>{parse.startDate} - {parse.endDate}</h2>
+                        <h2>{parse.status}</h2>
+                    </section>
+                )
+            }).slice(props.startIndex, props.endIndex)
+
+
+            return (
+                <section>
+                    <PaginatedButtons currentPage = {props.currentPage} cartLength = {props.requests.length} setCurrentPage = {(e:number)=>props.setCurrentPage(e)} rowsPerPage={props.rows}/>
+                    
+                    {requestDisplay}
+                </section>
+
+            )
+        }
     }
 }

@@ -388,6 +388,7 @@ label{
     padding-bottom: 1rem;
 }
 
+
 #auth .profile{
     padding: 2rem;
     width: 50%;
@@ -406,23 +407,42 @@ label{
     float: right;
 }
 
+#auth .profile .email{
+    text-transform: none;
+}
+
 input{
     font-size: 2rem;
     padding: 1rem 4rem;
     margin-bottom: 2rem;
 }
 
-#auth section form .button, #auth section.purchases .button{
-    width: 50%;
+#auth .employee{
+    max-height: 40vh;
+}
+
+#auth section form .button{
     padding: 2rem 4rem;
     margin: 3rem;
 }
 
 #auth .purchases{
-    width: 60%;
+    margin-top: 2rem;
     flex-wrap: wrap;
 }
 
+#auth .buttons .button{
+    margin: 2rem;
+    padding: 2rem 4rem;
+}
+
+#auth .heading{
+    margin-bottom: 5rem;
+}
+
+#auth .buttons, #auth .PTO{
+    width: 50%;
+}
 
 #auth .purchases .cartItem{
     padding: 2.5rem;
@@ -434,6 +454,10 @@ input{
 
 #auth .widget{
     margin-top: 2rem;
+}
+
+#auth section .hide{
+    margin: 2rem 0rem;
 }
 
 #auth .profile h2{
@@ -572,7 +596,6 @@ html{
 
 h1{
     font-size: 6rem;
-    text-transform: capitalize;
 }
 
 h2{
@@ -581,6 +604,10 @@ h2{
 
 h3{
     font-size: 2.5rem;
+}
+
+h1, h2, h3{
+    text-transform: capitalize;
 }
 
 p{
