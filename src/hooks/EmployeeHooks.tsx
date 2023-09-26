@@ -246,33 +246,53 @@ export async function handlePTO(listOfUsers: User[], PTO: string, PTOStartDate: 
             return; 
         }
 
-        if(PTOStartYear < currentYear || PTOEndYear < currentYear){
+        //if start < 2023 or end < 2023 or start or end are greater than 2024 or end year is less than start year
+        if(PTOStartYear > PTOEndYear || PTOStartYear < currentYear || PTOEndYear < currentYear || PTOStartYear > currentYear + 1 || PTOEndYear > currentYear + 1){
             toast.error("Year requested for PTO is invalid");
             return;
-        }else if(((PTOStartMonth < currentMonth) || (PTOEndMonth < currentMonth)) && PTOEndYear === currentYear){
+        }else if((PTOStartMonth > PTOEndMonth) || (PTOStartMonth < currentMonth && PTOStartYear === currentYear) || ((PTOEndMonth < currentMonth) && (PTOEndYear === currentYear)) || ((PTOStartMonth > currentMonth + 6) && (PTOStartYear === currentYear)) || ((PTOEndMonth > currentMonth + 6) && (PTOEndYear === currentYear))){
+            //start end month < 9 or end month < 9 and end year is 2023 && start year is 2023 and end month is at least greater than start month
+            //makes sure the end or start months are no more than 6 months after the current month assuming the current years are the same as the current year
             toast.error("Month requested for PTO is invalid");
             return;
-        }else if(((PTOStartDay < currentDay) && (PTOStartMonth === currentMonth)) || ((PTOEndMonth < PTOStartMonth) || (PTOEndMonth - PTOStartMonth > 1) || ((PTOEndDay < currentDay) && (PTOEndMonth === currentMonth) && (PTOEndYear === currentYear)))){
+        }else if(((PTOStartDay < currentDay) && (PTOStartMonth === currentMonth && PTOStartYear === currentYear)) || ((PTOEndDay < currentDay) && (PTOEndMonth === currentMonth && PTOEndYear === currentYear))){
+            //start day < current day && start year is 2023 && start month is 9
+            //end day < current day && end year is 2023 && end month is 9
             toast.error("Day requested for PTO is invalid");
             console.log("test1")
             return;
-        }else if((PTOStartDay <= currentDay + 14 || ((PTOEndDay - PTOStartDay) > 14)) && PTOEndMonth === currentMonth  && PTOStartMonth === currentMonth){
+        }else if(((PTOStartDay <= currentDay + 14 && PTOStartMonth === currentMonth) || ((PTOEndDay - PTOStartDay) > 14)) && PTOEndMonth === PTOStartMonth){
+            //start day is at least more than 15 days from current day and the month for both end and start are the same
+            //end day - start day is no more than 14 days assuming the end and start months are the same as the current month
             toast.error("Day requested for PTO is invalid");
             console.log("test2")
             return;
-        }else if(PTOStartMonth > currentMonth || PTOEndMonth > PTOStartMonth){
-            if((PTOStartMonth === 1 || PTOStartMonth === 3 || PTOStartMonth === 5 || PTOStartMonth === 7 || PTOStartMonth === 8 || PTOStartMonth === 10) && (31 - currentDay) + PTOStartDay <= 14){
+        }else if(((PTOEndDay <= currentDay + 14) && (PTOEndMonth === currentMonth)) || ((PTOEndDay < PTOStartDay) && (PTOEndMonth === PTOStartMonth))){
+            //end day is at least more than 15 days from current day and the month for both end and start are the same
+            //end day is less than start day assuming start and end months are the same
+            toast.error("Day requested for PTO is invalid");
+            console.log("test3")
+            return;
+        }else if(PTOEndMonth > PTOStartMonth){
+            if((PTOStartMonth === 1 || PTOStartMonth === 3 || PTOStartMonth === 5 || PTOStartMonth === 7 || PTOStartMonth === 8 || PTOStartMonth === 10) && ((31 - PTOStartDay) + PTOEndDay > 14)){
                 toast.error("Day requested for PTO is invalid");
-                console.log("test3")
+                console.log("test4")
                 return;
-            }else if((PTOStartMonth === 4 || PTOStartMonth === 6 || PTOStartMonth === 9 || PTOStartMonth === 11) && (30 - currentDay) + PTOStartDay <= 14){
+            }else if((PTOStartMonth === 4 || PTOStartMonth === 6 || PTOStartMonth === 9 || PTOStartMonth === 11) && ((30 - PTOStartDay) + PTOEndDay > 14)){
                 toast.error("Day requested for PTO is invalid");
+                console.log("test5")
                 return;
-            }else if(PTOStartMonth === 2 && (28 - currentDay) + PTOStartDay <= 14){
+            }else if(PTOStartMonth === 2 && PTOStartYear % 4 !== 0 && ((28 - PTOStartDay) + PTOEndDay > 14)){
                 toast.error("Day requested for PTO is invalid");
+                console.log("test6")
+                return;
+            }else if(PTOStartMonth === 2 && PTOStartYear % 4 === 0 && ((29 - PTOStartDay) + PTOEndDay > 14)){
+                toast.error("Day requested for PTO is invalid");
+                console.log("test6")
                 return;
             }
-        }
+        } 
+
         
         if(((Number(findEmployee[0].PTO) - Number(PTO)) < 0) && (Number(PTO) >= Number(findEmployee[0].PTO))){
             toast.error("Not enough PTO balance for the requested PTO time");
@@ -291,10 +311,11 @@ export async function handlePTO(listOfUsers: User[], PTO: string, PTOStartDate: 
             PTOEndDate: PTOEndDate
         };
 
-
         await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PTO_COLLECTION_ID, data, [Permission.read(Role.any())]);
 
         window.location.reload();
+
+
 
         // if(((Number(findEmployee[0].PTO) - Number(PTO)) >= 0) && Number(PTO) && (Number(PTO) >= Number(findEmployee[0].PTO)) && (Number(PTO) > 0)){
         
