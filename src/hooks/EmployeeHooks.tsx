@@ -315,38 +315,121 @@ export async function handlePTO(listOfUsers: User[], PTO: string, PTOStartDate: 
 
         window.location.reload();
 
-
-
-        // if(((Number(findEmployee[0].PTO) - Number(PTO)) >= 0) && Number(PTO) && (Number(PTO) >= Number(findEmployee[0].PTO)) && (Number(PTO) > 0)){
-        
-
-        //     if(findEmployee.length){
-        //       await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, findEmployee[0].$id, data)
-        //       window.location.reload();
-        //     }else{
-        //       await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, data, [Permission.read(Role.any())])
-        //       window.location.reload();
-        //     }
-        // }else{
-        //     toast.error("Please fill out the PTO input with a valid value and try again!")
-        // }
-
     }catch(err){
         console.error(err);
     }
 }
 
+interface Approve{
+    PTO: string,
+    email: string, 
+    name: string, 
+    userID: string, 
+    startDate: string, 
+    endDate: string,
+    $id: string
+}
+
+async function ApprovePTO(props: Approve){
+    try{
+
+        const employeeList = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID)
+
+        const findEmployee = employeeList.documents.filter((employee:Profile)=>employee.email === props.email)
+
+        if(((Number(findEmployee[0].PTO) - Number(props.PTO)) >= 0) && Number(props.PTO) && (Number(props.PTO) <= Number(findEmployee[0].PTO))){
+
+            if(findEmployee.length){
+
+                if(findEmployee[0].requests){
+                    findEmployee[0].requests.push(JSON.stringify({startDate: props.startDate, endDate: props.endDate, status: "approved"}))
+                    
+                }
+
+                const data = {
+                    userID: props.userID,
+                    email: props.email,
+                    PTO: (Number(findEmployee[0].PTO) - Number(props.PTO)).toString(),
+                    requests: findEmployee[0].requests ? findEmployee[0].requests : [JSON.stringify({startDate: props.startDate, endDate: props.endDate, status: "approved"})]
+                };
+
+              await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, findEmployee[0].$id, data)
+              await api.deleteDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PTO_COLLECTION_ID, props.$id)
+              window.location.reload();
+            }else{
+
+                const data = {
+                    userID: props.userID,
+                    email: props.email,
+                    PTO: (Number(findEmployee[0].PTO) - Number(props.PTO)).toString(),
+                    requests: [JSON.stringify({startDate: props.startDate, endDate: props.endDate, status: "approved"})]
+                };
+
+
+              await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, data, [Permission.read(Role.any())])
+              await api.deleteDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PTO_COLLECTION_ID, props.$id)
+
+              window.location.reload();
+            }
+        }else{
+            toast.error("Please fill out the PTO input with a valid value and try again!")
+        }
+    }catch(err){
+        console.error(err);
+    }
+}
+
+async function DenyPTO(props: Approve){
+    try{
+        const employeeList = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID)
+
+        const findEmployee = employeeList.documents.filter((employee:Profile)=>employee.email === props.email)
+
+        if(findEmployee.length){
+            if(findEmployee[0].requests){
+                findEmployee[0].requests.push(JSON.stringify({startDate: props.startDate, endDate: props.endDate, status: "denied"}))
+                
+            }
+
+            const data = {
+                userID: props.userID,
+                email: props.email,
+                PTO: (Number(findEmployee[0].PTO) - Number(props.PTO)).toString(),
+                requests: findEmployee[0].requests ? findEmployee[0].requests : [JSON.stringify({startDate: props.startDate, endDate: props.endDate, status: "denied"})]
+            };
+
+          await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, findEmployee[0].$id, data)
+          await api.deleteDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PTO_COLLECTION_ID, props.$id)
+          window.location.reload();
+        }else{
+            const data = {
+                userID: props.userID,
+                email: props.email,
+                PTO: (Number(findEmployee[0].PTO) - Number(props.PTO)).toString(),
+                requests: [JSON.stringify({startDate: props.startDate, endDate: props.endDate, status: "denied"})]
+            };
+
+
+          await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, data, [Permission.read(Role.any())])
+          await api.deleteDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PTO_COLLECTION_ID, props.$id)
+          window.location.reload();
+        }
+        
+    }catch(err){
+        console.error(err);
+    }
+}
 
 export function RenderPTORequests(props: PTORequests){
 
 
-    const PTO = props.PTORequests?.map((user:PTO)=>{
+    const requests = props.PTORequests?.map((user:PTO)=>{
         return(
             <ul key = {user.$id} className = "flex flex-col alignCenter userDisplays">
                 <li>Name: {user.name}</li>
                 <li>Email: {user.email}</li>
                 <li>{user.PTOStartDate} - {user.PTOEndDate}</li>
-                <li className = "flex"><span>Hours: {user.PTO}</span>{Button({text: "", classNames: "fa-solid fa-check", handleButtonClick: ()=>""})}{Button({text: "", classNames: "fa-solid fa-xmark", handleButtonClick: ()=>""})}</li>
+                <li className = "flex"><span>Hours: {user.PTO}</span>{Button({text: "", classNames: "fa-solid fa-check", handleButtonClick: ()=>ApprovePTO({PTO: user.PTO, name: user.name, email: user.email, userID: user.userID, startDate: user.PTOStartDate, endDate: user.PTOEndDate, $id: user.$id})})}{Button({text: "", classNames: "fa-solid fa-xmark", handleButtonClick: ()=>DenyPTO({PTO: user.PTO, name: user.name, email: user.email, userID: user.userID, startDate: user.PTOStartDate, endDate: user.PTOEndDate, $id: user.$id})})}</li>
             </ul>
         )
     }).slice(props.firstIndex, props.lastIndex);
@@ -358,7 +441,7 @@ export function RenderPTORequests(props: PTORequests){
             <PaginatedButtons currentPage = {props.currentPTOPage} cartLength = {props.PTORequests.length} setCurrentPage = {(e:number)=>props.setCurrentPTOPage(e)} rowsPerPage={props.rows}/>
 
             <section>
-                {PTO}
+                {requests.length ? requests : <h2>No PTO Requests</h2>}
             </section>
 
             {Button({text: "Show Employee Customization", handleButtonClick: () => toggleDisplay((e:boolean)=>props.setPTODisplay(e), props.PTODisplay)})}
