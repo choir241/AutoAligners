@@ -256,14 +256,16 @@ export async function handlePTO(listOfUsers: User[], PTO: string, PTOStartDate: 
 
         const findEmployee = employeeList.documents.filter((employee:Profile)=>employee.email === localStorage.getItem("email"))
 
+        const start = new Date(PTOStartDate.split("-").join(", "));
+        const end = new Date(PTOEndDate.split("-").join(", "));
 
-        const PTOStartMonth = parseInt(PTOStartDate.split("-")[1]);
-        const PTOStartYear = parseInt(PTOStartDate.split("-")[0]);
-        const PTOStartDay = parseInt(PTOStartDate.split("-")[2]);
+        const PTOStartMonth = start.getMonth() +1;
+        const PTOStartYear = start.getFullYear();
+        const PTOStartDay = start.getDate();
 
-        const PTOEndMonth = parseInt(PTOEndDate.split("-")[1]);
-        const PTOEndYear = parseInt(PTOEndDate.split("-")[0]);
-        const PTOEndDay = parseInt(PTOEndDate.split("-")[2]);
+        const PTOEndMonth =  end.getMonth() +1;
+        const PTOEndYear = end.getFullYear();
+        const PTOEndDay = end.getDate();
 
         const currentDate = new Date();
 
@@ -280,7 +282,7 @@ export async function handlePTO(listOfUsers: User[], PTO: string, PTOStartDate: 
         if(PTOStartYear > PTOEndYear || PTOStartYear < currentYear || PTOEndYear < currentYear || PTOStartYear > currentYear + 1 || PTOEndYear > currentYear + 1){
             toast.error("Year requested for PTO is invalid");
             return;
-        }else if((PTOStartMonth > PTOEndMonth) || (PTOStartMonth < currentMonth && PTOStartYear === currentYear) || ((PTOEndMonth < currentMonth) && (PTOEndYear === currentYear)) || ((PTOStartMonth > currentMonth + 6) && (PTOStartYear === currentYear)) || ((PTOEndMonth > currentMonth + 6) && (PTOEndYear === currentYear))){
+        }else if((PTOStartMonth > PTOEndMonth && PTOStartYear === PTOEndYear) || (PTOStartMonth < currentMonth && PTOStartYear === currentYear) || ((PTOEndMonth < currentMonth) && (PTOEndYear === currentYear)) || ((PTOStartMonth > currentMonth + 6) && (PTOStartYear === currentYear)) || ((PTOEndMonth > currentMonth + 6) && (PTOEndYear === currentYear))){
             //start end month < 9 or end month < 9 and end year is 2023 && start year is 2023 and end month is at least greater than start month
             //makes sure the end or start months are no more than 6 months after the current month assuming the current years are the same as the current year
             toast.error("Month requested for PTO is invalid");
@@ -332,6 +334,43 @@ export async function handlePTO(listOfUsers: User[], PTO: string, PTOStartDate: 
             return;
         }
 
+        const daysOfWeek = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+
+        const startPTODay = daysOfWeek[start.getDay()];
+        const endPTODay = daysOfWeek[end.getDay()];
+
+        // Martin Luther King’s Birthday 3rd Monday in January
+        // Memorial Day last Monday in May
+        // Labor Day 1st Monday in September
+        // Thanksgiving Day 4th Thursday in November
+
+        const holidayDates:string[] = ["1/1", "7/4", "11/11", "12/25", "12/31"];
+        
+        holidayDates.forEach((holiday: string)=>{
+            const month = Number(holiday.split("/")[0]);
+            const date = Number(holiday.split("/")[1]);
+            if((month === PTOStartMonth && date === PTOStartDay) || (month === PTOEndMonth && date === PTOEndDay)){
+                console.log("holiday detected");
+            }
+        });
+
+        function nthWeekdayOfMonth(weekday:number, n:number, date:Date) {
+            var date = new Date(date.getFullYear(), date.getMonth(), 1),
+                add = (weekday - date.getDay() + 7) % 7 + (n - 1) * 7;
+            date.setDate(1 + add);
+            return date;
+          }
+
+          console.log(nthWeekdayOfMonth(1, 3, new Date(currentYear, 0)).getDate() === PTOStartDay)
+          console.log(PTOStartDay)
+          console.log(nthWeekdayOfMonth(1, 3, new Date(currentYear, 0)).getDate())
+
+          if(nthWeekdayOfMonth(1, 3, new Date(2024, 0)).getMonth()+1 === PTOStartMonth && nthWeekdayOfMonth(1, 3, new Date(currentYear, 0)).getDate() === PTOStartDay){
+            console.log("Martin Luther King Jr. Day")
+          };
+
+          console.log("test")
+        
         const data = {
             name: findUser.name,
             userID: findUser.$id,
@@ -341,9 +380,9 @@ export async function handlePTO(listOfUsers: User[], PTO: string, PTOStartDate: 
             PTOEndDate: PTOEndDate
         };
 
-        await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PTO_COLLECTION_ID, data, [Permission.read(Role.any())]);
+        // await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PTO_COLLECTION_ID, data, [Permission.read(Role.any())]);
 
-        window.location.reload();
+        // window.location.reload();
 
     }catch(err){
         console.error(err);
