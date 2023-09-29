@@ -335,14 +335,13 @@ export async function handlePTO(listOfUsers: User[], PTO: string, PTOStartDate: 
         }
 
         const daysOfWeek = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
-
+        
         const startPTODay = daysOfWeek[start.getDay()];
         const endPTODay = daysOfWeek[end.getDay()];
 
-        // Martin Luther King’s Birthday 3rd Monday in January
-        // Memorial Day last Monday in May
-        // Labor Day 1st Monday in September
-        // Thanksgiving Day 4th Thursday in November
+        if(startPTODay === "saturday" || startPTODay === "sunday" || endPTODay === "saturday" || endPTODay === "sunday"){
+            console.log("weekend")
+        }
 
         const holidayDates:string[] = ["1/1", "7/4", "11/11", "12/25", "12/31"];
         
@@ -354,22 +353,29 @@ export async function handlePTO(listOfUsers: User[], PTO: string, PTOStartDate: 
             }
         });
 
-        function nthWeekdayOfMonth(weekday:number, n:number, date:Date) {
-            var date = new Date(date.getFullYear(), date.getMonth(), 1),
-                add = (weekday - date.getDay() + 7) % 7 + (n - 1) * 7;
-            date.setDate(1 + add);
+        function nthWeekdayOfMonth(weekday:number, n:number, month:Date) {
+            const date = new Date(month.getFullYear(), month.getMonth(), 1),
+                add = (weekday - month.getDay() + 7) % 7 + (n - 1) * 7;
+            month.setDate(1 + add);
             return date;
           }
 
-          console.log(nthWeekdayOfMonth(1, 3, new Date(currentYear, 0)).getDate() === PTOStartDay)
-          console.log(PTOStartDay)
-          console.log(nthWeekdayOfMonth(1, 3, new Date(currentYear, 0)).getDate())
+        // Memorial Day last Monday in May
+     
+          const martin = nthWeekdayOfMonth(1, 3, new Date(currentYear, 0));
+          const labor = nthWeekdayOfMonth(1, 1, new Date(currentYear, 8));
+          const thanksgiving = nthWeekdayOfMonth(1, 4, new Date(currentYear, 10));
 
-          if(nthWeekdayOfMonth(1, 3, new Date(2024, 0)).getMonth()+1 === PTOStartMonth && nthWeekdayOfMonth(1, 3, new Date(currentYear, 0)).getDate() === PTOStartDay){
+
+          if((martin.getMonth() === PTOStartMonth && martin.getDate() === PTOStartDay) || (martin.getMonth() === PTOEndMonth && martin.getDate() === PTOEndDay)){
             console.log("Martin Luther King Jr. Day")
-          };
+          }else if((labor.getMonth() === PTOStartMonth && labor.getDate() === PTOStartDay) || (labor.getMonth() === PTOEndMonth && labor.getDate() === PTOEndDay)){
+            console.log("Labor Day")
+          }else if((thanksgiving.getMonth() === PTOStartMonth && thanksgiving.getDate() === PTOStartDay) || (thanksgiving.getMonth() === PTOEndMonth && thanksgiving.getDate() === PTOEndDay)){
+            console.log("Thanksgiving")
+          }
 
-          console.log("test")
+          console.log(findUser)
         
         const data = {
             name: findUser.name,
@@ -380,9 +386,9 @@ export async function handlePTO(listOfUsers: User[], PTO: string, PTOStartDate: 
             PTOEndDate: PTOEndDate
         };
 
-        // await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PTO_COLLECTION_ID, data, [Permission.read(Role.any())]);
+        await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PTO_COLLECTION_ID, data, [Permission.read(Role.any())]);
 
-        // window.location.reload();
+        window.location.reload();
 
     }catch(err){
         console.error(err);
@@ -505,6 +511,106 @@ export function RenderPTORequests(props: PTORequests){
 
         </section>
     )
+}
+
+interface Notification{
+    requests: string[] | undefined
+}
+
+export async function CheckPTOExpiration(){
+    try{
+        const employeeList = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID)
+
+        const findExpiredPTO = employeeList.documents.filter((user:Profile)=>{
+            const filtered = [];
+            for(let i = 0; i < user.requests.length; i++){
+                const parse = JSON.parse(user.requests[i]);
+
+                const year = parse.endDate.split("-")[0];
+                const month = parse.endDate.split("-")[1];
+                const day = parse.endDate.split("-")[2];
+
+                const date = new Date();
+                const currentMonth = date.getMonth()+1;
+                const currentYear = date.getFullYear();
+                const currentDay = date.getDate();
+
+                if(month <= currentMonth && day <= currentDay+1 && year <= currentYear){
+                    const account = user;
+                    account.requests.splice(user.requests.indexOf(user.requests[i]),1);
+                    filtered.push(account)
+                }
+            }
+            if(filtered.length){
+                return filtered
+            }
+        })
+
+        if(findExpiredPTO.length){
+
+            const data = {
+                email: findExpiredPTO[0].email,
+                requests: findExpiredPTO[0].requests,
+                userID: findExpiredPTO[0].userID
+            }
+
+            await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, findExpiredPTO[0].$id, data)
+
+        }
+        
+    }catch(err){
+        console.error(err);
+    }
+}
+
+export function PTONotification(props: Notification){
+    if(props.requests){
+        if(props.requests.length){
+
+            let upcomingMonth = 0;
+            let upcomingYear = 0;
+            let upcomingDay = 0;
+
+            const length =  props.requests.length
+
+            const test = props.requests.map((request:string, i:number)=>{
+                const parse = JSON.parse(request)
+                if(parse.status === "approved"){
+                    const year = parse.startDate.split("-")[0];
+                    const month = parse.startDate.split("-")[1];
+                    const day = parse.startDate.split("-")[2];
+
+                    if(!i){
+                        upcomingMonth = month
+                        upcomingYear = year
+                        upcomingDay = day
+                    }else if(year < upcomingYear){
+                        upcomingMonth = month
+                        upcomingYear = year
+                        upcomingDay = day
+                    }else if(year <= upcomingYear && month <= upcomingMonth){
+                        upcomingMonth = month
+                        upcomingYear = year
+                        upcomingDay = day
+                    }else if(year <= upcomingYear && month <= upcomingMonth && day <= upcomingDay){
+                        upcomingMonth = month
+                        upcomingYear = year
+                        upcomingDay = day
+                    }
+                    
+                        return (<div key = {`${month}/${day}/${year}`}>
+                        <h2>Upcoming Approved PTO: {upcomingYear}/{upcomingMonth}/{upcomingDay}</h2>
+                        </div>)
+
+                }
+            })
+
+            console.log(test)
+
+            return test
+
+        }
+    }
 }
 
 export async function GetPTORequests(setPTORequests: (e:PTO[])=>void){
