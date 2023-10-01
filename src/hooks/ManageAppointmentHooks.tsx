@@ -3,6 +3,7 @@ import React from "react"
 import {Link} from "react-router-dom"
 import {Appointment} from "./ReservationHooks"
 import axios from "axios"
+import {Button} from "../components/Button"
 
 export async function handleDeleteAppointment(id:string | undefined){
     await api.deleteDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID, id);
@@ -102,4 +103,103 @@ export function displayAppointments(appointments: Appointment[], classNameContai
          )
      }).slice(startIndex, endIndex);
      
+ }
+
+
+ //search
+ //enter value into search
+ //using appointment database, find appointment with string containing that value
+ //if none exist, return no results
+ //if exists, first show by exact wording and exact order of value
+ //then show by exacy wording but in any order
+ //re-render manageAppointments page to show this
+ 
+interface Search{
+    searchValue:string, 
+    setSearchValue: (e:string)=>void, 
+    setAppointments: (e:any[])=>void
+}
+
+ export function SearchBar(props: Search){
+ 
+    async function searchResults(){
+
+    const appointments = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID)
+     const findAppointmentExact = appointments.documents.map((appointment: Appointment)=>{
+        if(appointment.carMake.toLowerCase() === props.searchValue){
+            return appointment
+        }else if(appointment.carModel.toLowerCase() === props.searchValue){
+            return appointment
+        }else if(appointment.carYear.toLowerCase() === props.searchValue){
+            return appointment
+        }else if(appointment.service.toLowerCase() === props.searchValue){
+            return appointment
+        }else if(appointment.firstName.toLowerCase()=== props.searchValue){
+            return appointment
+        }else if(appointment.lastName.toLowerCase() === props.searchValue){
+            return appointment
+        }else if(appointment.time === props.searchValue){
+            return appointment
+        }
+     })   
+     
+    const findAppointmentIncludes = appointments.documents.map((appointment: Appointment)=>{
+        if(appointment.carMake.toLowerCase().includes(props.searchValue)){
+            return appointment
+        }else if(appointment.carModel.toLowerCase().includes(props.searchValue)){
+            return appointment
+        }else if(appointment.carYear.toLowerCase().includes(props.searchValue)){
+            return appointment
+        }else if(appointment.service.toLowerCase().includes(props.searchValue)){
+            return appointment
+        }else if(appointment.firstName.toLowerCase().includes(props.searchValue)){
+            return appointment
+        }else if(appointment.lastName.toLowerCase().includes(props.searchValue)){
+            return appointment
+        }else if(appointment.time.includes(props.searchValue)){
+            return appointment
+        }
+    })
+
+    const exactSearchResults = [];
+    const includeSearchResults = [];
+
+
+    for(let i = 0; i < findAppointmentExact.length; i++){
+        if(findAppointmentExact[i]){
+            exactSearchResults.push(findAppointmentExact[i]);
+        }
+    }
+
+    for(let i = 0; i < findAppointmentIncludes.length; i++){
+        if(findAppointmentIncludes[i]){
+            includeSearchResults.push(findAppointmentIncludes[i]);
+        }
+    }
+
+    console.log(exactSearchResults)
+    console.log(includeSearchResults)
+
+    if(exactSearchResults.length && exactSearchResults){
+        props.setAppointments(exactSearchResults)
+    }else if(includeSearchResults.length && includeSearchResults){
+        props.setAppointments(includeSearchResults)
+    }else{
+        props.setAppointments([])
+    }
+
+
+    }
+
+
+ 
+    return(
+        <form>
+             <input type = "search" onChange = {(e)=>props.setSearchValue(e.target.value)}/>
+             {Button({text: "Search", handleButtonClick: (e)=>{
+                e.preventDefault();
+                searchResults()}})}
+        </form>
+       
+    )
  }
