@@ -4,7 +4,7 @@ import React, {useState, useEffect} from "react"
 import {ButtonSubmit, Button} from "../../components/Button"
 import {User, GenerateNewEmployee, handleLogin, GetAccount, GetUsers, DisplayUsers, Input, handleSignUp} from "../../hooks/LoginHooks"
 import {PurchasedItem, GetPurchases } from "../../hooks/PurchasesHooks"
-import {CheckPTOExpiration, PTONotification, RenderRequestHistory, GetPTORequests, PTO, RenderPTORequests, AutomaticPTO, handlePTO, EmployeeButtons, RenderEmployeeAppointments, RenderEmployeeProfit, GetEmployee, Profile, handleEmployeeCustomization} from "../../hooks/EmployeeHooks"
+import {RenderRequestHistory, GetPTORequests, PTO, RenderPTORequests, handlePTO, EmployeeButtons, RenderEmployeeAppointments, RenderEmployeeProfit, GetEmployee, Profile, handleEmployeeCustomization} from "../../hooks/EmployeeHooks"
 import PaginatedButtons from "../../components/Graphs/PaginatedButtons"
 import ImageUpload from "../../components/Cloudinary/Cloudinary";
 import {toggleDisplay} from "../../hooks/FinanceHooks"
@@ -74,13 +74,9 @@ export function EmployeeHub(){
       }
     },[])
     
-    useEffect(()=>{
-        AutomaticPTO()
-    },[])
-
-    useEffect(()=>{
-        CheckPTOExpiration()
-    },[])
+    // useEffect(()=>{
+    //     AutomaticPTO()
+    // },[])
 
     //example employee id 649c8a408d41d5c02f5c
 
@@ -166,7 +162,7 @@ export function EmployeeHub(){
             <section className = "flex flex-col">
               <h2 className = "flex justifyCenter heading">Employee Hub</h2>
 
-              {PTONotification({requests: employee?.requests})}
+              {/* {PTONotification({requests: employee?.requests})} */}
 
 
               <section className="flex justifyBetween alignCenter employee">
