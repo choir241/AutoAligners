@@ -844,6 +844,38 @@ textarea{
     margin: 0rem 2rem 1rem 2rem;
 }
 
+.search{
+    width: 100%;
+    padding: 2rem;
+    position: relative;
+}
+
+.search div{
+    width: 60%;
+    margin-bottom: 2rem;
+}
+
+.search .filters{
+    background: white;
+    border-radius: 5px;
+    padding: 2rem;
+    position: fixed;
+    align-self: flex-end;
+}
+
+.search .filters #button{
+    align-self: flex-start;
+    margin-bottom: 1rem;
+}
+
+.search select{
+    padding: 1rem;
+    margin: 0rem;
+}
+
+.search input{
+    margin: 0rem;
+}
 
 .listAppointmentContainer{
     width: 100%;
