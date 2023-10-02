@@ -13,10 +13,12 @@ export default function ManageAppointments(){
     const [searchValue, setSearchValue] = useState<string>("");
     const rowsPerPage = 4;
     const [suggestions, setSuggestions] = useState<React.JSX.Element | undefined>();
+    const [hidden, setHidden] = useState(false)
 
     const startIndex = (currentPage - 1) * rowsPerPage;
     const endIndex = startIndex + rowsPerPage;
   
+
     useEffect(()=>{
         getAppointmentData((e:Appointment[])=>setAppointments(e))
     },[])
@@ -31,7 +33,7 @@ export default function ManageAppointments(){
                 <PaginatedButtons currentPage = {currentPage} setCurrentPage = {(e:number)=>setCurrentPage(e)} rowsPerPage={rowsPerPage} cartLength={appointments.length}/>
             </section>
 
-            {SearchBar({suggestions: suggestions, setSuggestions: (e:React.JSX.Element)=>setSuggestions(e), searchValue: searchValue, setSearchValue: (e:string)=>setSearchValue(e), setAppointments: (e:Appointment[])=>setAppointments(e)})}
+            {SearchBar({hidden: hidden, setHidden: (e:boolean) => setHidden(e), suggestions: suggestions, setSuggestions: (e:React.JSX.Element)=>setSuggestions(e), searchValue: searchValue, setSearchValue: (e:string)=>setSearchValue(e), setAppointments: (e:Appointment[])=>setAppointments(e)})}
           
             <section className = "appointments flex">
                 {appointments.length ? displayAppointments(appointments, classNameContainer, startIndex, endIndex) : <h1>No results match your search, try again.</h1>}

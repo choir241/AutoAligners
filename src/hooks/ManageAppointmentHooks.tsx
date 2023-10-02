@@ -119,7 +119,9 @@ interface Search{
     setSearchValue: (e:string)=>void, 
     setAppointments: (e:any[])=>void,
     suggestions: React.JSX.Element | undefined,
-    setSuggestions: (e:React.JSX.Element)=>void
+    setSuggestions: (e:React.JSX.Element)=>void,
+    hidden: boolean,
+    setHidden: (e:boolean) => void
 }
 
  export function SearchBar(props: Search){
@@ -220,7 +222,7 @@ interface Search{
                             return(
                                 <option key = {i++}>{value}</option>
                             )
-                        })
+                        }).slice(appointments.documents.length-6, appointments.documents.length)
 
                         const results = <select
                         onChange = {(e)=>props.setSearchValue(e.target.value)}
@@ -238,8 +240,6 @@ interface Search{
 
             return props.suggestions;
 
-
-
     }
 
 
@@ -249,19 +249,115 @@ interface Search{
     //if the user clicks on one of these suggestions, the search value becomes that suggestion 
 
  
-    return(
-        <form>
-            <section className = "flex flex-col alignCenter">
-                <div className="flex alignCenter">
-                    <input type = "search" value = {props.searchValue} onChange = {(e)=>props.setSearchValue(e.target.value)}/>          
 
+    async function filterByValue(filter: string){
+      try{
+        const appointments = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID)
+
+        if(filter === "make"){
+            const sortAppointments = appointments.documents.sort((a:Appointment, b: Appointment)=>a.carMake.localeCompare(b.carMake));
+            props.setAppointments(sortAppointments);
+        }else if(filter === "model"){
+            const sortAppointments = appointments.documents.sort((a:Appointment, b: Appointment)=>a.carModel.localeCompare(b.carModel));
+            props.setAppointments(sortAppointments);
+        }else if(filter === "year"){
+            const sortAppointments = appointments.documents.sort((a:Appointment, b: Appointment)=>parseInt(a.carYear) - parseInt(b.carYear));
+            props.setAppointments(sortAppointments);
+        }else if(filter === "service"){
+            const sortAppointments = appointments.documents.sort((a:Appointment, b: Appointment)=>a.service.localeCompare(b.service));
+            props.setAppointments(sortAppointments);
+        }else if(filter === "date"){
+            const sortAppointments = appointments.documents.sort((a:Appointment, b: Appointment)=>{
+                const aDate = new Date(a.date.split("D")[0]);
+                const bDate = new Date(b.date.split("D")[0]);
+                if(aDate < bDate){
+                    return -1;
+                }else if(aDate > bDate){
+                    return 1;
+                }else{
+                    return 0;
+                }
+            })
+            props.setAppointments(sortAppointments);
+        }else if(filter === "firstName"){
+            const sortAppointments = appointments.documents.sort((a:Appointment, b: Appointment)=>a.firstName.localeCompare(b.firstName));
+            props.setAppointments(sortAppointments);
+        }else if(filter === "lastName"){
+            const sortAppointments = appointments.documents.sort((a:Appointment, b: Appointment)=>a.lastName.localeCompare(b.lastName));
+            props.setAppointments(sortAppointments);
+        }
+
+
+      }catch(err){
+        console.error(err);
+      }
+    }
+
+    //filter buttons
+    //select from date, model, make, year or service, name
+    //when selected, it will re-render appointments based on that filter alphabetically/recent-latest
+
+
+    function searchFilters(){
+        return(
+            <section className = "filters flex justifyBetween alignCenter flex-col">
+
+                <i className = "fa-solid fa-xmark button" id = "button" onClick = {()=>props.setHidden(!props.hidden)}></i>
+
+                {Button({text: "Filter By Car Make", handleButtonClick: (e)=>{
+                    e.preventDefault();
+                    filterByValue("make");
+                }})}
+        
+                {Button({text: "Filter By Car Model", handleButtonClick: (e)=>{
+                    e.preventDefault();
+                    filterByValue("model");
+                }})}
+        
+                {Button({text: "Filter By Car Year", handleButtonClick: (e)=>{
+                    e.preventDefault();
+                    filterByValue("year");
+                }})}
+        
+                {Button({text: "Filter By Car Service", handleButtonClick: (e)=>{
+                    e.preventDefault();
+                    filterByValue("service");
+                }})}
+        
+                {Button({text: "Filter By Date", handleButtonClick: (e)=>{
+                    e.preventDefault();
+                    filterByValue("date");
+                }})}
+        
+                {Button({text: "Filter By First Name", handleButtonClick: (e)=>{
+                    e.preventDefault();
+                    filterByValue("firstName");
+                }})}
+        
+                {Button({text: "Filter By Last Name", handleButtonClick: (e)=>{
+                    e.preventDefault();
+                    filterByValue("lastName");
+                }})}
+        </section>
+        )
+    }
+
+    return(
+        <form className = "flex justifyCenter">
+            <section className = "flex flex-col alignCenter search">
+
+            {props.hidden ? searchFilters() : ""}
+                <div className="flex alignCenter justifyEvenly">
+                    <input type = "search" value = {props.searchValue} onChange = {(e)=>props.setSearchValue(e.target.value)}/>          
+                    {AutoSuggest(props.searchValue)}
                     {Button({text: "Search", handleButtonClick: (e)=>{
                     e.preventDefault();
                     searchResults()}})}
-                </div>
-   
+                                <i className = {`${props.hidden ? "fa-solid fa-caret-up clearButton" : "fa-solid fa-caret-down clearButton"}`} onClick = {()=>props.setHidden(!props.hidden)}></i>
 
-                 {AutoSuggest(props.searchValue)}
+
+                </div>
+
             </section>
 
     
