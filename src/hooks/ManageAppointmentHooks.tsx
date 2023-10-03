@@ -126,66 +126,63 @@ interface Search{
 
  export function SearchBar(props: Search){
 
+    function includeResults(appointments: Appointment[], appointmentFields: string[], check: boolean){
+        if(check){
+            const filteredAppointments = appointments.filter((appointment:Appointment) => {
+                return Object.values(appointment)
+                    .some(value => typeof value === "string" ? value.toLowerCase().includes(props.searchValue.toLowerCase()) : "");
+            });
+    
+            const suggestedValues = appointmentFields.flatMap(field =>
+                filteredAppointments
+                    .filter((appointment:any) => appointment[field].toLowerCase().includes(props.searchValue.toLowerCase()))
+            );
+    
+            return suggestedValues;
+        }else{
+            const filteredAppointments = appointments.filter((appointment:Appointment) => {
+                return Object.values(appointment)
+                    .some(value => typeof value === "string" ? value.toLowerCase().includes(props.searchValue.toLowerCase()) : "");
+            });
+    
+            const suggestedValues = appointmentFields.flatMap(field =>
+                filteredAppointments
+                    .filter((appointment:any) => appointment[field].toLowerCase().includes(props.searchValue.toLowerCase()))
+                    .map((appointment:any) => appointment[field])
+            );
+    
+            return suggestedValues;
+        }
+    }
+
+    function exactResults(appointments: Appointment[], appointmentFields: string[]){
+        const filteredAppointments = appointments.filter((appointment:Appointment) => {
+            return Object.values(appointment)
+                .some(value => typeof value === "string" ? value.toLowerCase() === props.searchValue.toLowerCase() : "");
+        });
+
+        const suggestedValues = appointmentFields.flatMap(field =>
+            filteredAppointments
+                .filter((appointment:any) => appointment[field].toLowerCase() === props.searchValue.toLowerCase())
+        );
+
+        return suggestedValues;
+    }
+
+
  
     async function searchResults(){
         try{
             const appointments = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID)
-            const findAppointmentExact = appointments.documents.map((appointment: Appointment)=>{
-           if(appointment.carMake.toLowerCase() === props.searchValue.toLowerCase()){
-               return appointment
-           }else if(appointment.carModel.toLowerCase() === props.searchValue.toLowerCase()){
-               return appointment
-           }else if(appointment.carYear.toLowerCase() === props.searchValue.toLowerCase()){
-               return appointment
-           }else if(appointment.service.toLowerCase() === props.searchValue.toLowerCase()){
-               return appointment
-           }else if(appointment.firstName.toLowerCase()=== props.searchValue.toLowerCase()){
-               return appointment
-           }else if(appointment.lastName.toLowerCase() === props.searchValue.toLowerCase()){
-               return appointment
-           }else if(appointment.time === props.searchValue.toLowerCase()){
-               return appointment
-           }
-            })   
-            
-           const findAppointmentIncludes = appointments.documents.map((appointment: Appointment)=>{
-           if(appointment.carMake.toLowerCase().includes(props.searchValue.toLowerCase())){
-               return appointment
-           }else if(appointment.carModel.toLowerCase().includes(props.searchValue.toLowerCase())){
-               return appointment
-           }else if(appointment.carYear.toLowerCase().includes(props.searchValue.toLowerCase())){
-               return appointment
-           }else if(appointment.service.toLowerCase().includes(props.searchValue.toLowerCase())){
-               return appointment
-           }else if(appointment.firstName.toLowerCase().includes(props.searchValue.toLowerCase())){
-               return appointment
-           }else if(appointment.lastName.toLowerCase().includes(props.searchValue.toLowerCase())){
-               return appointment
-           }else if(appointment.time.includes(props.searchValue.toLowerCase())){
-               return appointment
-           }
-           })
-       
-           const exactSearchResults = [];
-           const includeSearchResults = [];
+
+            const exactValues = exactResults(appointments.documents, ['carMake', 'carModel', 'carYear', 'service', 'firstName', 'lastName', 'time'])
+            const includeValues = includeResults(appointments.documents, ['carMake', 'carModel', 'carYear', 'service', 'firstName', 'lastName', 'time'], false)
        
        
-           for(let i = 0; i < findAppointmentExact.length; i++){
-               if(findAppointmentExact[i]){
-                   exactSearchResults.push(findAppointmentExact[i]);
-               }
-           }
-       
-           for(let i = 0; i < findAppointmentIncludes.length; i++){
-               if(findAppointmentIncludes[i]){
-                   includeSearchResults.push(findAppointmentIncludes[i]);
-               }
-           }
-       
-           if(exactSearchResults.length && exactSearchResults){
-               props.setAppointments(exactSearchResults)
-           }else if(includeSearchResults.length && includeSearchResults){
-               props.setAppointments(includeSearchResults)
+           if(exactValues.length && exactValues){
+               props.setAppointments(exactValues)
+           }else if(includeResults.length && includeValues){
+               props.setAppointments(includeValues)
            }else{
                props.setAppointments([])
            }
@@ -201,18 +198,7 @@ interface Search{
                     try{
                         const appointments = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID);
 
-                        const filteredAppointments = appointments.documents.filter((appointment:Appointment) => {
-                            return Object.values(appointment)
-                                .some(value => typeof value === "string" ? value.toLowerCase().includes(searchValue.toLowerCase()) : "");
-                        });
-        
-                        const appointmentFields:string[] = ['carMake', 'carModel', 'carYear', 'service', 'firstName', 'lastName', 'time'];
-                        const suggestedValues = appointmentFields.flatMap(field =>
-                            filteredAppointments
-                                .filter((appointment:any) => appointment[field].toLowerCase().includes(searchValue.toLowerCase()))
-                                .map((appointment:any) => appointment[field])
-                        );
-
+                        const suggestedValues = includeResults(appointments.documents, ['carMake', 'carModel', 'carYear', 'service', 'firstName', 'lastName', 'time'], false)
                         const removeDuplicates:string[] = [];
 
                         suggestedValues.forEach((value:string)=>removeDuplicates.indexOf(value) === -1 ? removeDuplicates.push(value) : "")
@@ -222,7 +208,7 @@ interface Search{
                             return(
                                 <option key = {i++}>{value}</option>
                             )
-                        }).slice(appointments.documents.length-6, appointments.documents.length)
+                        })
 
                         const results = <select
                         onChange = {(e)=>props.setSearchValue(e.target.value)}
