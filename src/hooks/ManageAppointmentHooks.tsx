@@ -114,7 +114,7 @@ export function displayAppointments(appointments: Appointment[], classNameContai
  //then show by exacy wording but in any order
  //re-render manageAppointments page to show this
  
-export interface Search{
+interface Search{
     searchValue:string, 
     setSearchValue: (e:string)=>void, 
     setAppointments: (e:any[])=>void,
@@ -124,8 +124,9 @@ export interface Search{
     setHidden: (e:boolean) => void
 }
 
+ export function SearchBar(props: Search){
 
-function includeResults(appointments: Appointment[], appointmentFields: string[], check: boolean, props: Search){
+    function includeResults(appointments: Appointment[], appointmentFields: string[], check: boolean){
         if(check){
             const filteredAppointments = appointments.filter((appointment:Appointment) => {
                 return Object.values(appointment)
@@ -154,7 +155,7 @@ function includeResults(appointments: Appointment[], appointmentFields: string[]
         }
     }
 
-function exactResults(appointments: Appointment[], appointmentFields: string[], props: Search){
+    function exactResults(appointments: Appointment[], appointmentFields: string[]){
         const filteredAppointments = appointments.filter((appointment:Appointment) => {
             return Object.values(appointment)
                 .some(value => typeof value === "string" ? value.toLowerCase() === props.searchValue.toLowerCase() : "");
@@ -170,16 +171,13 @@ function exactResults(appointments: Appointment[], appointmentFields: string[], 
 
 
  
-export async function searchResults(props: Search){
+    async function searchResults(){
         try{
             const appointments = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID)
 
-            const exactValues =  exactResults(appointments.documents, ['carMake', 'carModel', 'carYear', 'service', 'firstName', 'lastName', 'time'],       
-            {hidden : props.hidden, searchValue: props.searchValue, setSearchValue: (e:string)=>props.setSearchValue(e), setHidden: (e:boolean)=>props.setHidden(e), setAppointments: (e:Appointment[])=>props.setAppointments(e), suggestions: props.suggestions, setSuggestions: (e:React.JSX.Element)=>props.setSuggestions(e)})
-            
-            const includeValues = includeResults(appointments.documents, ['carMake', 'carModel', 'carYear', 'service', 'firstName', 'lastName', 'time'], false,             
-            {hidden : props.hidden, searchValue: props.searchValue, setSearchValue: (e:string)=>props.setSearchValue(e), setHidden: (e:boolean)=>props.setHidden(e), setAppointments: (e:Appointment[])=>props.setAppointments(e), suggestions: props.suggestions, setSuggestions: (e:React.JSX.Element)=>props.setSuggestions(e)})
-            
+            const exactValues = exactResults(appointments.documents, ['carMake', 'carModel', 'carYear', 'service', 'firstName', 'lastName', 'time'])
+            const includeValues = includeResults(appointments.documents, ['carMake', 'carModel', 'carYear', 'service', 'firstName', 'lastName', 'time'], false)
+       
        
            if(exactValues.length && exactValues){
                props.setAppointments(exactValues)
@@ -193,16 +191,14 @@ export async function searchResults(props: Search){
         }
     }
 
-export function AutoSuggest(props: Search, searchValue: string){
+    function AutoSuggest(searchValue: string){
 
             useEffect(()=>{
                 async function searchSuggest(){
                     try{
                         const appointments = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID);
 
-                        const suggestedValues = includeResults(appointments.documents, ['carMake', 'carModel', 'carYear', 'service', 'firstName', 'lastName', 'time'], false,             
-                        {hidden : props.hidden, searchValue: props.searchValue, setSearchValue: (e:string)=>props.setSearchValue(e), setHidden: (e:boolean)=>props.setHidden(e), setAppointments: (e:Appointment[])=>props.setAppointments(e), suggestions: props.suggestions, setSuggestions: (e:React.JSX.Element)=>props.setSuggestions(e)})
-
+                        const suggestedValues = includeResults(appointments.documents, ['carMake', 'carModel', 'carYear', 'service', 'firstName', 'lastName', 'time'], false)
                         const removeDuplicates:string[] = [];
 
                         suggestedValues.forEach((value:string)=>removeDuplicates.indexOf(value) === -1 ? removeDuplicates.push(value) : "")
@@ -226,7 +222,7 @@ export function AutoSuggest(props: Search, searchValue: string){
                 }
 
                 searchSuggest()
-            },[searchValue, props])
+            },[searchValue])
 
             return props.suggestions;
 
@@ -240,7 +236,7 @@ export function AutoSuggest(props: Search, searchValue: string){
 
  
 
-    async function filterByValue(props: Search, filter: string){
+    async function filterByValue(filter: string){
       try{
         const appointments = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID)
 
@@ -288,7 +284,7 @@ export function AutoSuggest(props: Search, searchValue: string){
     //when selected, it will re-render appointments based on that filter alphabetically/recent-latest
 
 
-export function searchFilters(props: Search){
+    function searchFilters(){
         return(
             <section className = "filters flex justifyBetween alignCenter flex-col">
 
@@ -296,45 +292,62 @@ export function searchFilters(props: Search){
 
                 {Button({text: "Filter By Car Make", handleButtonClick: (e)=>{
                     e.preventDefault();
-                    filterByValue({hidden : props.hidden, searchValue: props.searchValue, setSearchValue: (e:string)=>props.setSearchValue(e), setHidden: (e:boolean)=>props.setHidden(e), setAppointments: (e:Appointment[])=>props.setAppointments(e), suggestions: props.suggestions, setSuggestions: (e:React.JSX.Element)=>props.setSuggestions(e)}, 
-                    "make");
+                    filterByValue("make");
                 }})}
         
                 {Button({text: "Filter By Car Model", handleButtonClick: (e)=>{
                     e.preventDefault();
-                    filterByValue({hidden : props.hidden, searchValue: props.searchValue, setSearchValue: (e:string)=>props.setSearchValue(e), setHidden: (e:boolean)=>props.setHidden(e), setAppointments: (e:Appointment[])=>props.setAppointments(e), suggestions: props.suggestions, setSuggestions: (e:React.JSX.Element)=>props.setSuggestions(e)}, 
-                    "model");
+                    filterByValue("model");
                 }})}
         
                 {Button({text: "Filter By Car Year", handleButtonClick: (e)=>{
                     e.preventDefault();
-                    filterByValue({hidden : props.hidden, searchValue: props.searchValue, setSearchValue: (e:string)=>props.setSearchValue(e), setHidden: (e:boolean)=>props.setHidden(e), setAppointments: (e:Appointment[])=>props.setAppointments(e), suggestions: props.suggestions, setSuggestions: (e:React.JSX.Element)=>props.setSuggestions(e)},
-                    "year");
+                    filterByValue("year");
                 }})}
         
                 {Button({text: "Filter By Car Service", handleButtonClick: (e)=>{
                     e.preventDefault();
-                    filterByValue({hidden : props.hidden, searchValue: props.searchValue, setSearchValue: (e:string)=>props.setSearchValue(e), setHidden: (e:boolean)=>props.setHidden(e), setAppointments: (e:Appointment[])=>props.setAppointments(e), suggestions: props.suggestions, setSuggestions: (e:React.JSX.Element)=>props.setSuggestions(e)},
-                    "service");
+                    filterByValue("service");
                 }})}
         
                 {Button({text: "Filter By Date", handleButtonClick: (e)=>{
                     e.preventDefault();
-                    filterByValue({hidden : props.hidden, searchValue: props.searchValue, setSearchValue: (e:string)=>props.setSearchValue(e), setHidden: (e:boolean)=>props.setHidden(e), setAppointments: (e:Appointment[])=>props.setAppointments(e), suggestions: props.suggestions, setSuggestions: (e:React.JSX.Element)=>props.setSuggestions(e)},
-                    "date");
+                    filterByValue("date");
                 }})}
         
                 {Button({text: "Filter By First Name", handleButtonClick: (e)=>{
                     e.preventDefault();
-                    filterByValue({hidden : props.hidden, searchValue: props.searchValue, setSearchValue: (e:string)=>props.setSearchValue(e), setHidden: (e:boolean)=>props.setHidden(e), setAppointments: (e:Appointment[])=>props.setAppointments(e), suggestions: props.suggestions, setSuggestions: (e:React.JSX.Element)=>props.setSuggestions(e)},
-                    "firstName");
+                    filterByValue("firstName");
                 }})}
         
                 {Button({text: "Filter By Last Name", handleButtonClick: (e)=>{
                     e.preventDefault();
-                    filterByValue({hidden : props.hidden, searchValue: props.searchValue, setSearchValue: (e:string)=>props.setSearchValue(e), setHidden: (e:boolean)=>props.setHidden(e), setAppointments: (e:Appointment[])=>props.setAppointments(e), suggestions: props.suggestions, setSuggestions: (e:React.JSX.Element)=>props.setSuggestions(e)},
-                    "lastName");
+                    filterByValue("lastName");
                 }})}
         </section>
         )
     }
+
+    return(
+        <form className = "flex justifyCenter">
+            <section className = "flex flex-col alignCenter search">
+
+            {props.hidden ? searchFilters() : ""}
+                <div className="flex alignCenter justifyEvenly">
+                    <input type = "search" value = {props.searchValue} onChange = {(e)=>props.setSearchValue(e.target.value)}/>          
+                    {AutoSuggest(props.searchValue)}
+                    {Button({text: "Search", handleButtonClick: (e)=>{
+                    e.preventDefault();
+                    searchResults()}})}
+                                <i className = {`${props.hidden ? "fa-solid fa-caret-up clearButton" : "fa-solid fa-caret-down clearButton"}`} onClick = {()=>props.setHidden(!props.hidden)}></i>
+
+
+                </div>
+
+            </section>
+
+    
+        </form>
+       
+    )
+ }
