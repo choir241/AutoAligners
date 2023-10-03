@@ -2,8 +2,9 @@ import React, {useState, useEffect} from "react"
 import {Appointment, getAppointmentData} from "../../hooks/ReservationHooks"
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
-import { displayAppointments, SearchBar } from "../../hooks/ManageAppointmentHooks"
+import { displayAppointments, searchResults, searchFilters, AutoSuggest } from "../../hooks/ManageAppointmentHooks"
 import PaginatedButtons from "../../components/Graphs/PaginatedButtons"
+import SearchUI from "../../components/Search"
 
 export default function ManageAppointments(){
 
@@ -23,6 +24,7 @@ export default function ManageAppointments(){
         getAppointmentData((e:Appointment[])=>setAppointments(e))
     },[])
 
+
     return(
         <main>
             <Nav pageHeading = "Manage Appointments"/>
@@ -33,8 +35,14 @@ export default function ManageAppointments(){
                 <PaginatedButtons currentPage = {currentPage} setCurrentPage = {(e:number)=>setCurrentPage(e)} rowsPerPage={rowsPerPage} cartLength={appointments.length}/>
             </section>
 
-            {SearchBar({hidden: hidden, setHidden: (e:boolean) => setHidden(e), suggestions: suggestions, setSuggestions: (e:React.JSX.Element)=>setSuggestions(e), searchValue: searchValue, setSearchValue: (e:string)=>setSearchValue(e), setAppointments: (e:Appointment[])=>setAppointments(e)})}
-          
+            <SearchUI search={{hidden : hidden, searchValue: searchValue, setSearchValue: (e:string)=>setSearchValue(e), setHidden: (e:boolean)=>setHidden(e), 
+            setAppointments: (e:Appointment[])=>setAppointments(e), suggestions: suggestions, setSuggestions: (e:React.JSX.Element)=>setSuggestions(e)}}  
+            searchFilters = {()=> searchFilters({hidden : hidden, searchValue: searchValue, setSearchValue: (e:string)=>setSearchValue(e), setHidden: (e:boolean)=>setHidden(e), setAppointments: (e:Appointment[])=>setAppointments(e), suggestions: suggestions, setSuggestions: (e:React.JSX.Element)=>setSuggestions(e)})}
+            searchResults = {()=>searchResults({hidden : hidden, searchValue: searchValue, setSearchValue: (e:string)=>setSearchValue(e), setHidden: (e:boolean)=>setHidden(e), setAppointments: (e:Appointment[])=>setAppointments(e), suggestions: suggestions, setSuggestions: (e:React.JSX.Element)=>setSuggestions(e)})}
+            AutoSuggest = {(searchValue: string)=> AutoSuggest({hidden : hidden, searchValue: searchValue, setSearchValue: (e:string)=>setSearchValue(e), setHidden: (e:boolean)=>setHidden(e), setAppointments: (e:Appointment[])=>setAppointments(e), suggestions: suggestions, setSuggestions: (e:React.JSX.Element)=>setSuggestions(e)}, 
+            searchValue)}
+            />
+            
             <section className = "appointments flex">
                 {appointments.length ? displayAppointments(appointments, classNameContainer, startIndex, endIndex) : <h1>No results match your search, try again.</h1>}
             </section>
