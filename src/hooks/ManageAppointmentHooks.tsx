@@ -126,9 +126,9 @@ interface Search{
 
  export function SearchBar(props: Search){
 
-    function includeResults(appointments: Appointment[], appointmentFields: string[], check: boolean){
+    function includeResults(appointments: any[], appointmentFields: string[], check: boolean){
         if(check){
-            const filteredAppointments = appointments.filter((appointment:Appointment) => {
+            const filteredAppointments = appointments.filter((appointment:any) => {
                 return Object.values(appointment)
                     .some(value => typeof value === "string" ? value.toLowerCase().includes(props.searchValue.toLowerCase()) : "");
             });
@@ -140,7 +140,7 @@ interface Search{
     
             return suggestedValues;
         }else{
-            const filteredAppointments = appointments.filter((appointment:Appointment) => {
+            const filteredAppointments = appointments.filter((appointment:any) => {
                 return Object.values(appointment)
                     .some(value => typeof value === "string" ? value.toLowerCase().includes(props.searchValue.toLowerCase()) : "");
             });
@@ -155,8 +155,8 @@ interface Search{
         }
     }
 
-    function exactResults(appointments: Appointment[], appointmentFields: string[]){
-        const filteredAppointments = appointments.filter((appointment:Appointment) => {
+    function exactResults(appointments: any[], appointmentFields: string[]){
+        const filteredAppointments = appointments.filter((appointment:any) => {
             return Object.values(appointment)
                 .some(value => typeof value === "string" ? value.toLowerCase() === props.searchValue.toLowerCase() : "");
         });
@@ -241,19 +241,19 @@ interface Search{
         const appointments = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID)
 
         if(filter === "make"){
-            const sortAppointments = appointments.documents.sort((a:Appointment, b: Appointment)=>a.carMake.localeCompare(b.carMake));
+            const sortAppointments = appointments.documents.sort((a:any, b: any)=>a.carMake.localeCompare(b.carMake));
             props.setAppointments(sortAppointments);
         }else if(filter === "model"){
-            const sortAppointments = appointments.documents.sort((a:Appointment, b: Appointment)=>a.carModel.localeCompare(b.carModel));
+            const sortAppointments = appointments.documents.sort((a:any, b: any)=>a.carModel.localeCompare(b.carModel));
             props.setAppointments(sortAppointments);
         }else if(filter === "year"){
-            const sortAppointments = appointments.documents.sort((a:Appointment, b: Appointment)=>parseInt(a.carYear) - parseInt(b.carYear));
+            const sortAppointments = appointments.documents.sort((a:any, b: any)=>parseInt(a.carYear) - parseInt(b.carYear));
             props.setAppointments(sortAppointments);
         }else if(filter === "service"){
-            const sortAppointments = appointments.documents.sort((a:Appointment, b: Appointment)=>a.service.localeCompare(b.service));
+            const sortAppointments = appointments.documents.sort((a:any, b: any)=>a.service.localeCompare(b.service));
             props.setAppointments(sortAppointments);
         }else if(filter === "date"){
-            const sortAppointments = appointments.documents.sort((a:Appointment, b: Appointment)=>{
+            const sortAppointments = appointments.documents.sort((a:any, b: any)=>{
                 const aDate = new Date(a.date.split("D")[0]);
                 const bDate = new Date(b.date.split("D")[0]);
                 if(aDate < bDate){
@@ -266,10 +266,10 @@ interface Search{
             })
             props.setAppointments(sortAppointments);
         }else if(filter === "firstName"){
-            const sortAppointments = appointments.documents.sort((a:Appointment, b: Appointment)=>a.firstName.localeCompare(b.firstName));
+            const sortAppointments = appointments.documents.sort((a:any, b: any)=>a.firstName.localeCompare(b.firstName));
             props.setAppointments(sortAppointments);
         }else if(filter === "lastName"){
-            const sortAppointments = appointments.documents.sort((a:Appointment, b: Appointment)=>a.lastName.localeCompare(b.lastName));
+            const sortAppointments = appointments.documents.sort((a:any, b: any)=>a.lastName.localeCompare(b.lastName));
             props.setAppointments(sortAppointments);
         }
 

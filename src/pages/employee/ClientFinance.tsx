@@ -7,10 +7,10 @@ import PaginatedButtons from "../../components/Graphs/PaginatedButtons"
 export default function DisplayClientFinance(){
 
     const [displayFinance, setDisplayFinance] = useState<boolean>(false);
-    const [clientFinance, setClientFinance] = useState<ClientFinance[]>([])
+    const [clientFinance, setClientFinance] = useState<ClientFinance[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [client, setClient] = useState<string>("");
-    const [financeTotal, setFinanceTotal] = useState<string>("")
+    const [financeTotal, setFinanceTotal] = useState<string>("");
     const [email, setEmail] = useState<string>("");
 
     const rowsPerPage = 5;

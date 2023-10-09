@@ -272,3 +272,4 @@ export function RenderClientFinance(props: TableContent){
         </table>
     )
 }
+
