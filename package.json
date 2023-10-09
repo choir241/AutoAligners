@@ -1,6 +1,6 @@
 {
   "name": "autoaligners",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -31,12 +31,11 @@
   "license": "ISC",
   "dependencies": {
     "@cloudinary/url-gen": "^1.11.2",
-    "@types/node": "^20.6.2",
+    "@types/node": "^20.8.3",
     "appwrite": "^13.0.0",
-    "axios": "^1.5.0",
+    "axios": "^1.5.1",
     "chart.js": "^4.4.0",
     "cloudinary-core": "^2.13.0",
-    "dotenv": "^16.3.1",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
@@ -47,6 +46,6 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@types/react": "^18.2.21"
+    "@types/react": "^18.2.25"
   }
 }

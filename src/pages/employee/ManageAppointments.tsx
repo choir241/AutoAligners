@@ -25,7 +25,7 @@ export default function ManageAppointments(){
 
     return(
         <main>
-            <Nav pageHeading = "Manage Appointments"/>
+  <Nav pageHeading = "Manage Appointments"/>
 
             <section className = "flex justifyCenter">
                 <i className="fa-solid fa-list appointmentContainer" onClick = {()=>setClassNameContainer("listAppointmentContainer")}></i>
