@@ -11,6 +11,7 @@ interface nav{
 
 export default function Nav(props: nav){
 
+
     const [cart, setCart] = useState<CartItem[]>();
     const [cartQuantity, setCartQuantity] = useState<number>();
 

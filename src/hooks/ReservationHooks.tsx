@@ -4,7 +4,6 @@ import {carData} from "../api/data"
 import api from "../api/api"
 import { Permission, Role } from "appwrite"
 
-
 //interface type for Car type
 export interface Car{
     id_: number,

@@ -571,7 +571,7 @@ export function PTONotification(props: Notification){
             let upcomingYear = 0;
             let upcomingDay = 0;
 
-            const length =  props.requests.length
+            // const length =  props.requests.length
 
             const test = props.requests.map((request:string, i:number)=>{
                 const parse = JSON.parse(request)
