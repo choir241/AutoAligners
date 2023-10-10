@@ -4,7 +4,8 @@ import {Link} from "react-router-dom"
 interface ButtonProps{
     text: string,
     handleButtonClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>void,
-    classNames?: string
+    classNames?: string,
+    key?: string,
 }
 
 interface ButtonSubmitProps{
@@ -34,6 +35,7 @@ export function ButtonSubmit (props: ButtonSubmitProps) {
 export function Button (props: ButtonProps) {
     return(
         <button 
+        key = {props.key}
         className = {`button ${props.classNames}`}
         onClick = {(e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
             e.preventDefault();
