@@ -10,8 +10,8 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import PaginatedButtons from "./PaginatedButtons"
-import {Date} from "../../hooks/PurchasesHooks"
 import Query_Offset from "./Query_Offset";
+import {DisplayDate, GraphLabels} from "../../middleware/Interfaces";
 
 ChartJS.register(
   CategoryScale,
@@ -38,25 +38,9 @@ export const options = {
 };
 
 
-interface GraphLabels{
-    profits: any[],
-    quantities: any[],
-    dates: any[],
-    cartLength: number,
-    currentPage: number,
-    setCurrentPage: (e:number) => void,
-    rowsPerPage: number,
-    startIndex: number,
-    endIndex: number,
-    setLimit: (e:number) => void,
-    limit: number,
-    length: number
-  }
-  
-
 export default function HorizontalBarGraph(props:GraphLabels){
 
-    const date = props.dates.map((date:Date)=>date.date)
+    const date = props.dates.map((date:DisplayDate)=>date.date)
 
     const data = {
         labels: date.slice(props.startIndex, props.endIndex),

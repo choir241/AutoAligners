@@ -2,12 +2,13 @@ import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
 import React, {useState, useEffect} from "react"
 import {ButtonSubmit, Button} from "../../components/Button"
-import {User, GenerateNewEmployee, handleLogin, GetAccount, GetUsers, DisplayUsers, Input, handleSignUp} from "../../hooks/LoginHooks"
-import {PurchasedItem, GetPurchases } from "../../hooks/PurchasesHooks"
-import {RenderRequestHistory, GetPTORequests, PTO, RenderPTORequests, handlePTO, EmployeeButtons, RenderEmployeeAppointments, RenderEmployeeProfit, GetEmployee, Profile, handleEmployeeCustomization} from "../../hooks/EmployeeHooks"
+import {GenerateNewEmployee, handleLogin, GetAccount, GetUsers, DisplayUsers, Input, handleSignUp} from "../../hooks/LoginHooks"
+import {GetPurchases } from "../../hooks/PurchasesHooks"
+import {RenderRequestHistory, GetPTORequests, RenderPTORequests, handlePTO, EmployeeButtons, RenderEmployeeAppointments, RenderEmployeeProfit, GetEmployee, handleEmployeeCustomization} from "../../hooks/EmployeeHooks"
 import PaginatedButtons from "../../components/Graphs/PaginatedButtons"
 import ImageUpload from "../../components/Cloudinary/Cloudinary";
 import {toggleDisplay} from "../../hooks/FinanceHooks"
+import {PTO, Profile, User, PurchasedItem} from "../../middleware/Interfaces"
 
 export function EmployeeHub(){
 

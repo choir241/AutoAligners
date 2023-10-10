@@ -1,15 +1,8 @@
 import React from "react"
 import {toast} from "react-toastify"
 import api from "../api/api"
-import {Appointment, Alert} from "./ReservationHooks"
-
-export interface ChooseInput{
-    defaultValue: string | undefined,
-    text1: string, 
-    text2:string, 
-    name: string, 
-    onChange:(e:string)=>void
-}
+import {Alert} from "./ReservationHooks"
+import {Appointment, Choose} from "../middleware/Interfaces"
 
 export function ValidateEditInput(props: Appointment):false|undefined{
 
@@ -47,7 +40,7 @@ export function ValidateEditInput(props: Appointment):false|undefined{
     HandleSubmitData({$id: props.$id, service: props.service, firstName: props.firstName, lastName: props.lastName, date: props.date, time: props.time, carModel: props.carModel, carMake: props.carMake, carYear: props.carYear, email: props.email, phone: props.phone, zipCode: props.zipCode, contact: props.contact, comment: props.comment, stayLeave:props.stayLeave});
 }
 
-export function EditChooseTwoInput(props: ChooseInput){
+export function EditChooseTwoInput(props: Choose){
     if(props.defaultValue === props.text2){
         return(
             <div>
@@ -123,28 +116,24 @@ export async function getEditAppointmentData(){
     }
 }
 
-interface EditAppointment{
-    Appointment: Appointment
-}
-
-export async function handleEditAppointment(props: EditAppointment){
+export async function handleEditAppointment(props: Appointment){
     try{
         if(!ValidateEditInput({
-            $id: props.Appointment.$id, 
-            service: props.Appointment.service, 
-            firstName: props.Appointment.firstName, 
-            lastName: props.Appointment.lastName, 
-            date: props.Appointment.date, 
-            time: props.Appointment.time, 
-            carModel: props.Appointment.carModel, 
-            carMake: props.Appointment.carMake, 
-            carYear:props.Appointment.carYear, 
-            email: props.Appointment.email, 
-            phone: props.Appointment.phone, 
-            zipCode: props.Appointment.zipCode, 
-            contact: props.Appointment.contact, 
-            comment: props.Appointment.comment, 
-            stayLeave:props.Appointment.stayLeave
+            $id: props.$id, 
+            service: props.service, 
+            firstName: props.firstName, 
+            lastName: props.lastName, 
+            date: props.date, 
+            time: props.time, 
+            carModel: props.carModel, 
+            carMake: props.carMake, 
+            carYear:props.carYear, 
+            email: props.email, 
+            phone: props.phone, 
+            zipCode: props.zipCode, 
+            contact: props.contact, 
+            comment: props.comment, 
+            stayLeave:props.stayLeave
          })){            
             return;
         }

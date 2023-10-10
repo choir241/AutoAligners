@@ -1,13 +1,5 @@
 import React from "react"
-
-interface buttons{
-    cartLength: number,
-    setCurrentPage: (e:number) => void,
-    currentPage: number,
-    rowsPerPage: number,
-    className?: string
-}
-
+import {buttons} from "../../middleware/Interfaces"
 
 export default function PaginatedButtons(props: buttons){
 

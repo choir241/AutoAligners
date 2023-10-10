@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from "react"
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
-import {checkDate, GetClientFinance, ClientFinance, RenderClientFinance, renderEditFinanceDisplay} from "../../hooks/FinanceHooks"
+import {checkDate, GetClientFinance, RenderClientFinance, renderEditFinanceDisplay} from "../../hooks/FinanceHooks"
 import PaginatedButtons from "../../components/Graphs/PaginatedButtons"
 import {SearchBar} from "../../components/Search"
+import {ClientFinance} from "../../middleware/Interfaces"
 
 export default function DisplayClientFinance(){
 

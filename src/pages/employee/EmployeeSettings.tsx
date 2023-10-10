@@ -2,7 +2,8 @@ import Footer from "../../components/Footer"
 import Nav from "../../components/Nav"
 import React, {useState, useEffect} from "react"
 import {Button} from "../../components/Button"
-import {updateAccountEmail, GetAccount, handleDeleteAccount, updateAccountName, updateAccountPassword, Input, User} from "../../hooks/LoginHooks"
+import {updateAccountEmail, GetAccount, handleDeleteAccount, updateAccountName, updateAccountPassword, Input} from "../../hooks/LoginHooks"
+import {User} from "../../middleware/Interfaces"
 
 export default function EmployeeSettings():React.JSX.Element{
 

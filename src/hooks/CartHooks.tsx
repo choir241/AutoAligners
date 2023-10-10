@@ -1,63 +1,10 @@
 import React from "react"
 import {Button} from "../components/Button"
 import api from "../api/api"
-import {InventoryItem} from "./InventoryHooks"
 import {Permission, Role} from "appwrite"
 import {toast} from "react-toastify"
 import Assets from "../components/Assets"
-
-export interface CartItem{
-    $id: string,
-    itemID: string,
-    category: string,
-    description: string,
-    manufacturer: string,
-    name: string,
-    price: string,
-    email: string,
-    quantity: string,
-}
-
-export interface CardInfo{
-    cardNumber: number,
-    securityNumber: string,
-    expirationDate: string,
-    type: string,
-}
-
-interface renderCartQuantity{
-    name:string, 
-    quantity: string, 
-    inventory: InventoryItem[],
-    cartItemQuantity: string | undefined,
-    setCartItemQuantity: (e:string) => void
-}
-
-interface AddToCart{
-    cart: CartItem[], 
-    $id: string | undefined, 
-    inventory: InventoryItem[], 
-    quantity: any
-}
-
-interface CartPurchase{
-    inventory: InventoryItem[], 
-    cart: CartItem[], 
-    cardInfo: CardInfo | undefined, 
-    total: string
-}
-
-interface Cart{
-    cart: CartItem[], 
-    inventory: InventoryItem[], 
-    cartItemQuantity: string | undefined,
-    setCartItemQuantity: (e:string)=>void,
-    cardInfo: CardInfo | undefined,
-    setCardInfo: (e:CardInfo)=>void,
-    startIndex: number,
-    endIndex: number
-
-}
+import {CardInfo, CartItem, AddToCart, renderCartQuantity, CartPurchase, Cart, InventoryItem} from "../middleware/Interfaces"
 
 export function RenderPaymentForm(cardInfo: CardInfo | undefined, setCardInfo: (e:CardInfo)=>void){
     return(

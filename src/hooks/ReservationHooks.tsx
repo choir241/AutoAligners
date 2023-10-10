@@ -3,108 +3,8 @@ import {toast} from "react-toastify"
 import {carData} from "../api/data"
 import api from "../api/api"
 import { Permission, Role } from "appwrite"
+import {ServiceEstimate, Car, CarSelectData, SelectOptions, TextBox, GeneralInput, ChooseInput, Appointment, RenderCalendar, TimeDateAppointments, ChangeTime} from "../middleware/Interfaces"
 
-//interface type for Car type
-export interface Car{
-    id_: number,
-    manufacturer: string,
-    model: string,
-    year: number,
-    vin: string
-};
-
-//interface type for selecting car data (model, year, make)
-export interface CarSelectData{
-    onMakeSelect: (e:React.JSX.Element[])=>void,
-    onModelSelect: (e:React.JSX.Element[])=>void,
-    onYearSelect: (e:React.JSX.Element[])=>void,
-    carMake: string,
-    carModel: string
-}
-
-//interface type for resetting car make/car year/and car model values
-export interface SelectOptions{
-    defaultValue: string,
-    options: React.JSX.Element[],
-    onChange: (e:string)=>void,
-    resetModel: (e:string)=>void,
-    resetYear: (e:string)=>void,
-    resetMake: (e:string)=>void,
-    carYear:string,
-    carMake: string,
-    carModel: string
-}
-
-//interface type for comment input
-export interface TextBox{
-    height: number,
-    width: number,
-    onChange: (e:string)=>void,
-    placeholder: string
-}
-
-//interface type for general inputs
-export interface GeneralInput{
-    type: string,
-    onChange: (e:any)=>void,
-    placeholder?: string,
-    minlength?: number,
-    maxlength?: number,
-    value?: string,
-    defaultValue?: string,
-    id?: string
-}
-
-export interface ChooseInput{
-    text1: string, 
-    text2:string, 
-    name: string, 
-    onChange:(e:string)=>void
-}
-
-//interface type for appointments
-export interface Appointment{
-    $id?: string,
-    date: string,
-    time: string,
-    carModel: string,
-    carMake: string,
-    carYear: string,
-    firstName: string,
-    lastName: string,
-    email: string,
-    phone: string,
-    zipCode: string,
-    contact: string,
-    comment: string,
-    stayLeave: string,
-    service: string
-}
-
-export interface RenderCalendar{
-    currentMonth: number,
-    currentDay: number,
-    currentYear: number,
-    daysOfWeek: string[],
-    currentDayOfWeek: number,
-    setDate: (e:string) => void,
-    i:number
-}
-
-export interface TimeDateAppointments{
-    setTime: (e:string)=>void, 
-    appointments: Appointment[], 
-    setDate: (e:string)=>void,
-    date?: string,
-    time?: string
-}
-
-export interface ChangeTime{
-    i:number,
-    e:React.MouseEvent<HTMLButtonElement, MouseEvent>, 
-    time:string, 
-    setTime: (e:string)=>void
-}
 
 export function TextBoxInput(props: TextBox):React.JSX.Element{
     return(
@@ -697,20 +597,6 @@ export function validateServiceEstimateInput(props: ServiceEstimate):false|undef
     SubmitServiceEstimate({service: props.service, firstName: props.firstName, lastName: props.lastName, carModel: props.carModel, carMake: props.carMake, carYear: props.carYear, email: props.email, phone: props.phone, zipCode: props.zipCode, contact: props.contact, comment: props.comment, stayLeave:props.stayLeave});
 }
 
-interface ServiceEstimate{
-    carModel: string,
-    carMake: string,
-    carYear: string,
-    firstName: string,
-    lastName: string,
-    email: string,
-    phone: string,
-    zipCode: string,
-    contact: string,
-    comment: string,
-    stayLeave: string,
-    service: string
-}
 
 export async function SubmitServiceEstimate(props: ServiceEstimate):Promise<void>{         
     
