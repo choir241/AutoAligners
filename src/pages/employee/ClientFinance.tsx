@@ -1,8 +1,9 @@
 import React, {useState, useEffect} from "react"
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
-import {SearchBar, checkDate, GetClientFinance, ClientFinance, RenderClientFinance, renderEditFinanceDisplay} from "../../hooks/FinanceHooks"
+import {checkDate, GetClientFinance, ClientFinance, RenderClientFinance, renderEditFinanceDisplay} from "../../hooks/FinanceHooks"
 import PaginatedButtons from "../../components/Graphs/PaginatedButtons"
+import {SearchBar} from "../../components/Search"
 
 export default function DisplayClientFinance(){
 
@@ -29,6 +30,8 @@ export default function DisplayClientFinance(){
         checkDate(clientFinance)
     })
 
+    const filterArray = ['email', 'financeTotal', 'type'];
+
     return (
         <main>
             <Nav pageHeading = {"Client Finances"}/>
@@ -41,7 +44,7 @@ export default function DisplayClientFinance(){
             :
             <section>
                 <PaginatedButtons currentPage = {currentPage} cartLength = {clientFinance.length} setCurrentPage = {(e:number)=>setCurrentPage(e)} rowsPerPage={rowsPerPage}/>
-                {SearchBar({hidden: hidden, setHidden: (e:boolean) => setHidden(e), suggestions: suggestions, setSuggestions: (e:React.JSX.Element)=>setSuggestions(e), searchValue: searchValue, setSearchValue: (e:string)=>setSearchValue(e), setAppointments: (e:ClientFinance[])=>setClientFinance(e)})}
+                {SearchBar({hidden: hidden, setHidden: (e:boolean) => setHidden(e), suggestions: suggestions, setSuggestions: (e:React.JSX.Element)=>setSuggestions(e), searchValue: searchValue, setSearchValue: (e:string)=>setSearchValue(e), setData: (e:ClientFinance[])=>setClientFinance(e), database: process.env.REACT_APP_CART_DATABASE_ID, collection: process.env.REACT_APP_FINANCE_PAYMENTS_COLLECTION_ID, filterArray: filterArray})}
 
                 {clientFinance.length ? RenderClientFinance({clientFinance: clientFinance, startIndex: startIndex, endIndex: endIndex, displayFinance: displayFinance, setDisplayFinance: (e:boolean)=>setDisplayFinance(e), client: client, setClient: (e:string)=>setClient(e), financeTotal, setFinanceTotal: (e:string)=>setFinanceTotal(e), email, setEmail: (e:string)=> setEmail(e)}) :  <h1 className = "textAlignCenter">No results match your search, try again.</h1>}
             </section>
