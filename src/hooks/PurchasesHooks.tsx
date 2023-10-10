@@ -1,16 +1,8 @@
 import api from "../api/api"
 import {Query} from "appwrite"
 import PaginatedButtons from "../components/Graphs/PaginatedButtons"
+import {PurchasedItem, DisplayBy, DisplayDate} from "../middleware/Interfaces"
 
-export interface PurchasedItem{
-    $createdAt: string,
-    $id: string,
-    name: string,
-    price: string,
-    quantity: string,
-    cartItems: string,
-    email?: string
-}
 
 //get purchase database
 export async function GetPurchases(setPurchases:(e:PurchasedItem[])=>void, limit?: number){
@@ -44,18 +36,12 @@ export async function GetPurchases(setPurchases:(e:PurchasedItem[])=>void, limit
 //only list purchases of the current month based on the creation date
 //only list purchases of the current years based on the creation date
 
-export interface Date{
-    date: string,
-    quantityTotal: number,
-    totalProfit?: number
- }
-
 export function DisplayByYear(props: DisplayBy){
     const date = new Date();
     const currentYear = date.getFullYear();
     const purchasedDates = GetPurchasedDates(props.purchases);
-    const filteredDates = purchasedDates.filter((date:Date | undefined)=>date?.date.includes(currentYear.toString()))
-    const tableData = filteredDates.map((date: Date | undefined, i:number)=>{
+    const filteredDates = purchasedDates.filter((date:DisplayDate | undefined)=>date?.date.includes(currentYear.toString()))
+    const tableData = filteredDates.map((date: DisplayDate | undefined, i:number)=>{
         return(
             <tr key = {`year-${i}`} className = {`${i % 2 === 0 ? "even" : "odd"}`}>
                 <td>{date?.date}</td>
@@ -90,10 +76,10 @@ export function DisplayByYear(props: DisplayBy){
     const currentMonth = date.getMonth()+1;
     const currentYear = date.getFullYear();
     const purchasedDates = GetPurchasedDates(props.purchases);
-    const filteredDates = purchasedDates.filter((date:Date | undefined)=>date?.date.split("-")[0].includes(currentYear.toString()) && date?.date.split("-")[1].includes(currentMonth.toString()))
+    const filteredDates = purchasedDates.filter((date:DisplayDate | undefined)=>date?.date.split("-")[0].includes(currentYear.toString()) && date?.date.split("-")[1].includes(currentMonth.toString()))
     
     if(filteredDates.length){
-        const tableData = filteredDates.map((date: Date | undefined, i:number)=>{
+        const tableData = filteredDates.map((date: DisplayDate | undefined, i:number)=>{
             return(
             <tr key = {`month-${i}`} className = {`${i % 2 === 0 ? "even" : "odd"}`}>
                 <td>{date?.date}</td>
@@ -123,15 +109,6 @@ export function DisplayByYear(props: DisplayBy){
            
         )
     }
- }
-
- interface DisplayBy{
-    purchases: PurchasedItem[], 
-    startIndex: number, 
-    endIndex: number, 
-    currentPage: number,
-    setCurrentPage: (e:number)=>void,
-    rowsPerPage: number
  }
 
  export function DisplayByWeek(props: DisplayBy){
@@ -183,9 +160,9 @@ export function DisplayByYear(props: DisplayBy){
     }   
       
     const purchasedDates = GetPurchasedDates(props.purchases);
-    const filteredDates = purchasedDates.filter((date:Date | undefined)=>date?.date.split("-")[0].includes(currentYear.toString()) && date?.date.split("-")[1].includes(currentMonth.toString()) && filterDate(date?.date.split("-")[2])[0])
+    const filteredDates = purchasedDates.filter((date:DisplayDate | undefined)=>date?.date.split("-")[0].includes(currentYear.toString()) && date?.date.split("-")[1].includes(currentMonth.toString()) && filterDate(date?.date.split("-")[2])[0])
 
-    const tableData = filteredDates.map((date: Date | undefined, i: number)=>{
+    const tableData = filteredDates.map((date: DisplayDate | undefined, i: number)=>{
         return(
             <tr key = {`week-${i}`} className = {`${i % 2 === 0 ? "even" : "odd"}`}>
                 <td>{date?.date}</td>

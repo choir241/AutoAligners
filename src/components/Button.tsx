@@ -1,23 +1,6 @@
 import React from "react"
 import {Link} from "react-router-dom"
-
-interface ButtonProps{
-    text: string,
-    handleButtonClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>void,
-    classNames?: string,
-    key?: string,
-}
-
-interface ButtonSubmitProps{
-    text: string,
-    handleButtonClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>void
-}
-
-interface ButtonLinkProps{
-    domain: string,
-    text: string,
-    classNames?: string
-}
+import {ButtonProps, ButtonSubmitProps, ButtonLinkProps} from "../middleware/Interfaces"
 
 export function ButtonSubmit (props: ButtonSubmitProps) {
     return(

@@ -1,6 +1,7 @@
 import React, {useEffect} from "react"
 import api from "../api/api"
 import {Button} from "../components/Button"
+import {Search} from "../middleware/Interfaces"
 //search
  //enter value into search
  //using appointment database, find appointment with string containing that value
@@ -9,18 +10,6 @@ import {Button} from "../components/Button"
  //then show by exacy wording but in any order
  //re-render manageAppointments page to show this
  
- interface Search{
-    searchValue:string, 
-    setSearchValue: (e:string)=>void, 
-    setData: (e:any[])=>void,
-    suggestions: React.JSX.Element | undefined,
-    setSuggestions: (e:React.JSX.Element)=>void,
-    hidden: boolean,
-    setHidden: (e:boolean) => void,
-    database: string,
-    collection: string,
-    filterArray: string[]
-}
 
 export function SearchBar(props: Search){
     function includeResults(data: any[], dataFields: string[], check: boolean){

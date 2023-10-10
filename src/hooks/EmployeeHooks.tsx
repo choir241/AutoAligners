@@ -1,75 +1,13 @@
-import {PurchasedItem} from "./PurchasesHooks" 
 import {Input} from "./ReservationHooks"
 import api from "../api/api"
 import Nav from "../components/Nav"
 import Footer from "../components/Footer"
 import {ButtonLink, Button} from "../components/Button"
-import {User} from "./LoginHooks"
 import {Permission, Role} from "appwrite"
 import {toast} from "react-toastify"
 import {toggleDisplay} from "./FinanceHooks"
 import PaginatedButtons from "../components/Graphs/PaginatedButtons"
-
-export interface Profile{
-    $id: string,
-    email?: string,
-    fileName: string,
-    image: string,
-    position: string,
-    PTO: string,
-    salary: string,
-    requestedPTO: string,
-    requests: string[]
-}
-
-export interface PTO{
-    PTO: string, 
-    PTOStartDate: string, 
-    PTOEndDate: string,
-    userID: string,
-    $id: string,
-    email: string,
-    name: string,
-}
-
-interface PTORequests{
-    currentPTOPage:number, 
-    setCurrentPTOPage: (e:number)=>void,
-    rows: number, 
-    setPTODisplay: (e:boolean)=>void,
-    PTODisplay: boolean, 
-    PTORequests: PTO[],
-    firstIndex: number, 
-    lastIndex: number
-}
-
-
-interface Approve{
-    PTO: string,
-    email: string, 
-    name: string, 
-    userID: string, 
-    startDate: string, 
-    endDate: string,
-    $id: string
-}
-
-interface History{
-    currentPage: number, 
-    setCurrentPage: (e:number)=>void, 
-    rows: number, 
-    startIndex: number, 
-    endIndex: number, 
-    requests?:string[]
-}
-
-interface Customize{
-    listOfUsers: User[], 
-    email: string, 
-    salary: string, 
-    position: string, 
-    PTO: string
-}
+import {PurchasedItem, Profile, PTO, PTORequests, Approve, History, Customize, Notification, User} from "../middleware/Interfaces"
 
 export function RenderEmployeeAppointments(purchases: PurchasedItem[], startIndex: number, endIndex: number){
 
@@ -511,10 +449,6 @@ export function RenderPTORequests(props: PTORequests){
 
         </section>
     )
-}
-
-interface Notification{
-    requests: string[] | undefined
 }
 
 export async function CheckPTOExpiration(){

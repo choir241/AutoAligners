@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from "react"
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
-import {DefaultInventory, InventoryItem, GetInventory} from "../../hooks/InventoryHooks"
+import {DefaultInventory, GetInventory} from "../../hooks/InventoryHooks"
+import {InventoryItem} from "../../middleware/Interfaces"
 
 export default function InventoryShop(){
 

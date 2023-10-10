@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from "react"
-import {Appointment, getAppointmentData} from "../../hooks/ReservationHooks"
+import { getAppointmentData} from "../../hooks/ReservationHooks"
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
 import { displayAppointments} from "../../hooks/ManageAppointmentHooks"
 import PaginatedButtons from "../../components/Graphs/PaginatedButtons"
 import {SearchBar} from "../../components/Search"
+import {Appointment} from "../../middleware/Interfaces"
 
 export default function ManageAppointments(){
 

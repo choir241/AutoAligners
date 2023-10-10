@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from "react"
 import Nav from "../../components/Nav"
-import {getAppointmentData, Appointment, DisplayTimeDateAppointments, GetCarData, SelectCarMakeInput, SelectCarModelInput, SelectCarYearInput, ChooseCarService, Input, TextBoxInput} from "../../hooks/ReservationHooks"
+import {getAppointmentData, DisplayTimeDateAppointments, GetCarData, SelectCarMakeInput, SelectCarModelInput, SelectCarYearInput, ChooseCarService, Input, TextBoxInput} from "../../hooks/ReservationHooks"
 import { EditChooseTwoInput, handleEditAppointment, checkDate, getEditAppointmentData } from "../../hooks/EditAppointmentHooks"
 import {Button} from "../../components/Button"
 import Footer from "../../components/Footer"
+import {Appointment} from "../../middleware/Interfaces"
 
 export default function EditAppointment(){
 
@@ -103,7 +104,7 @@ export default function EditAppointment(){
             <Button
                 text = "Edit Appointment"
                 handleButtonClick={()=> handleEditAppointment(
-                    {Appointment: {
+                    {
                         service: service, 
                         firstName: firstName, 
                         lastName: lastName, 
@@ -118,7 +119,6 @@ export default function EditAppointment(){
                         contact: contact, 
                         comment: comment, 
                         stayLeave: stayLeave
-                    }
                     }
                     )}/>
             </div>

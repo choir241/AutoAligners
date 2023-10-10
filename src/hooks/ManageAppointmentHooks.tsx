@@ -1,7 +1,7 @@
 import api from "../api/api"
 import React from "react"
 import {Link} from "react-router-dom"
-import {Appointment} from "./ReservationHooks"
+import {Appointment} from "../middleware/Interfaces"
 import axios from "axios"
 
 export async function handleDeleteAppointment(id:string | undefined){

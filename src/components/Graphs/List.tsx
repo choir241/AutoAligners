@@ -1,14 +1,8 @@
 import React, {useState, useEffect} from "react"
-import {DisplayByMonth, DisplayByWeek, DisplayByYear, PurchasedItem, GetPurchases} from "../../hooks/PurchasesHooks"
+import {DisplayByMonth, DisplayByWeek, DisplayByYear, GetPurchases} from "../../hooks/PurchasesHooks"
 import {Button} from "../../components/Button"
+import {ListLabels, PurchasedItem} from "../../middleware/Interfaces"
 
-interface ListLabels{
-    currentPage: number,
-    setCurrentPage: (e:number) => void,
-    rowsPerPage: number,
-    startIndex: number,
-    endIndex: number
-}
 
 export default function List(props: ListLabels){
 

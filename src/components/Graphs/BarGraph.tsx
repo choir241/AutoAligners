@@ -10,24 +10,8 @@ import {
     Legend,
   } from 'chart.js';
 import PaginatedButtons from "./PaginatedButtons";
-import {Date} from "../../hooks/PurchasesHooks";
+import {DisplayDate, GraphLabels} from "../../middleware/Interfaces";
 import Query_Offset from "./Query_Offset";
-
-interface GraphLabels{
-  quantities: number[],
-  profits: any[],
-  dates: any[],
-  cartLength: number,
-  currentPage: number,
-  setCurrentPage: (e:number) => void,
-  rowsPerPage: number,
-  startIndex: number,
-  endIndex: number,
-  setLimit: (e:number) => void,
-  limit: number,
-  length: number
-}
-
 
 // array of number elements are being passed through for the values of the datasets
 // only show the first 10 elements of that array
@@ -60,7 +44,7 @@ ChartJS.register(
 
 export default function BarGraph(props:GraphLabels){
 
-    const date = props.dates.map((date:Date)=>date.date)
+    const date = props.dates.map((date:DisplayDate)=>date.date)
 
     const data = {
         labels: date.slice(props.startIndex, props.endIndex),
