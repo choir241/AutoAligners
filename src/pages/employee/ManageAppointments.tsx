@@ -2,8 +2,9 @@ import React, {useState, useEffect} from "react"
 import {Appointment, getAppointmentData} from "../../hooks/ReservationHooks"
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
-import { displayAppointments, SearchBar } from "../../hooks/ManageAppointmentHooks"
+import { displayAppointments} from "../../hooks/ManageAppointmentHooks"
 import PaginatedButtons from "../../components/Graphs/PaginatedButtons"
+import {SearchBar} from "../../components/Search"
 
 export default function ManageAppointments(){
 
@@ -23,6 +24,8 @@ export default function ManageAppointments(){
         getAppointmentData((e:Appointment[])=>setAppointments(e))
     },[])
 
+    const filterArray = ['carMake', 'carModel', 'carYear', 'service', 'firstName', 'lastName', 'time'];
+    
     return(
         <main>
   <Nav pageHeading = "Manage Appointments"/>
@@ -33,7 +36,7 @@ export default function ManageAppointments(){
                 <PaginatedButtons currentPage = {currentPage} setCurrentPage = {(e:number)=>setCurrentPage(e)} rowsPerPage={rowsPerPage} cartLength={appointments.length}/>
             </section>
 
-            {SearchBar({hidden: hidden, setHidden: (e:boolean) => setHidden(e), suggestions: suggestions, setSuggestions: (e:React.JSX.Element)=>setSuggestions(e), searchValue: searchValue, setSearchValue: (e:string)=>setSearchValue(e), setAppointments: (e:Appointment[])=>setAppointments(e)})}
+            {SearchBar({hidden: hidden, setHidden: (e:boolean) => setHidden(e), suggestions: suggestions, setSuggestions: (e:React.JSX.Element)=>setSuggestions(e), searchValue: searchValue, setSearchValue: (e:string)=>setSearchValue(e), setData: (e:Appointment[])=>setAppointments(e), filterArray: filterArray, database: process.env.REACT_APP_DATABASE_ID, collection: process.env.REACT_APP_COLLECTION_ID})}
           
             <section className = "appointments flex">
                 {appointments.length ? displayAppointments(appointments, classNameContainer, startIndex, endIndex) : <h1>No results match your search, try again.</h1>}
