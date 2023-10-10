@@ -1,8 +1,9 @@
     import React, {useState, useEffect} from "react"
     import {Button} from "../../components/Button"
     import Nav from "../../components/Nav"
-    import {getAppointmentData, Appointment, checkAppointmentDate, DisplayTimeDateAppointments, GetCarData, SelectCarMakeInput, SelectCarModelInput, ChooseTwoInput, SelectCarYearInput, ChooseCarService, Input, TextBoxInput, checkInputValidation} from "../../hooks/ReservationHooks"
+    import {getAppointmentData, checkAppointmentDate, DisplayTimeDateAppointments, GetCarData, SelectCarMakeInput, SelectCarModelInput, ChooseTwoInput, SelectCarYearInput, ChooseCarService, Input, TextBoxInput, checkInputValidation} from "../../hooks/ReservationHooks"
     import Footer from "../../components/Footer"
+    import {Appointment} from "../../middleware/Interfaces"
 
     export default function Reservation(){
 

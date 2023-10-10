@@ -1,56 +1,8 @@
 import {Button} from "../components/Button"
-import { RenderPaymentForm, CardInfo } from "./CartHooks"
+import { RenderPaymentForm} from "./CartHooks"
 import api from "../api/api"
 import {Permission, Role} from "appwrite"
-import {useEffect} from "react"
-
-export interface FinanceDisplay{
-    text:string, 
-    display: boolean, 
-    setDisplay: (e:boolean) => void, 
-    cardInfo: CardInfo | undefined, 
-    setCardInfo: (e:CardInfo)=>void,
-    email: string,
-    setEmail: (e:string) => void,
-}
-
-export interface ClientFinance{
-$id: string,
-$updatedAt: string,
-$createdAt: string,
-cardAmount: number,
-cardNumber: number,
-email: string,
-expirationDate: string,
-financeTotal: string,
-securityNumber: string,
-type: string
-}
-
-interface EditFinance{
-    display: boolean, 
-    setDisplay: (e:boolean)=>void, 
-    client: string, 
-    clientFinance: ClientFinance[],
-    financeTotal: string,
-    setFinanceTotal: (e:string) => void,
-    email: string,
-    setEmail: (e:string) => void
-}
-
-interface TableContent{
-    clientFinance: ClientFinance[], 
-    startIndex: number,
-    endIndex: number, 
-    displayFinance: boolean, 
-    setDisplayFinance: (e:boolean)=> void,
-    client: string,
-    setClient: (e:string)=> void,
-    financeTotal: string,
-    setFinanceTotal: (e:string) => void,
-    email: string,
-    setEmail: (e:string) => void
-}
+import {CardInfo, FinanceDisplay, ClientFinance, EditFinance, TableContent} from "../middleware/Interfaces"
 
 export function toggleDisplay(setDisplay: (e:boolean)=>void, display: boolean){
     setDisplay(!display)

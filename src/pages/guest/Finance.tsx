@@ -4,7 +4,7 @@ import Footer from "../../components/Footer"
 import {ButtonLink, Button} from "../../components/Button"
 import Assets from "../../components/Assets"
 import {renderFinanceDisplay, toggleDisplay } from "../../hooks/FinanceHooks"
-import {CardInfo} from "../../hooks/CartHooks"
+import {CardInfo} from "../../middleware/Interfaces"
 
 export default function Finance(){
 

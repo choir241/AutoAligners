@@ -2,12 +2,9 @@ import React, {useState, useEffect} from "react"
 import {ButtonLink,ButtonSubmit} from "../components/Button"
 import {handleLogout} from "../hooks/LoginHooks"
 import {Link} from "react-router-dom"
-import {GetCart, CartItem} from "../hooks/CartHooks"
+import {GetCart} from "../hooks/CartHooks"
 import EmployeeNav from "./EmployeeNav"
-
-interface nav{
-    pageHeading: string
-}
+import {CartItem, nav} from "../middleware/Interfaces"
 
 export default function Nav(props: nav){
 

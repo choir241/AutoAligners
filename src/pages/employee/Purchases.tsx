@@ -5,8 +5,9 @@ import BarGraph from "../../components/Graphs/BarGraph"
 import LineGraph from "../../components/Graphs/LineGraph"
 import HorizontalBarGraph from "../../components/Graphs/HorizontalBarGraph"
 import List from "../../components/Graphs/List"
-import {GetPurchasedProfit, GetPurchases, PurchasedItem, GetPurchasedQuantities, GetPurchasedDates} from "../../hooks/PurchasesHooks"
+import {GetPurchasedProfit, GetPurchases, GetPurchasedQuantities, GetPurchasedDates} from "../../hooks/PurchasesHooks"
 import {Button} from "../../components/Button"
+import {PurchasedItem} from "../../middleware/Interfaces"
 
 export default function Purchases(){
 

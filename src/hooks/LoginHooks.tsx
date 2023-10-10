@@ -3,48 +3,8 @@ import React from "react"
 import api from "../api/api"
 import {toast} from "react-toastify"
 import {Client, Account, ID} from "appwrite"
+import {InputTypes, User, Login, SignUp} from "../middleware/Interfaces"
 
-interface InputTypes{
-    type: string,
-    name: string,
-    onChange: (e:string)=>void,
-    placeholder?: string,
-    value?: string,
-    disabled?: boolean,
-    min?: string,
-    max?: string
-  }
-  
-export interface User{
-    $createdAt: string, 
-    $id: string,
-    $updatedAt: string,
-    email: string,
-    emailVerification: boolean,
-    name: string,
-    passwordUpdate: string,
-    phone: string,
-    phoneVerification: boolean,
-    prefs: object,
-    registration: string,
-    status: boolean
-}
-
-interface SignUp{
-    email: string,
-    name: string,
-    password: string
-  }
-
-interface Login{
-  email: string,
-  name: string,
-  password: string,
-  employeeId: string,
-  listOfUsers: User[]
-}
-  
-  
 export function Input(props: InputTypes):React.JSX.Element{
     return(<input 
       type = {props.type} 

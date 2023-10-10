@@ -3,43 +3,9 @@ import React from "react"
 import {Permission, Role} from "appwrite"
 import {items} from "../api/inventory"
 import {Button} from "../components/Button"
-import {CartItem, handleAddToCart} from "./CartHooks"
+import {handleAddToCart} from "./CartHooks"
+import {CartItem, InventoryItem, Item, DefaultInventoryDisplay, InventoryQuantity, DisplayCurrentInventory} from "../middleware/Interfaces"
 
-export interface InventoryItem{
-    $id?: string,
-    name: string,
-    category: string,
-    quantity: number,
-    manufacturer: string,
-    reOrderLV: number,
-    price: string,
-    description: string
-}
-
-interface Item{
-    inventory: InventoryItem,
-    itemQuantity: number | undefined
-}
-
-interface DefaultInventoryDisplay{
-    setItemQuantity: (e:number) => void,
-    inventory: InventoryItem[],
-    itemQuantity: number | undefined
-}
-
-interface InventoryQuantity{
-    itemName: string, 
-    cart: CartItem[], 
-    setItemQuantity:(e:number)=>void, 
-    quantity: number
-}
-
-interface DisplayCurrentInventory{
-    cart: CartItem[], 
-    inventory: InventoryItem[], 
-    setItemQuantity: (e:number)=>void, 
-    quantity: number | undefined
-}
 
 //get inventory database
 export async function GetInventory(setInventory: (e:InventoryItem[])=>void){

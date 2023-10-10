@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from "react"
-import {GetInventory, InventoryItem} from "../../hooks/InventoryHooks"
+import {GetInventory} from "../../hooks/InventoryHooks"
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
-import {RenderCart, GetCart, CartItem, CardInfo, RenderPaymentForm} from "../../hooks/CartHooks"
+import {RenderCart, GetCart, RenderPaymentForm} from "../../hooks/CartHooks"
 import PaginatedButtons from "../../components/Graphs/PaginatedButtons"
+import {CartItem, CardInfo, InventoryItem} from "../../middleware/Interfaces"
 
 export default function Cart(){
 

@@ -11,23 +11,8 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2'
 import PaginatedButtons from "./PaginatedButtons"
-import {Date} from "../../hooks/PurchasesHooks"
 import Query_Offset from "./Query_Offset";
-
-interface GraphLabels {
-  quantities: number[],
-  profits: any[],
-  dates: any[],
-  cartLength: number,
-  currentPage: number,
-  setCurrentPage: (e: number) => void,
-  rowsPerPage: number,
-  startIndex: number,
-  endIndex: number,
-  setLimit: (e:number) => void,
-  limit: number,
-  length: number
-}
+import {DisplayDate, GraphLabels} from "../../middleware/Interfaces";
 
 
 ChartJS.register(
@@ -54,7 +39,7 @@ ChartJS.register(
 
 export default function LineGraph(props:GraphLabels){
 
-    const date = props.dates.map((date:Date)=>date.date)
+    const date = props.dates.map((date:DisplayDate)=>date.date)
 
     const data = {
         labels: date.slice(props.startIndex, props.endIndex),
