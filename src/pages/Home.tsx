@@ -1,8 +1,7 @@
-import React from "react"
 import Nav from "../components/Nav"
 import Footer from "../components/Footer"
 import {ButtonLink} from "../components/Button"
-import Assets from "../components/Assets"
+import Assets from "../components/Assets.jsx"
 import Employee from "./employee/Employee"
 
 export default function Home(){

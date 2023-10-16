@@ -1,5 +1,5 @@
-import React, {useEffect} from "react"
-import api from "../api/api"
+import {useEffect} from "react"
+import api from "../api/api.jsx"
 import {Button} from "../components/Button"
 import {Search} from "../middleware/Interfaces"
 //search
