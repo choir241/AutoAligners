@@ -1,4 +1,4 @@
-import React, {useState} from "react"
+import {useState} from "react"
 import {ButtonLink} from "./Button"
 
 export default function EmployeeNav(){

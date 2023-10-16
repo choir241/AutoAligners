@@ -30,7 +30,7 @@ export default function App(){
         <Suspense fallback = {<h1>Loading...</h1>}>
             <BrowserRouter>
                 <Routes>
-                  <Route exact path = "/" element = {<Home/>}/>
+                  <Route path = "/" element = {<Home/>}/>
                     <Route element = {<PublicRoutes/>}>
                         <Route path = "/employee" element = {<Employee/>}/>
                         <Route path = "/finance" element = {<Finance/>}/>
