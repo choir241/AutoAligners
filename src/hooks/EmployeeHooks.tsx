@@ -88,7 +88,7 @@ export function EmployeeForm(setSalary:(e:string)=>void,setPosition:(e:string)=>
 
 export async function GetEmployee(setEmployee: (e:Profile)=>void){
     try{
-        const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID)
+        const data = await api.listDocuments(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_PROFILE_COLLECTION_ID)
 
         if(data.documents.length){
         const findUser = data.documents.filter((user:Profile)=>cacheEmail === user.email)[0]
@@ -129,7 +129,7 @@ export async function handleEmployeeCustomization(props: Customize){
 
             const findUser = props.listOfUsers.filter((employee:User)=>employee.email===props.email)[0]
 
-            const employeeList = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID)
+            const employeeList = await api.listDocuments(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_PROFILE_COLLECTION_ID)
 
             const findEmployee = employeeList.documents.filter((employee:Profile)=>employee.email === props.email)
             
@@ -142,10 +142,10 @@ export async function handleEmployeeCustomization(props: Customize){
             }
 
             if(findEmployee.length){
-              await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, findEmployee[0].$id, data)
+              await api.updateDocument(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_PROFILE_COLLECTION_ID, findEmployee[0].$id, data)
               window.location.reload();
             }else{
-              await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, data, [Permission.read(Role.any())])
+              await api.createDocument(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_PROFILE_COLLECTION_ID, data, [Permission.read(Role.any())])
               window.location.reload();
             }
         }else{
@@ -165,7 +165,7 @@ export async function AutomaticPTO(){
         const currentDay = date.getDate();
 
         if(currentMonth===1 && currentDay === 1 && !cachePTO){
-            const employeeList = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID)
+            const employeeList = await api.listDocuments(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_PROFILE_COLLECTION_ID)
 
             employeeList.documents.forEach(async(user:User)=>{
                 const data = {
@@ -174,7 +174,7 @@ export async function AutomaticPTO(){
                     PTO: "40"
                 }
 
-                  await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, user.$id, data)
+                  await api.updateDocument(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_PROFILE_COLLECTION_ID, user.$id, data)
             })
             SetCachePTO("Refill done");
         }else{
@@ -191,7 +191,7 @@ export async function handlePTO(listOfUsers: User[], PTO: string, PTOStartDate: 
 
         const findUser = listOfUsers.filter((employee:User)=>employee.email===cacheEmail)[0]
 
-        const employeeList = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID)
+        const employeeList = await api.listDocuments(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_PROFILE_COLLECTION_ID)
 
         const findEmployee = employeeList.documents.filter((employee:Profile)=>employee.email === cacheEmail)
 
@@ -325,7 +325,7 @@ export async function handlePTO(listOfUsers: User[], PTO: string, PTOStartDate: 
             PTOEndDate: PTOEndDate
         };
 
-        await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PTO_COLLECTION_ID, data, [Permission.read(Role.any())]);
+        await api.createDocument(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_PTO_COLLECTION_ID, data, [Permission.read(Role.any())]);
 
         window.location.reload();
 
@@ -337,7 +337,7 @@ export async function handlePTO(listOfUsers: User[], PTO: string, PTOStartDate: 
 async function ApprovePTO(props: Approve){
     try{
 
-        const employeeList = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID)
+        const employeeList = await api.listDocuments(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_PROFILE_COLLECTION_ID)
 
         const findEmployee = employeeList.documents.filter((employee:Profile)=>employee.email === props.email)
 
@@ -357,8 +357,8 @@ async function ApprovePTO(props: Approve){
                     requests: findEmployee[0].requests ? findEmployee[0].requests : [JSON.stringify({startDate: props.startDate, endDate: props.endDate, status: "approved"})]
                 };
 
-              await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, findEmployee[0].$id, data)
-              await api.deleteDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PTO_COLLECTION_ID, props.$id)
+              await api.updateDocument(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_PROFILE_COLLECTION_ID, findEmployee[0].$id, data)
+              await api.deleteDocument(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_PTO_COLLECTION_ID, props.$id)
               window.location.reload();
             }else{
 
@@ -370,8 +370,8 @@ async function ApprovePTO(props: Approve){
                 };
 
 
-              await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, data, [Permission.read(Role.any())])
-              await api.deleteDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PTO_COLLECTION_ID, props.$id)
+              await api.createDocument(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_PROFILE_COLLECTION_ID, data, [Permission.read(Role.any())])
+              await api.deleteDocument(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_PTO_COLLECTION_ID, props.$id)
 
               window.location.reload();
             }
@@ -385,7 +385,7 @@ async function ApprovePTO(props: Approve){
 
 async function DenyPTO(props: Approve){
     try{
-        const employeeList = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID)
+        const employeeList = await api.listDocuments(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_PROFILE_COLLECTION_ID)
 
         const findEmployee = employeeList.documents.filter((employee:Profile)=>employee.email === props.email)
 
@@ -401,8 +401,8 @@ async function DenyPTO(props: Approve){
                 requests: findEmployee[0].requests ? findEmployee[0].requests : [JSON.stringify({startDate: props.startDate, endDate: props.endDate, status: "denied"})]
             };
 
-          await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, findEmployee[0].$id, data)
-          await api.deleteDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PTO_COLLECTION_ID, props.$id)
+          await api.updateDocument(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_PROFILE_COLLECTION_ID, findEmployee[0].$id, data)
+          await api.deleteDocument(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_PTO_COLLECTION_ID, props.$id)
           window.location.reload();
         }else{
             const data = {
@@ -412,8 +412,8 @@ async function DenyPTO(props: Approve){
             };
 
 
-          await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, data, [Permission.read(Role.any())])
-          await api.deleteDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PTO_COLLECTION_ID, props.$id)
+          await api.createDocument(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_PROFILE_COLLECTION_ID, data, [Permission.read(Role.any())])
+          await api.deleteDocument(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_PTO_COLLECTION_ID, props.$id)
           window.location.reload();
         }
         
@@ -454,7 +454,7 @@ export function RenderPTORequests(props: PTORequests){
 
 export async function CheckPTOExpiration(){
     try{
-        const employeeList = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID)
+        const employeeList = await api.listDocuments(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_PROFILE_COLLECTION_ID)
 
         const findExpiredPTO = employeeList.documents.filter((user:Profile)=>{
             const filtered = [];
@@ -489,7 +489,7 @@ export async function CheckPTOExpiration(){
                 userID: findExpiredPTO[0].userID
             }
 
-            await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, findExpiredPTO[0].$id, data)
+            await api.updateDocument(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_PROFILE_COLLECTION_ID, findExpiredPTO[0].$id, data)
 
         }
         
@@ -550,7 +550,7 @@ export function PTONotification(props: Notification){
 
 export async function GetPTORequests(setPTORequests: (e:PTO[])=>void){
     try{
-        const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PTO_COLLECTION_ID);
+        const data = await api.listDocuments(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_PTO_COLLECTION_ID);
         setPTORequests(data.documents);
     }catch(err){
         console.error(err);

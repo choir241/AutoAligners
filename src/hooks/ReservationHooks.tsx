@@ -1,7 +1,7 @@
 import React, {useState} from "react"
 import {toast} from "react-toastify"
-import {carData} from "../api/data"
-import api from "../api/api"
+import {carData} from "../api/data.jsx"
+import api from "../api/api.jsx"
 import { Permission, Role } from "appwrite"
 import {ServiceEstimate, Car, CarSelectData, SelectOptions, TextBox, GeneralInput, ChooseInput, Appointment, RenderCalendar, TimeDateAppointments, ChangeTime} from "../middleware/Interfaces"
 
@@ -162,7 +162,7 @@ export async function GetCarData(props:CarSelectData){
 
             if(props.carMake && props.carModel && (props.carMake !== "Select Car Make") && (props.carModel !== "Select Car Model")){
                 //sets form options to all car years available for car make and car models
-                const response = carData.filter((car:Car, i:number)=>{
+                const response = carData.filter((car:Car)=>{
                     let year = 0
                     if(car.manufacturer === props.carMake && car.model === props.carModel){
                         year = car.year
@@ -473,14 +473,21 @@ export async function handleSubmitData(props: Appointment):Promise<void>{
                 "comment":props.comment
             }
 
-
-            await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID, formData, [Permission.read(Role.any())])
+            await api.createDocument(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_COLLECTION_ID, formData, [Permission.read(Role.any())])
 
             window.location.reload();   
 }
 
 export function Alert(text: string){
     alert(text)
+}
+
+export function handleCreateAppointment(date: string, time: string, setDate: (e:string)=>void, props: Appointment){
+    checkAppointmentDate(date, time, (e:string)=>setDate(e))
+
+    if(!checkInputValidation({service: props.service, firstName: props.firstName, lastName: props.lastName, date: props.date, time: props.time, carModel: props.carModel, carMake: props.carMake, carYear:props.carYear, email: props.email, phone: props.phone, zipCode: props.zipCode, contact: props.contact, comment: props.comment, stayLeave:props.stayLeave})){
+        return;
+    }
 }
 
 export function checkInputValidation(props: Appointment):false|undefined{
@@ -540,7 +547,7 @@ export function checkInputValidation(props: Appointment):false|undefined{
 
 export async function getAppointmentData(setAppointments: (e:Appointment[])=>void){
     try{
-        const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID)
+        const data = await api.listDocuments(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_COLLECTION_ID)
         setAppointments(data.documents);
     }catch(err){
         console.error(err);
@@ -615,8 +622,8 @@ export async function SubmitServiceEstimate(props: ServiceEstimate):Promise<void
         "comment":props.comment
     }
 
-
-    const data = await api.createDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_SERVICE_COLLECTION_ID, formData, [Permission.read(Role.any())])
+    
+    const data = await api.createDocument(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_SERVICE_COLLECTION_ID, formData, [Permission.read(Role.any())])
 
     if(data){
         window.location.reload();   
