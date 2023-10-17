@@ -1,5 +1,6 @@
 import {useState} from "react"
 import {ButtonLink} from "./Button"
+import {cacheEmail} from "../middleware/Cache"
 
 export default function EmployeeNav(){
 
@@ -19,7 +20,7 @@ export default function EmployeeNav(){
                     {ButtonLink({classNames: "goBack", text: "Shop for Inventory", domain: "/inventoryShop"})}
                     {ButtonLink({classNames: "goBack", text: "Estimates", domain: "/estimates"})}
                     {ButtonLink({classNames: "goBack", text: "Client Finances", domain: "/clientFinance"})}
-                    {localStorage.getItem("email")?.toLowerCase() === "bobthebuilder@gmail.com" ? ButtonLink({classNames: "goBack", text: "Purchase History", domain: "/purchases"}) : ""}
+                    {cacheEmail?.toLowerCase() === "bobthebuilder@gmail.com" ? ButtonLink({classNames: "goBack", text: "Purchase History", domain: "/purchases"}) : ""}
                     {ButtonLink({classNames: "goBack", text: "Settings", domain: "/settings"})}
                     </div>
         </section>

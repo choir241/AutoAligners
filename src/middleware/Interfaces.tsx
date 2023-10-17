@@ -190,6 +190,15 @@ export interface ChangeTime{
     setTime: (e:string)=>void
 }
 
+export interface DisplayInventory{
+    pricePerUnit: number,
+    itemName: string,
+    manufacturer: string,
+    description: string,
+    reorderLevel: string,
+    category: string
+}
+
 export interface PurchasedItem{
     $createdAt: string,
     $id: string,
@@ -282,7 +291,7 @@ export interface InventoryItem{
     category: string,
     quantity: number,
     manufacturer: string,
-    reOrderLV: number,
+    reOrderLV: string,
     price: string,
     description: string
 }

@@ -1,4 +1,4 @@
-import api from "../api/api"
+import api from "../api/api.jsx"
 import {Query} from "appwrite"
 import PaginatedButtons from "../components/Graphs/PaginatedButtons"
 import {PurchasedItem, DisplayBy, DisplayDate} from "../middleware/Interfaces"

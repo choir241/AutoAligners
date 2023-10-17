@@ -3,6 +3,7 @@ import React from "react"
 import {Link} from "react-router-dom"
 import {Appointment} from "../middleware/Interfaces"
 import axios from "axios"
+import { SetCacheID } from "../middleware/Cache"
 
 export async function handleDeleteAppointment(id:string | undefined){
     await api.deleteDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID, id);
@@ -70,7 +71,7 @@ export function displayAppointments(appointments: Appointment[], classNameContai
                  <div className = "flex alignCenter">
                     <h1>{appointment.firstName} {appointment.lastName}</h1>
                     <i className="fa-regular fa-trash-can button" onClick= {()=>handleDeleteAppointment(appointment.$id)}></i>
-                    <Link to = "/editAppointment" className="fa-regular fa-pen-to-square button" onClick = {()=>localStorage.setItem("id", appointment.$id || "")}></Link>
+                    <Link to = "/editAppointment" className="fa-regular fa-pen-to-square button" onClick = {()=> SetCacheID (appointment.$id || "")}></Link>
                  </div>
           
                  <div className = "flex">

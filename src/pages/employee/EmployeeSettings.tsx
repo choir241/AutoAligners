@@ -4,6 +4,7 @@ import React, {useState, useEffect} from "react"
 import {Button} from "../../components/Button"
 import {updateAccountEmail, GetAccount, handleDeleteAccount, updateAccountName, updateAccountPassword, Input} from "../../hooks/LoginHooks"
 import {User} from "../../middleware/Interfaces"
+import {cacheEmail} from "../../middleware/Cache"
 
 export default function EmployeeSettings():React.JSX.Element{
 
@@ -17,7 +18,7 @@ export default function EmployeeSettings():React.JSX.Element{
 
 
   useEffect(()=>{
-    if(localStorage.getItem("email")){
+    if(cacheEmail){
       GetAccount((e:User) => setUser(e))
     }
   },[])

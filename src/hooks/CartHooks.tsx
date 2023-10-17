@@ -5,6 +5,7 @@ import {Permission, Role} from "appwrite"
 import {toast} from "react-toastify"
 import Assets from "../components/Assets"
 import {CardInfo, CartItem, AddToCart, renderCartQuantity, CartPurchase, Cart, InventoryItem} from "../middleware/Interfaces"
+import {cacheEmail} from "../middleware/Cache"
 
 export function RenderPaymentForm(cardInfo: CardInfo | undefined, setCardInfo: (e:CardInfo)=>void){
     return(
@@ -54,7 +55,7 @@ export function RenderPaymentForm(cardInfo: CardInfo | undefined, setCardInfo: (
 export async function GetCart(setCart: (e:CartItem[])=>void){
     try{
         const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_CART_COLLECTION_ID);
-        setCart(data.documents.filter((item: CartItem)=>item.email === localStorage.getItem("email")));
+        setCart(data.documents.filter((item: CartItem)=>item.email === cacheEmail));
     }catch(err){
         console.error(err);
         toast.error(`${err}`);
@@ -68,7 +69,7 @@ export async function handleAddToCart(props: AddToCart){
         const findItem = props.inventory.filter((item:InventoryItem)=>item.$id === props.$id)
 
         //find item in cart using item object in the findItem array && current logged in user
-        const findCartItem = props.cart.filter((cartItem:CartItem)=>cartItem.name === findItem[0].name && cartItem.email === localStorage.getItem("email"));
+        const findCartItem = props.cart.filter((cartItem:CartItem)=>cartItem.name === findItem[0].name && cartItem.email === cacheEmail);
 
         //if there are no duplicates items currently in the cart using findCartItem 
         if(!findCartItem.length){
@@ -82,7 +83,7 @@ export async function handleAddToCart(props: AddToCart){
                 "manufacturer": item.manufacturer,
                 "name": item.name,
                 "price": item.price,
-                "email": localStorage.getItem("email"),
+                "email": cacheEmail,
                 "quantity": props.quantity ? props.quantity: 1
             }
 
@@ -101,7 +102,7 @@ export async function handleAddToCart(props: AddToCart){
                 "manufacturer": item.manufacturer,
                 "name": item.name,
                 "price": item.price,
-                "email": localStorage.getItem("email"),
+                "email": cacheEmail,
                 "quantity": props.quantity ? props.quantity + findCartItem[0].quantity : 1 + findCartItem[0].quantity
             }
            
@@ -128,7 +129,7 @@ export async function EditCart(item: CartItem){
             "manufacturer": item.manufacturer,
             "name": item.name,
             "price": item.price,
-            "email": localStorage.getItem("email"),
+            "email": cacheEmail,
             "quantity": item.quantity
         }
        

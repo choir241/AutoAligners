@@ -5,6 +5,7 @@ import {Link} from "react-router-dom"
 import {GetCart} from "../hooks/CartHooks"
 import EmployeeNav from "./EmployeeNav"
 import {CartItem, nav} from "../middleware/Interfaces"
+import {cacheEmail} from "../middleware/Cache"
 
 export default function Nav(props: nav){
 
@@ -13,16 +14,16 @@ export default function Nav(props: nav){
     const [cartQuantity, setCartQuantity] = useState<number>();
 
     useEffect(()=>{
-        if(localStorage.getItem("email")){
+        if(cacheEmail){
             GetCart((e:CartItem[])=>setCart(e));
         }
     },[])
 
     useEffect(()=>{
-        if(localStorage.getItem("email") && cart?.length){
+        if(cacheEmail && cart?.length){
             let sum:number = 0
 
-            cart.forEach((item:CartItem)=>item.email === localStorage.getItem("email") ? sum += parseInt(item.quantity) : "")
+            cart.forEach((item:CartItem)=>item.email === cacheEmail ? sum += parseInt(item.quantity) : "")
 
             setCartQuantity(sum);
         }
@@ -33,20 +34,20 @@ export default function Nav(props: nav){
              <nav className = "flex justifyBetween alignCenter">
                 <Link to = "/"><h1>AutoAligners</h1></Link>
             <ul className = "flex alignCenter">
-              <li><Link to = "/">{localStorage.getItem("email") ? "Employee Hub" : "Home"}</Link></li>
-              {localStorage.getItem("email") ? "" : <li><Link to = "/estimate">Estimate Car Service</Link></li>}
-              {localStorage.getItem("email") ? "" : <li><Link to = "/finance">Finance</Link></li>}
-              {localStorage.getItem("email") ? 
+              <li><Link to = "/">{cacheEmail ? "Employee Hub" : "Home"}</Link></li>
+              {cacheEmail ? "" : <li><Link to = "/estimate">Estimate Car Service</Link></li>}
+              {cacheEmail ? "" : <li><Link to = "/finance">Finance</Link></li>}
+              {cacheEmail ? 
               <li>
                 <EmployeeNav/>
             </li> 
                 : <li><Link to = "/employee">Login/Demo</Link></li>}
-              {localStorage.getItem("email") ? <li><Link to = "/manageAppointments">Manage Appointments</Link></li> : ""}
-              {localStorage.getItem("email") ? <li className = "cart">{cart?.length && cartQuantity ? <span>{cartQuantity}</span> : ""}<Link to = "/cart"><i className = "fa-solid fa-cart-shopping button"></i></Link></li> : ""}
+              {cacheEmail ? <li><Link to = "/manageAppointments">Manage Appointments</Link></li> : ""}
+              {cacheEmail ? <li className = "cart">{cart?.length && cartQuantity ? <span>{cartQuantity}</span> : ""}<Link to = "/cart"><i className = "fa-solid fa-cart-shopping button"></i></Link></li> : ""}
 
             </ul>
-            {localStorage.getItem("email") ? <div>{ButtonSubmit({handleButtonClick: ()=>handleLogout(), text: "Logout"})}</div>: ""}
-            {localStorage.getItem("email") ? "" : <div>{ButtonLink({domain: "/reservation", text: "Make Reservation"})}</div>}
+            {cacheEmail ? <div>{ButtonSubmit({handleButtonClick: ()=>handleLogout(), text: "Logout"})}</div>: ""}
+            {cacheEmail ? "" : <div>{ButtonLink({domain: "/reservation", text: "Make Reservation"})}</div>}
 
             </nav>
 

@@ -1,10 +1,9 @@
 import api from "../api/api"
-import React from "react"
 import {Permission, Role} from "appwrite"
 import {items} from "../api/inventory"
 import {Button} from "../components/Button"
 import {handleAddToCart} from "./CartHooks"
-import {CartItem, InventoryItem, Item, DefaultInventoryDisplay, InventoryQuantity, DisplayCurrentInventory} from "../middleware/Interfaces"
+import {DisplayInventory, CartItem, InventoryItem, Item, DefaultInventoryDisplay, InventoryQuantity, DisplayCurrentInventory} from "../middleware/Interfaces"
 
 
 //get inventory database
@@ -160,7 +159,7 @@ function renderQuantityOptions(setItemQuantity:(e:number)=>void){
 export function DefaultInventory(props: DefaultInventoryDisplay){
 
     //iterate through static data in api/inventory
-    return items.map((inventoryItem,i)=>{
+    return items.map((inventoryItem: DisplayInventory, i:number)=>{
 
         //find item in static data currently in inventory database
         const findItem: InventoryItem[] = props.inventory.filter((value:InventoryItem) => value.name === inventoryItem.itemName);

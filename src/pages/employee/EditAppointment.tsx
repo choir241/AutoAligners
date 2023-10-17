@@ -5,6 +5,7 @@ import { EditChooseTwoInput, handleEditAppointment, checkDate, getEditAppointmen
 import {Button} from "../../components/Button"
 import Footer from "../../components/Footer"
 import {Appointment} from "../../middleware/Interfaces"
+import { cacheEditAppointmentData } from "../../middleware/Cache"
 
 export default function EditAppointment(){
 
@@ -40,7 +41,7 @@ export default function EditAppointment(){
         checkDate(date, (e:string)=>setWarning(e));
     },[carMake, carModel, date]);
  
-    const appointmentData = localStorage.getItem("editAppointmentData") as string;
+    const appointmentData = cacheEditAppointmentData as string;
     const data = JSON.parse(appointmentData);
         
     return(
@@ -60,7 +61,7 @@ export default function EditAppointment(){
                     <section className = "section-1 flex flex-col alignCenter">
                      <section className = "flex flex-col alignCenter">
                             {SelectCarMakeInput({defaultValue: data.carMake, options: carMakeOptions, onChange: (e:string)=>setCarMake(e), carMake: carMake, carYear: carYear, carModel: carModel, resetModel: (e:string)=>setCarModel(e), resetYear:(e:string)=>setCarYear(e), resetMake:(e:string)=>setCarMake(e)})}
-                            {SelectCarModelInput({defaultValue: data.carModel, options: carModelOptions, onChange: (e:string)=>setCarModel(e), carMake: carMake, carModel: carModel, carYear: carYear, resetModel:(e:string)=>setCarModel(e), resetYear: (e:string)=>setCarYear(e), resetMake:(e:string)=>setCarMake})}
+                            {SelectCarModelInput({defaultValue: data.carModel, options: carModelOptions, onChange: (e:string)=>setCarModel(e), carMake: carMake, carModel: carModel, carYear: carYear, resetModel:(e:string)=>setCarModel(e), resetYear: (e:string)=>setCarYear(e), resetMake:(e:string)=>setCarMake(e)})}
                             {SelectCarYearInput({defaultValue: data.carYear, options: carYearOptions, onChange: (e:string)=>setCarYear(e), carMake: carMake, carModel: carModel, carYear: carYear, resetModel:(e:string)=>setCarModel(e),resetYear:(e:string)=>setCarYear(e),resetMake:(e:string)=>setCarMake(e)})}
                         </section>
                  
