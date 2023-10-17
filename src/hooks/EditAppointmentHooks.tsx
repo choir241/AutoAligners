@@ -1,8 +1,8 @@
-import React from "react"
 import {toast} from "react-toastify"
 import api from "../api/api"
 import {Alert} from "./ReservationHooks"
 import {Appointment, Choose} from "../middleware/Interfaces"
+import { cacheEditAppointmentData, SetCacheEdit, cacheAppointmentID } from "../middleware/Cache"
 
 export function ValidateEditInput(props: Appointment):false|undefined{
 
@@ -69,7 +69,7 @@ export function EditChooseTwoInput(props: Choose){
 
 export async function HandleSubmitData(props: Appointment):Promise<void>{       
     try{
-        const appointmentData = localStorage.getItem("editAppointmentData") as string;
+        const appointmentData =  cacheEditAppointmentData as string;
         const data = JSON.parse(appointmentData);
     
             const formData = {
@@ -106,9 +106,9 @@ export async function getEditAppointmentData(){
         const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID)
 
 
-        const findAppointment = data.documents.filter((appointment: Appointment)=>appointment.$id === localStorage.getItem("id"))
+        const findAppointment = data.documents.filter((appointment: Appointment)=>appointment.$id === cacheAppointmentID)
 
-        localStorage.setItem("editAppointmentData", JSON.stringify(findAppointment[0]))
+        SetCacheEdit(JSON.stringify(findAppointment[0]))
 
     }catch(err){
         console.error(err);

@@ -1,6 +1,6 @@
 import {BrowserRouter} from "react-router-dom"
 import {Route, Routes} from "react-router"
-import {PrivateRoutes, PublicRoutes, PurchaseRoutes} from "./middleware/Routes"
+import {PrivateRoutes, PublicRoutes, PurchaseRoutes} from "./middleware/Routes.jsx"
 import {lazy, Suspense} from "react"
 import {ToastContainer} from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"

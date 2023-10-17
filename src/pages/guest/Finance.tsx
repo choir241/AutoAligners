@@ -1,8 +1,8 @@
-import React,{useState} from "react"
+import {useState} from "react"
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
 import {ButtonLink, Button} from "../../components/Button"
-import Assets from "../../components/Assets"
+import Assets from "../../components/Assets.jsx"
 import {renderFinanceDisplay, toggleDisplay } from "../../hooks/FinanceHooks"
 import {CardInfo} from "../../middleware/Interfaces"
 

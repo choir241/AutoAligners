@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react"
+import {useState, useEffect} from "react"
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
 import {GetInventory, CurrentInventory} from "../../hooks/InventoryHooks"

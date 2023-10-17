@@ -8,6 +8,7 @@ import {toast} from "react-toastify"
 import {toggleDisplay} from "./FinanceHooks"
 import PaginatedButtons from "../components/Graphs/PaginatedButtons"
 import {PurchasedItem, Profile, PTO, PTORequests, Approve, History, Customize, Notification, User} from "../middleware/Interfaces"
+import {cacheEmail, cachePTO, SetCachePTO} from "../middleware/Cache"
 
 export function RenderEmployeeAppointments(purchases: PurchasedItem[], startIndex: number, endIndex: number){
 
@@ -16,7 +17,7 @@ export function RenderEmployeeAppointments(purchases: PurchasedItem[], startInde
 
         for(let i = 0; i < cart.cartItems.length; i++){
             const cartItem:PurchasedItem = JSON.parse(cart.cartItems[i]);
-            if(cartItem.email === localStorage.getItem("email")){
+            if(cartItem.email === cacheEmail){
 
             const itemTotal = Number(cartItem.price) * parseInt(cartItem.quantity)
             
@@ -41,7 +42,7 @@ export function RenderEmployeeProfit(purchases: PurchasedItem[]){
         for(let i = 0; i < cart.cartItems.length; i++){
             const cartItem:PurchasedItem = JSON.parse(cart.cartItems[i]);
 
-            if(cartItem.email === localStorage.getItem("email")){
+            if(cartItem.email === cacheEmail){
         
             const itemTotal = Number(cartItem.price) * parseInt(cartItem.quantity)
             
@@ -90,7 +91,7 @@ export async function GetEmployee(setEmployee: (e:Profile)=>void){
         const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID)
 
         if(data.documents.length){
-        const findUser = data.documents.filter((user:Profile)=>localStorage.getItem("email") === user.email)[0]
+        const findUser = data.documents.filter((user:Profile)=>cacheEmail === user.email)[0]
         
         setEmployee(findUser)
         }
@@ -104,15 +105,15 @@ export async function GetEmployee(setEmployee: (e:Profile)=>void){
 export function EmployeeButtons(){
     return(
         <main className = "flex flex-col justifyBetween">
-                <Nav pageHeading = {localStorage.getItem("email") ? "Employee Hub" : "Login/Demo"}/>
+                <Nav pageHeading = {cacheEmail ? "Employee Hub" : "Login/Demo"}/>
 
 
             <section className = "flex flex-col alignCenter" id = "employee">
                 <nav>
                     <ul className = "flex justifyBetween flex-col">
-                        {localStorage.getItem("email") ? "" : <li className = "textAlignCenter">{ButtonLink({domain : "/adminDemo", text: "Admin Demo"})}</li>}
-                        {localStorage.getItem("email") ? "" : <li className = "textAlignCenter">{ButtonLink({domain : "/demo", text: "Demo"})}</li>}
-                        {localStorage.getItem("email") ? "" : <li className = "textAlignCenter">{ButtonLink({domain: "/login", text: "Login"})}</li>}
+                        {cacheEmail ? "" : <li className = "textAlignCenter">{ButtonLink({domain : "/adminDemo", text: "Admin Demo"})}</li>}
+                        {cacheEmail ? "" : <li className = "textAlignCenter">{ButtonLink({domain : "/demo", text: "Demo"})}</li>}
+                        {cacheEmail ? "" : <li className = "textAlignCenter">{ButtonLink({domain: "/login", text: "Login"})}</li>}
                     </ul>
                 </nav>
             </section>
@@ -163,7 +164,7 @@ export async function AutomaticPTO(){
         const currentMonth = date.getMonth() + 1
         const currentDay = date.getDate();
 
-        if(currentMonth===1 && currentDay === 1 && !localStorage.getItem("PTO")){
+        if(currentMonth===1 && currentDay === 1 && !cachePTO){
             const employeeList = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID)
 
             employeeList.documents.forEach(async(user:User)=>{
@@ -175,9 +176,9 @@ export async function AutomaticPTO(){
 
                   await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, user.$id, data)
             })
-            localStorage.setItem("PTO", "Refill done");
+            SetCachePTO("Refill done");
         }else{
-            localStorage.setItem("PTO", "");
+            SetCachePTO("")
         }
 
     }catch(err){
@@ -188,11 +189,11 @@ export async function AutomaticPTO(){
 export async function handlePTO(listOfUsers: User[], PTO: string, PTOStartDate: string, PTOEndDate: string){
     try{
 
-        const findUser = listOfUsers.filter((employee:User)=>employee.email===localStorage.getItem("email"))[0]
+        const findUser = listOfUsers.filter((employee:User)=>employee.email===cacheEmail)[0]
 
         const employeeList = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID)
 
-        const findEmployee = employeeList.documents.filter((employee:Profile)=>employee.email === localStorage.getItem("email"))
+        const findEmployee = employeeList.documents.filter((employee:Profile)=>employee.email === cacheEmail)
 
         const start = new Date(PTOStartDate.split("-").join(", "));
         const end = new Date(PTOEndDate.split("-").join(", "));
@@ -318,7 +319,7 @@ export async function handlePTO(listOfUsers: User[], PTO: string, PTOStartDate: 
         const data = {
             name: findUser.name,
             userID: findUser.$id,
-            email: localStorage.getItem("email"),
+            email: cacheEmail,
             PTO: PTO,
             PTOStartDate: PTOStartDate,
             PTOEndDate: PTOEndDate

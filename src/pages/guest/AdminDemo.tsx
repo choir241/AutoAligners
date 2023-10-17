@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import {useEffect, useState} from "react"
 import Nav from "../../components/Nav"
 import {Input, handleLogin, GetUsers} from "../../hooks/LoginHooks"
 import {ButtonSubmit} from "../../components/Button"
@@ -25,10 +25,10 @@ export default function AdminDemo(){
 
             <section className="flex flex-col alignCenter justifyCenter">
                 <form className = "flex flex-col alignCenter">        
-                  {Input({type: "email", onChange: (e:string)=> "",  name: "email", placeholder: email, disabled : true})}
-                  {Input({type: "text", onChange: (e:string)=> "", name: "employeeId", placeholder: employeeID, disabled : true})}
-                  {Input({type: "text", onChange: (e:string)=> "", name: "name", placeholder: name, disabled : true})}
-                  {Input({type: "password",onChange: (e:string)=> "",  name: "password", placeholder: password, disabled : true})}
+                  {Input({type: "email", onChange: (e:string)=> e,  name: "email", placeholder: email, disabled : true})}
+                  {Input({type: "text", onChange: (e:string)=> e, name: "employeeId", placeholder: employeeID, disabled : true})}
+                  {Input({type: "text", onChange: (e:string)=> e, name: "name", placeholder: name, disabled : true})}
+                  {Input({type: "password",onChange: (e:string)=> e,  name: "password", placeholder: password, disabled : true})}
 
 
 

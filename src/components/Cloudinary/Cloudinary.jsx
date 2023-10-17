@@ -1,6 +1,7 @@
 import {useRef, useEffect} from "react"
 import api from "../../api/api"
 import { Permission, Role } from "appwrite"
+import {cacheEmail} from "../../middleware/Cache"
 
 const ImageUpload = ({user}) => {
 
@@ -20,7 +21,7 @@ const ImageUpload = ({user}) => {
 
       const employeeList = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID)
 
-      const findEmployee = employeeList.documents.filter((employee)=>employee.email === localStorage.getItem("email"))
+      const findEmployee = employeeList.documents.filter((employee)=>employee.email === cacheEmail)
 
       if(findEmployee.length){
         await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PROFILE_COLLECTION_ID, findEmployee[0].$id, data)

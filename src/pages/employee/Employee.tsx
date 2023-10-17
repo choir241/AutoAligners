@@ -1,6 +1,6 @@
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
-import React, {useState, useEffect} from "react"
+import {useState, useEffect} from "react"
 import {ButtonSubmit, Button} from "../../components/Button"
 import {GenerateNewEmployee, handleLogin, GetAccount, GetUsers, DisplayUsers, Input, handleSignUp} from "../../hooks/LoginHooks"
 import {GetPurchases } from "../../hooks/PurchasesHooks"
@@ -9,6 +9,7 @@ import PaginatedButtons from "../../components/Graphs/PaginatedButtons"
 import ImageUpload from "../../components/Cloudinary/Cloudinary";
 import {toggleDisplay} from "../../hooks/FinanceHooks"
 import {PTO, Profile, User, PurchasedItem} from "../../middleware/Interfaces"
+import { cacheEmail } from "../../middleware/Cache"
 
 export function EmployeeHub(){
 
@@ -48,13 +49,13 @@ export function EmployeeHub(){
     const lastIndex = firstIndex + rows;
 
     useEffect(()=>{
-      if(localStorage.getItem("email")){
+      if(cacheEmail){
         GetAccount((e:User) => setUser(e))
       }
     },[])
 
     useEffect(()=>{
-      if(localStorage.getItem("email")){
+      if(cacheEmail){
         GetPTORequests((e:PTO[]) => setPTORequests(e))
       }
     },[])
@@ -64,13 +65,13 @@ export function EmployeeHub(){
     },[listOfUsers])
 
     useEffect(()=>{
-      if(localStorage.getItem("email")){
+      if(cacheEmail){
         GetPurchases((e:PurchasedItem[])=>setPurchases(e))
       }
     },[listOfUsers])
 
     useEffect(()=>{
-      if(localStorage.getItem("email")){
+      if(cacheEmail){
         GetEmployee((e:Profile)=>setEmployee(e))
       }
     },[])
@@ -105,7 +106,7 @@ export function EmployeeHub(){
             {Input({type: "password", name: "password",  onChange: (e)=>setPassword(e), placeholder: "Your Password"})}
   
             {loading? 
-            ButtonSubmit({handleButtonClick: (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handleLogin({email:email, name: name, password: password, employeeId: employeeId, listOfUsers: listOfUsers}), text: "Login"})
+            ButtonSubmit({handleButtonClick: ()=>handleLogin({email:email, name: name, password: password, employeeId: employeeId, listOfUsers: listOfUsers}), text: "Login"})
             : <h1>Loading...</h1>
             }
           </form>
@@ -129,7 +130,7 @@ export function EmployeeHub(){
               Button({text: "Automate Password for New Employee Account", handleButtonClick: ()=>{GenerateNewEmployee((e:string)=>setPassword(e), (e:string)=>setGeneratedPassword(e))}})
               }
   
-              {ButtonSubmit({handleButtonClick: (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handleSignUp({email: email, name: name, password: password}), text: "Create Employee Sign Up"})}
+              {ButtonSubmit({handleButtonClick: ()=>handleSignUp({email: email, name: name, password: password}), text: "Create Employee Sign Up"})}
               </form>
             </section>
 
@@ -143,7 +144,7 @@ export function EmployeeHub(){
               {Input({type: "text", name: "position", onChange: (e)=>setPosition(e), placeholder: "Set Employees Position"})}
               {Input({type: "text", name: "PTO", onChange: (e)=>setPTO(e), placeholder: "Set Employees PTO"})}
 
-              {ButtonSubmit({handleButtonClick: (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handleEmployeeCustomization({listOfUsers: listOfUsers, email: email, salary: salary, position: position, PTO: PTO}), text: "Customize Employee Information"})}
+              {ButtonSubmit({handleButtonClick: ()=>handleEmployeeCustomization({listOfUsers: listOfUsers, email: email, salary: salary, position: position, PTO: PTO}), text: "Customize Employee Information"})}
 
               {Button({text: "Manage PTO Requests", classNames: "PTODisplay", handleButtonClick: () => toggleDisplay((e:boolean)=>setPTODisplay(e), PTODisplay)})}
 
@@ -201,7 +202,7 @@ export function EmployeeHub(){
 
                     <section className="flex alignCenter">
                     {Button({text: "Hide Request PTO Hub", classNames: "hide", handleButtonClick: ()=>toggleDisplay((e:boolean)=>setPTODisplay(e),PTODisplay)})}
-                    {ButtonSubmit({handleButtonClick: (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>handlePTO(listOfUsers, PTO, startPTODate, endPTODate), text: "Request PTO"})}                     
+                    {ButtonSubmit({handleButtonClick: ()=>handlePTO(listOfUsers, PTO, startPTODate, endPTODate), text: "Request PTO"})}                     
 
                     </section>
 
@@ -251,6 +252,6 @@ export function EmployeeHub(){
 
 export default function Employee(){
    return (
-    localStorage.getItem("email") ? <EmployeeHub/> : <EmployeeButtons/>
+    cacheEmail? <EmployeeHub/> : <EmployeeButtons/>
    )
 }
