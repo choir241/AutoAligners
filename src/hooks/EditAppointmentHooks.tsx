@@ -92,7 +92,7 @@ export async function HandleSubmitData(props: Appointment):Promise<void>{
             console.log(props.$id)
             console.log(formData)
         
-            await api.updateDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID, data.$id, formData)
+            await api.updateDocument(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_COLLECTION_ID, data.$id, formData)
     
             window.location.reload();
     }catch(err){
@@ -103,7 +103,7 @@ export async function HandleSubmitData(props: Appointment):Promise<void>{
 
 export async function getEditAppointmentData(){
     try{
-        const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_COLLECTION_ID)
+        const data = await api.listDocuments(import.meta.env.VITE_REACT_APP_DATABASE_ID,import.meta.env.VITE_REACT_APP_COLLECTION_ID)
 
 
         const findAppointment = data.documents.filter((appointment: Appointment)=>appointment.$id === cacheAppointmentID)

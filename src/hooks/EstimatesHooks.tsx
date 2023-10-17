@@ -16,7 +16,7 @@ async function NotifyClient(props: Estimate, price: string){
         formData.append("carMake", props.carMake)
         formData.append("price", price);
         
-        await api.deleteDocument(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_ESTIMATES_COLLECTION_ID, props.$id);
+        await api.deleteDocument(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_ESTIMATES_COLLECTION_ID, props.$id);
 
         const data = await axios.post("https://car-app-backend-0ejb.onrender.com/sendEstimateEmail", formData, {})
 
@@ -45,7 +45,7 @@ export function RenderEstimateForm(props: Estimate, price: string, setPrice: (e:
 
 export async function GetEstimates(setEstimates : (e:Estimate[])=>void){
     try{
-        const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_ESTIMATES_COLLECTION_ID);
+        const data = await api.listDocuments(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_ESTIMATES_COLLECTION_ID);
         setEstimates(data.documents);
     }catch(err){
         console.error(err)

@@ -7,11 +7,11 @@ import {PurchasedItem, DisplayBy, DisplayDate} from "../middleware/Interfaces"
 //get purchase database
 export async function GetPurchases(setPurchases:(e:PurchasedItem[])=>void, limit?: number){
     try{
-        const data = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PURCHASES_COLLECTION_ID, [Query.limit(100)]);
+        const data = await api.listDocuments(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_PURCHASES_COLLECTION_ID, [Query.limit(100)]);
 
         if(limit){
 
-                const response = await api.listDocuments(process.env.REACT_APP_DATABASE_ID, process.env.REACT_APP_PURCHASES_COLLECTION_ID, [Query.limit(limit), Query.offset(limit-25)]);
+                const response = await api.listDocuments(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_PURCHASES_COLLECTION_ID, [Query.limit(limit), Query.offset(limit-25)]);
 
                 const array = response.documents
                 setPurchases(array)
