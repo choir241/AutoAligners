@@ -124,7 +124,7 @@ export async function handleSignUp(props: SignUp):Promise<void>{
 
       const client = new Client()
       .setEndpoint("https://cloud.appwrite.io/v1") // Your API Endpoint
-      .setProject(process.env.REACT_APP_PROJECT) // Your project ID
+      .setProject(import.meta.env.VITE_REACT_APP_PROJECT) // Your project ID
     
   
       const account = new Account(client);

@@ -22,7 +22,7 @@ async function handlePayment(financeTotal: string, email: string, cardInfo: Card
         expirationDate: cardInfo?.expirationDate
     }
 
-       await api.createDocument(process.env.REACT_APP_CART_DATABASE_ID, process.env.REACT_APP_FINANCE_PAYMENTS_COLLECTION_ID, purchase, [Permission.read(Role.any())])
+       await api.createDocument(import.meta.env.VITE_REACT_APP_CART_DATABASE_ID, import.meta.env.VITE_REACT_APP_FINANCE_PAYMENTS_COLLECTION_ID, purchase, [Permission.read(Role.any())])
 
        window.location.reload();
     }catch(err){
@@ -73,7 +73,7 @@ export function renderFinanceDisplay(props: FinanceDisplay){
 
 export async function GetClientFinance(setClientFinance: (e:ClientFinance[])=>void){
     try{
-        const data = await api.listDocuments(process.env.REACT_APP_CART_DATABASE_ID, process.env.REACT_APP_FINANCE_PAYMENTS_COLLECTION_ID);
+        const data = await api.listDocuments(import.meta.env.VITE_REACT_APP_CART_DATABASE_ID, import.meta.env.VITE_REACT_APP_FINANCE_PAYMENTS_COLLECTION_ID);
 
         if(data.documents.length){
             setClientFinance(data.documents);
@@ -85,7 +85,7 @@ export async function GetClientFinance(setClientFinance: (e:ClientFinance[])=>vo
 
 async function deleteClientFinance(id:string){
 try{
-    const data = await api.deleteDocument(process.env.REACT_APP_CART_DATABASE_ID, process.env.REACT_APP_FINANCE_PAYMENTS_COLLECTION_ID, id)
+    const data = await api.deleteDocument(import.meta.env.VITE_REACT_APP_CART_DATABASE_ID, import.meta.env.VITE_REACT_APP_FINANCE_PAYMENTS_COLLECTION_ID, id)
     console.log(data)
     window.location.reload();
 }catch(err){
@@ -100,7 +100,7 @@ try{
         financeTotal        
     }
 
-    await api.updateDocument(process.env.REACT_APP_CART_DATABASE_ID, process.env.REACT_APP_FINANCE_PAYMENTS_COLLECTION_ID, id, data)
+    await api.updateDocument(import.meta.env.VITE_REACT_APP_CART_DATABASE_ID, import.meta.env.VITE_REACT_APP_FINANCE_PAYMENTS_COLLECTION_ID, id, data)
 
     window.location.reload();
 }catch(err){
@@ -130,7 +130,7 @@ export function checkDate(clientFinance: ClientFinance[]){
                 cardAmount: client.cardAmount 
             }
 
-            await api.updateDocument(process.env.REACT_APP_CART_DATABASE_ID, process.env.REACT_APP_FINANCE_PAYMENTS_COLLECTION_ID, client.$id, data)
+            await api.updateDocument(import.meta.env.VITE_REACT_APP_CART_DATABASE_ID, import.meta.env.VITE_REACT_APP_FINANCE_PAYMENTS_COLLECTION_ID, client.$id, data)
         })
     
     }catch(err){

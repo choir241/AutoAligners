@@ -1,7 +1,7 @@
     import React, {useState, useEffect} from "react"
     import {Button} from "../../components/Button"
     import Nav from "../../components/Nav"
-    import {getAppointmentData, checkAppointmentDate, DisplayTimeDateAppointments, GetCarData, SelectCarMakeInput, SelectCarModelInput, ChooseTwoInput, SelectCarYearInput, ChooseCarService, Input, TextBoxInput, checkInputValidation} from "../../hooks/ReservationHooks"
+    import {getAppointmentData, DisplayTimeDateAppointments, GetCarData, SelectCarMakeInput, SelectCarModelInput, ChooseTwoInput, SelectCarYearInput, ChooseCarService, Input, TextBoxInput, handleCreateAppointment} from "../../hooks/ReservationHooks"
     import Footer from "../../components/Footer"
     import {Appointment} from "../../middleware/Interfaces"
 
@@ -31,30 +31,17 @@
         useEffect(()=>{
             GetCarData({onMakeSelect: setCarMakeOptions, onModelSelect: setCarModelOptions, onYearSelect: setCarYearOptions, carMake: carMake, carModel:carModel});
 
-            getAppointmentData((e:Appointment[])=>setAppointments(e))
+            getAppointmentData((e:Appointment[])=>setAppointments(e));
 
         },[carMake, carModel]);
         
 
-        function handleCreateAppointment():void{    
-
-            checkAppointmentDate(date, time, (e:string)=>setDate(e))
-
-            if(!checkInputValidation({service: service, firstName: firstName, lastName: lastName, date: date, time: time, carModel: carModel, carMake: carMake, carYear:carYear, email: email, phone: phone, zipCode: zipCode, contact: contact, comment: comment, stayLeave:stayLeave})){
-                return;
-            }
-
-        }
-
         return(
             <main id = "reservation">
 
-                <Nav pageHeading = ""/>
-
-                <h1>Make Reservation</h1>
+                <Nav pageHeading = {"Make Reservation"}/>
 
                 {DisplayTimeDateAppointments({setTime: (e:string)=>setTime(e), appointments: appointments, setDate: (e:string)=>setDate(e)})}
-
 
                     <section className = "flex flex-col">
 
@@ -86,13 +73,13 @@
 
                                 {Input({type: "text", onChange: (e:string)=>setZipCode(e), placeholder: "Postal/Zip Code", minlength: 5, maxlength: 5})}
 
-                                <div className="flex flex-col alignCenter contact">
+                                <section className="flex flex-col alignCenter contact">
                                     <h2>Preferred Contact Method</h2>
 
                                     {ChooseTwoInput({text1:"Email",text2: "Phone",name: "contact" ,onChange: (e:string)=>setContact(e)})}
                                     {TextBoxInput({width: 50, height: 10, onChange: (e:string)=>setComment(e), placeholder: "Additional Comments"})}
 
-                                </div>  
+                                </section>  
 
                             </section>
                  
@@ -100,11 +87,10 @@
 
                     </section>
 
-
                     <div className="flex justifyCenter">
                         <Button
                         text = "Reserve Appointment"
-                        handleButtonClick={()=> handleCreateAppointment()}/>
+                        handleButtonClick={()=> handleCreateAppointment(date, time, (e:string)=>setDate(e),{service: service, firstName: firstName, lastName: lastName, date: date, time: time, carModel: carModel, carMake: carMake, carYear:carYear, email: email, phone: phone, zipCode: zipCode, contact: contact, comment: comment, stayLeave:stayLeave})}/>
                     </div>
 
                 <Footer/>
