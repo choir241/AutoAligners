@@ -4,7 +4,7 @@ import api from "../api/api"
 import {toast} from "react-toastify"
 import {Client, Account, ID} from "appwrite"
 import {InputTypes, User, Login, SignUp} from "../middleware/Interfaces"
-import {cacheEmail, SetCacheEmail, clearSession} from "../middleware/Cache"
+import {cacheEmail, SetCacheEmail} from "../middleware/Cache"
 
 export function Input(props: InputTypes):React.JSX.Element{
     return(<input 
@@ -187,6 +187,7 @@ export async function handleLogin(props: Login): Promise<void>{
       await api.createSession(props.email, props.password);
       const response = await api.getAccount();
       if(response){
+        console.log(response)
         SetCacheEmail(props.email)
         window.location.reload()
       }
@@ -201,7 +202,7 @@ export async function handleLogin(props: Login): Promise<void>{
 export async function handleLogout(): Promise<void>{
   try{
     const user = await api.deleteCurrentSession();
-    clearSession;
+    SetCacheEmail("")
     if(user){
       window.location.reload();
     }
@@ -305,7 +306,7 @@ export async function updateAccountEmail(email: string, password: string){
 export async function handleDeleteAccount(user: User | undefined){
   try{
     await axios.delete(`https://car-app-backend-0ejb.onrender.com/deleteUser/${user?.$id}`)
-    clearSession;
+    SetCacheEmail("");
     window.location.reload();
   }catch(err){
     console.error(err);

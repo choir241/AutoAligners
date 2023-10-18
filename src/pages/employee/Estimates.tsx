@@ -1,10 +1,11 @@
 import React,{useState, useEffect} from "react"
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
-import {GetEstimates, RenderEstimates} from "../../hooks/EstimatesHooks"
+import {RenderEstimates} from "../../hooks/EstimatesHooks"
 import PaginatedButtons from "../../components/Graphs/PaginatedButtons"
 import {SearchBar} from "../../components/Search"
 import {Estimate} from "../../middleware/Interfaces"
+import {GetEstimates} from "../../hooks/ApiCalls"
 
 export default function Estimates(){
 

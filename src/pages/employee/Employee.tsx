@@ -3,13 +3,13 @@ import Footer from "../../components/Footer"
 import {useState, useEffect} from "react"
 import {ButtonSubmit, Button} from "../../components/Button"
 import {GenerateNewEmployee, handleLogin, GetAccount, GetUsers, DisplayUsers, Input, handleSignUp} from "../../hooks/LoginHooks"
-import {GetPurchases } from "../../hooks/PurchasesHooks"
-import {RenderRequestHistory, GetPTORequests, RenderPTORequests, handlePTO, EmployeeButtons, RenderEmployeeAppointments, RenderEmployeeProfit, GetEmployee, handleEmployeeCustomization} from "../../hooks/EmployeeHooks"
+import {RenderRequestHistory, RenderPTORequests, handlePTO, EmployeeButtons, RenderEmployeeAppointments, RenderEmployeeProfit, handleEmployeeCustomization} from "../../hooks/EmployeeHooks"
 import PaginatedButtons from "../../components/Graphs/PaginatedButtons"
-import ImageUpload from "../../components/Cloudinary/Cloudinary";
+import ImageUpload from "../../components/Cloudinary/Cloudinary.jsx";
 import {toggleDisplay} from "../../hooks/FinanceHooks"
 import {PTO, Profile, User, PurchasedItem} from "../../middleware/Interfaces"
 import { cacheEmail } from "../../middleware/Cache"
+import {GetPurchases, GetPTORequests, GetEmployee} from "../../hooks/ApiCalls"
 
 export function EmployeeHub(){
 
@@ -170,7 +170,7 @@ export function EmployeeHub(){
               <section className="flex justifyBetween alignCenter employee">
                   <section className = "imgContainer">
                       <img src = {employee?.image} className ="profileImg" alt = {employee?.fileName}/>
-                      <ImageUpload user = {user}/>
+                      {/* <ImageUpload user = {user}/> */}
                       </section>
                       <section className="flex flex-col profile">
                       <h2 className = "email">Email: {user.email}</h2>

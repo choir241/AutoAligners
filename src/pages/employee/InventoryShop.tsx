@@ -1,8 +1,9 @@
 import {useState, useEffect} from "react"
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
-import {DefaultInventory, GetInventory} from "../../hooks/InventoryHooks"
+import {DefaultInventory} from "../../hooks/InventoryHooks"
 import {InventoryItem} from "../../middleware/Interfaces"
+import {GetInventory} from "../../hooks/ApiCalls"
 
 export default function InventoryShop(){
 
@@ -12,7 +13,6 @@ export default function InventoryShop(){
     useEffect(()=>{
         GetInventory((e:InventoryItem[])=>setInventory(e))
     },[])
-
 
     return(
         <main id = "inventory">

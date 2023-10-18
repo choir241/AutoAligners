@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from "react"
 import Nav from "../../components/Nav"
-import {getAppointmentData, DisplayTimeDateAppointments, GetCarData, SelectCarMakeInput, SelectCarModelInput, SelectCarYearInput, ChooseCarService, Input, TextBoxInput} from "../../hooks/ReservationHooks"
-import { EditChooseTwoInput, handleEditAppointment, checkDate, getEditAppointmentData } from "../../hooks/EditAppointmentHooks"
+import {DisplayTimeDateAppointments, GetCarData, SelectCarMakeInput, SelectCarModelInput, SelectCarYearInput, ChooseCarService, Input, TextBoxInput} from "../../hooks/ReservationHooks"
+import { EditChooseTwoInput, handleEditAppointment, checkDate} from "../../hooks/EditAppointmentHooks"
 import {Button} from "../../components/Button"
 import Footer from "../../components/Footer"
 import {Appointment} from "../../middleware/Interfaces"
 import { cacheEditAppointmentData } from "../../middleware/Cache"
+import {GetEditAppointmentData, GetAppointmentData} from "../../hooks/ApiCalls"
 
 export default function EditAppointment(){
 
@@ -34,9 +35,9 @@ export default function EditAppointment(){
     useEffect(()=>{
         GetCarData({onMakeSelect: setCarMakeOptions, onModelSelect: setCarModelOptions, onYearSelect: setCarYearOptions, carMake: carMake, carModel:carModel});
 
-        getAppointmentData((e:Appointment[])=>setAppointments(e))
+        GetAppointmentData((e:Appointment[])=>setAppointments(e))
 
-        getEditAppointmentData();
+        GetEditAppointmentData();
 
         checkDate(date, (e:string)=>setWarning(e));
     },[carMake, carModel, date]);
