@@ -1,9 +1,10 @@
     import React, {useState, useEffect} from "react"
     import {Button} from "../../components/Button"
     import Nav from "../../components/Nav"
-    import {getAppointmentData, DisplayTimeDateAppointments, GetCarData, SelectCarMakeInput, SelectCarModelInput, ChooseTwoInput, SelectCarYearInput, ChooseCarService, Input, TextBoxInput, handleCreateAppointment} from "../../hooks/ReservationHooks"
+    import {DisplayTimeDateAppointments, GetCarData, SelectCarMakeInput, SelectCarModelInput, ChooseTwoInput, SelectCarYearInput, ChooseCarService, Input, TextBoxInput, handleCreateAppointment} from "../../hooks/ReservationHooks"
     import Footer from "../../components/Footer"
     import {Appointment} from "../../middleware/Interfaces"
+    import {GetAppointmentData} from "../../hooks/ApiCalls"
 
     export default function Reservation(){
 
@@ -31,7 +32,7 @@
         useEffect(()=>{
             GetCarData({onMakeSelect: setCarMakeOptions, onModelSelect: setCarModelOptions, onYearSelect: setCarYearOptions, carMake: carMake, carModel:carModel});
 
-            getAppointmentData((e:Appointment[])=>setAppointments(e));
+            GetAppointmentData((e:Appointment[])=>setAppointments(e));
 
         },[carMake, carModel]);
         

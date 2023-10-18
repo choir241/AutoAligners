@@ -1,11 +1,14 @@
 import {BrowserRouter} from "react-router-dom"
 import {Route, Routes} from "react-router"
 import {PrivateRoutes, PublicRoutes, PurchaseRoutes} from "./middleware/Routes.jsx"
-import {lazy, Suspense} from "react"
+import {lazy, Suspense, useEffect, useState} from "react"
 import {ToastContainer} from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import {EmployeeHub} from "./pages/employee/Employee.tsx"
-
+import {APIContext} from "./middleware/Context.tsx"
+import {cacheEmail} from "./middleware/Cache.tsx"
+import {InventoryItem} from "./middleware/Interfaces.tsx"
+import {GetInventory} from "./hooks/ApiCalls.tsx"
 
 export default function App(){
 
@@ -24,39 +27,51 @@ export default function App(){
     const Cart = lazy(()=>import("./pages/employee/Cart"));
     const Purchases = lazy(()=>import("./pages/employee/Purchases"));
     const Estimates = lazy(()=>import("./pages/employee/Estimates"));
-    const AdminDemo = lazy(()=>import("./pages/guest/AdminDemo"))
+    const AdminDemo = lazy(()=>import("./pages/guest/AdminDemo"));
+
+    const [inventory, setInventory] = useState<InventoryItem[]>([]);
+
+    useEffect(()=>{
+        if(cacheEmail){
+            GetInventory((e:InventoryItem[])=>setInventory(e));
+        }
+    },[])
+
+
 
     return(
-        <Suspense fallback = {<h1>Loading...</h1>}>
-            <BrowserRouter>
-                <Routes>
-                  <Route path = "/" element = {<Home/>}/>
-                    <Route element = {<PublicRoutes/>}>
-                        <Route path = "/employee" element = {<Employee/>}/>
-                        <Route path = "/finance" element = {<Finance/>}/>
-                        <Route path = "/login" element = {<EmployeeHub/>}/>
-                        <Route path = "/estimate" element = {<ServiceEstimate/>}/>
-                        <Route path = "/demo" element = {<Demo/>}/>
-                        <Route path = "/adminDemo" element = {<AdminDemo/>}/>
-                        <Route path = "/reservation" element = {<Reservation/>}/>
-                    </Route>
-                    <Route element = {<PrivateRoutes/>}>
-                        <Route path = "/clientFinance" element = {<ClientFinance/>}/>
-                        <Route path = "/cart" element = {<Cart/>}/>
-                        <Route path = "/inventory" element = {<Inventory/>}/>
-                        <Route path = "/inventoryShop" element = {<InventoryShop/>}/>
-                        <Route path = "/settings" element = {<EmployeeSettings/>}/>
-                        <Route path = "/manageAppointments" element = {<ManageAppointments/>}/>
-                        <Route path = "/editAppointment" element = {<EditAppointment/>}/>
-                        <Route path = "/estimates" element = {<Estimates/>}/>
-                        <Route element = {<PurchaseRoutes/>}>
-                            <Route path = "/purchases" element = {<Purchases/>}/>
+        <APIContext.Provider value = {{inventory}}>
+            <Suspense fallback = {<h1>Loading...</h1>}>
+                <BrowserRouter>
+                    <Routes>
+                      <Route path = "/" element = {<Home/>}/>
+                        <Route element = {<PublicRoutes/>}>
+                            <Route path = "/employee" element = {<Employee/>}/>
+                            <Route path = "/finance" element = {<Finance/>}/>
+                            <Route path = "/login" element = {<EmployeeHub/>}/>
+                            <Route path = "/estimate" element = {<ServiceEstimate/>}/>
+                            <Route path = "/demo" element = {<Demo/>}/>
+                            <Route path = "/adminDemo" element = {<AdminDemo/>}/>
+                            <Route path = "/reservation" element = {<Reservation/>}/>
                         </Route>
+                        <Route element = {<PrivateRoutes/>}>
+                            <Route path = "/clientFinance" element = {<ClientFinance/>}/>
+                            <Route path = "/cart" element = {<Cart/>}/>
+                            <Route path = "/inventory" element = {<Inventory/>}/>
+                            <Route path = "/inventoryShop" element = {<InventoryShop/>}/>
+                            <Route path = "/settings" element = {<EmployeeSettings/>}/>
+                            <Route path = "/manageAppointments" element = {<ManageAppointments/>}/>
+                            <Route path = "/editAppointment" element = {<EditAppointment/>}/>
+                            <Route path = "/estimates" element = {<Estimates/>}/>
+                            <Route element = {<PurchaseRoutes/>}>
+                                <Route path = "/purchases" element = {<Purchases/>}/>
+                            </Route>
 
-                    </Route>
-                </Routes>
-            </BrowserRouter>
-            <ToastContainer/>
-        </Suspense>
+                        </Route>
+                    </Routes>
+                </BrowserRouter>
+                <ToastContainer/>
+            </Suspense>
+        </APIContext.Provider>
     )
 }

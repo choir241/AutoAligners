@@ -2,7 +2,7 @@ import {toast} from "react-toastify"
 import api from "../api/api"
 import {Alert} from "./ReservationHooks"
 import {Appointment, Choose} from "../middleware/Interfaces"
-import { cacheEditAppointmentData, SetCacheEdit, cacheAppointmentID } from "../middleware/Cache"
+import { cacheEditAppointmentData} from "../middleware/Cache"
 
 export function ValidateEditInput(props: Appointment):false|undefined{
 
@@ -101,20 +101,7 @@ export async function HandleSubmitData(props: Appointment):Promise<void>{
    
 }
 
-export async function getEditAppointmentData(){
-    try{
-        const data = await api.listDocuments(import.meta.env.VITE_REACT_APP_DATABASE_ID,import.meta.env.VITE_REACT_APP_COLLECTION_ID)
 
-
-        const findAppointment = data.documents.filter((appointment: Appointment)=>appointment.$id === cacheAppointmentID)
-
-        SetCacheEdit(JSON.stringify(findAppointment[0]))
-
-    }catch(err){
-        console.error(err);
-        toast.error(`${err}`);
-    }
-}
 
 export async function handleEditAppointment(props: Appointment){
     try{

@@ -15,6 +15,6 @@ export function PublicRoutes(){
 
 export function PurchaseRoutes(){
     return(
-        cacheEmail.toLowerCase() === "bobthebuilder@gmail.com" ? <Outlet/> : <Navigate to = "/"/>
+        cacheEmail?.toLowerCase() === "bobthebuilder@gmail.com" ? <Outlet/> : <Navigate to = "/"/>
     )
 }

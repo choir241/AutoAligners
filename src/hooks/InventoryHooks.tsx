@@ -6,15 +6,6 @@ import {handleAddToCart} from "./CartHooks"
 import {DisplayInventory, CartItem, InventoryItem, Item, DefaultInventoryDisplay, InventoryQuantity, DisplayCurrentInventory} from "../middleware/Interfaces"
 
 
-//get inventory database
-export async function GetInventory(setInventory: (e:InventoryItem[])=>void){
-    try{
-        const data = await api.listDocuments(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_INVENTORY_COLLECTION_ID)
-        setInventory(data.documents);
-    }catch(err){
-        console.error(err)
-    }
-}
 
 //render quantites of items in inventory
 function renderInventoryQuantityOptions(props: InventoryQuantity){
