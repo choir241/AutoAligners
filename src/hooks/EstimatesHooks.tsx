@@ -43,16 +43,6 @@ export function RenderEstimateForm(props: Estimate, price: string, setPrice: (e:
     )
 }
 
-export async function GetEstimates(setEstimates : (e:Estimate[])=>void){
-    try{
-        const data = await api.listDocuments(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_ESTIMATES_COLLECTION_ID);
-        setEstimates(data.documents);
-    }catch(err){
-        console.error(err)
-    }
-}
-
-
 export function RenderEstimates(estimates: Estimate[], price: string, setPrice: (e:string)=>void, estimateFormDisplay: boolean | undefined, setEstimateFormDisplay: (e:boolean)=>void, startIndex: number, endIndex: number){
 
     const renderDisplay = estimates.map((item: Estimate)=>{

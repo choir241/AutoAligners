@@ -16,6 +16,8 @@
     "axios": "^1.5.1",
     "chart.js": "^4.4.0",
     "cloudinary-core": "^2.13.0",
+    "immer": "^10.0.3",
+    "optics-ts": "^2.4.1",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-router": "^6.16.0",

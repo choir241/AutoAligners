@@ -51,17 +51,6 @@ export function RenderPaymentForm(cardInfo: CardInfo | undefined, setCardInfo: (
     )
 }
 
-//Get Cart database data
-export async function GetCart(setCart: (e:CartItem[])=>void){
-    try{
-        const data = await api.listDocuments(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_CART_COLLECTION_ID);
-        setCart(data.documents.filter((item: CartItem)=>item.email === cacheEmail));
-    }catch(err){
-        console.error(err);
-        toast.error(`${err}`);
-    }
-}
-
 //When user add an item to the cart
 export async function handleAddToCart(props: AddToCart){
     try{

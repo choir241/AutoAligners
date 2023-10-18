@@ -1,30 +1,5 @@
-import api from "../api/api.jsx"
-import {Query} from "appwrite"
 import PaginatedButtons from "../components/Graphs/PaginatedButtons"
 import {PurchasedItem, DisplayBy, DisplayDate} from "../middleware/Interfaces"
-
-
-//get purchase database
-export async function GetPurchases(setPurchases:(e:PurchasedItem[])=>void, limit?: number){
-    try{
-        const data = await api.listDocuments(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_PURCHASES_COLLECTION_ID, [Query.limit(100)]);
-
-        if(limit){
-
-                const response = await api.listDocuments(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_PURCHASES_COLLECTION_ID, [Query.limit(limit), Query.offset(limit-25)]);
-
-                const array = response.documents
-                setPurchases(array)
-
-        }else{
-            setPurchases(data.documents);
-        }
-
-    }catch(err){
-        console.error(err);
-
-    }
- }
 
  //three buttons, week, month, year
 //on click, they trigger their respective functions

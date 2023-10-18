@@ -205,10 +205,9 @@ export interface PurchasedItem{
     name: string,
     price: string,
     quantity: string,
-    cartItems: string,
+    cartItems: string[],
     email?: string
 }
-
 
 export interface DisplayBy{
     purchases: PurchasedItem[], 

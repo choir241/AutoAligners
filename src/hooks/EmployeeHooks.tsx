@@ -86,22 +86,6 @@ export function EmployeeForm(setSalary:(e:string)=>void,setPosition:(e:string)=>
     )
 }
 
-export async function GetEmployee(setEmployee: (e:Profile)=>void){
-    try{
-        const data = await api.listDocuments(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_PROFILE_COLLECTION_ID)
-
-        if(data.documents.length){
-        const findUser = data.documents.filter((user:Profile)=>cacheEmail === user.email)[0]
-        
-        setEmployee(findUser)
-        }
-
-    }catch(err){
-        console.error(err);
-    }
-}
-
-
 export function EmployeeButtons(){
     return(
         <main className = "flex flex-col justifyBetween">
@@ -548,14 +532,6 @@ export function PTONotification(props: Notification){
     }
 }
 
-export async function GetPTORequests(setPTORequests: (e:PTO[])=>void){
-    try{
-        const data = await api.listDocuments(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_PTO_COLLECTION_ID);
-        setPTORequests(data.documents);
-    }catch(err){
-        console.error(err);
-    }
-}
 
 export function RenderRequestHistory(props: History){
     if(props.requests){

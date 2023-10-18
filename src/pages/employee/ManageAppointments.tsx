@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from "react"
-import { getAppointmentData} from "../../hooks/ReservationHooks"
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
 import { displayAppointments} from "../../hooks/ManageAppointmentHooks"
 import PaginatedButtons from "../../components/Graphs/PaginatedButtons"
 import {SearchBar} from "../../components/Search"
 import {Appointment} from "../../middleware/Interfaces"
+import {GetAppointmentData} from "../../hooks/ApiCalls"
 
 export default function ManageAppointments(){
 
@@ -22,7 +22,7 @@ export default function ManageAppointments(){
   
 
     useEffect(()=>{
-        getAppointmentData((e:Appointment[])=>setAppointments(e))
+        GetAppointmentData((e:Appointment[])=>setAppointments(e))
     },[])
 
     const filterArray = ['carMake', 'carModel', 'carYear', 'service', 'firstName', 'lastName', 'time'];

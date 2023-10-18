@@ -71,17 +71,6 @@ export function renderFinanceDisplay(props: FinanceDisplay){
     )
 }
 
-export async function GetClientFinance(setClientFinance: (e:ClientFinance[])=>void){
-    try{
-        const data = await api.listDocuments(import.meta.env.VITE_REACT_APP_CART_DATABASE_ID, import.meta.env.VITE_REACT_APP_FINANCE_PAYMENTS_COLLECTION_ID);
-
-        if(data.documents.length){
-            setClientFinance(data.documents);
-        }
-    }catch(err){
-        console.error(err);
-    }
-}
 
 async function deleteClientFinance(id:string){
 try{
