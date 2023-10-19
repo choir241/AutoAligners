@@ -1,15 +1,16 @@
-import React,{useState, useEffect} from "react"
+import React,{useState, useContext} from "react"
 import Nav from "../../components/Nav"
 import Footer from "../../components/Footer"
 import {RenderEstimates} from "../../hooks/EstimatesHooks"
 import PaginatedButtons from "../../components/Graphs/PaginatedButtons"
 import {SearchBar} from "../../components/Search"
-import {Estimate} from "../../middleware/Interfaces"
-import {GetEstimates} from "../../hooks/ApiCalls"
+import {APIContext} from "../../middleware/Context"
 
 export default function Estimates(){
 
-    const [estimates, setEstimates] = useState<Estimate[]>([]);
+
+    const {estimates} = useContext(APIContext);
+
     const [price, setPrice] = useState<string>("");
     const [estimateFormDisplay, setEstimateFormDisplay] = useState<boolean>()
     const [currentPage, setCurrentPage] = useState(1);
@@ -21,10 +22,6 @@ export default function Estimates(){
   
     const startIndex = (currentPage - 1) * rowsPerPage;
     const endIndex = startIndex + rowsPerPage;
-
-    useEffect(()=>{
-        GetEstimates((e:Estimate[])=>setEstimates(e));
-    },[])
 
     const filterArray = ['carMake', 'carModel', 'carYear', 'service', 'firstName', 'lastName'];
 
