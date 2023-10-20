@@ -7,15 +7,13 @@ import {APIContext} from "../../middleware/Context"
 
 export default function EmployeeSettings():React.JSX.Element{
 
+  const {user} = useContext(APIContext);
 
   const [email, setEmail] = useState<string>("");
   const [displayDelete, setDisplayDelete] = useState<boolean>(false);
   const [oldPassword, setOldPassword] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [name, setName] = useState<string>("");
-  
-  const {user} = useContext(APIContext);
-
 
     return(
         <main id = "employeeSettings">
