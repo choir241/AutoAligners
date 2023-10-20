@@ -1,59 +1,17 @@
 import {BrowserRouter} from "react-router-dom"
 import {Route, Routes} from "react-router"
 import {PrivateRoutes, PublicRoutes, PurchaseRoutes} from "./middleware/Routes.jsx"
-import {lazy, Suspense, useEffect, useState} from "react"
+import {Suspense, useEffect, useState} from "react"
 import {ToastContainer} from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import {EmployeeHub} from "./pages/employee/Employee.tsx"
 import {APIContext} from "./middleware/Context.tsx"
 import {cacheEmail} from "./middleware/Cache.tsx"
 import {ClientFinance, Profile, PTO, InventoryItem, CartItem, Appointment, PurchasedItem, Estimate, User} from "./middleware/Interfaces.tsx"
-import {GetClientFinance, GetUsers, GetEmployee, GetPTORequests, GetInventory, GetCart, GetAppointmentData, GetPurchases, GetEstimates, GetAccount } from "./hooks/ApiCalls.tsx"
+import {GetClientFinance, GetEmployee, GetPTORequests, GetInventory, GetCart, GetAppointmentData, GetPurchases, GetEstimates, GetAccount } from "./hooks/ApiCalls.tsx"
+import {defaultEmployee, defaultUser, Home, Employee, Finance, ServiceEstimate, Demo, AdminDemo, Reservation, Cart, Inventory, InventoryShop, EmployeeSettings, ManageAppointments, EditAppointment, Estimates, Purchases, Client} from "./Pages"
 
 export default function App(){
-
-    const defaultUser = {
-    $createdAt: "",
-    $updatedAt: "",
-    email: "",
-    $id: "",
-    name: "",
-    phone: "",
-    phoneVerification: true,
-    emailVerification: true,
-    passwordUpdate: "",
-    status: true,
-    prefs: [],
-    registration: ""
-    }
-
-    const defaultEmployee = {
-        $id: "",
-        fileName: "",
-        image: "",
-        position: "",
-        PTO: "",
-        salary: "",
-        requestedPTO: "",
-        requests: []
-    }
-
-    const Home = lazy(()=>import("./pages/Home.tsx"));
-    const Reservation = lazy(()=>import("./pages/guest/Reservation.tsx"));
-    const Demo = lazy(()=>import("./pages/guest/Demo"));
-    const ServiceEstimate = lazy(()=>import("./pages/guest/ServiceEstimate.tsx"));
-    const ManageAppointments = lazy(()=>import("./pages/employee/ManageAppointments.tsx"));
-    const EditAppointment = lazy(()=>import("./pages/employee/EditAppointment.tsx"));
-    const Employee = lazy(()=>import("./pages/employee/Employee.tsx"));
-    const Finance = lazy(()=>import("./pages/guest/Finance.tsx"));
-    const ClientFinance = lazy(()=> import("./pages/employee/ClientFinance.tsx"));
-    const EmployeeSettings = lazy(()=>import("./pages/employee/EmployeeSettings.tsx"));
-    const Inventory = lazy(()=>import("./pages/employee/Inventory.tsx"));
-    const InventoryShop = lazy(()=>import("./pages/employee/InventoryShop.tsx"));
-    const Cart = lazy(()=>import("./pages/employee/Cart"));
-    const Purchases = lazy(()=>import("./pages/employee/Purchases"));
-    const Estimates = lazy(()=>import("./pages/employee/Estimates"));
-    const AdminDemo = lazy(()=>import("./pages/guest/AdminDemo"));
 
     const [inventory, setInventory] = useState<InventoryItem[]>([]);
     const [cart, setCart] = useState<CartItem[]>([]);
@@ -63,9 +21,8 @@ export default function App(){
     const [user, setUser] = useState<User>(defaultUser);
     const [PTORequests, setPTORequests] = useState<PTO[]>([]);
     const [employee, setEmployee] = useState<Profile>(defaultEmployee);
-    const [listOfUsers, setListOfUsers] = useState<User[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
     const [clientFinance, setClientFinance] = useState<ClientFinance[]>([]);
+
 
     useEffect(()=>{
         if(cacheEmail){
@@ -80,16 +37,13 @@ export default function App(){
             GetClientFinance((e:ClientFinance[])=>setClientFinance(e));
         }
 
-        GetUsers((e:User[])=>setListOfUsers(e), (e:boolean)=>setLoading(e));
     },[])
 
     return(
         <APIContext.Provider 
-        value = {{inventory, setInventory, cart, setCart, 
-        appointments, setAppointments, purchases, setPurchases,
-        estimates, setEstimates, user, setUser, PTORequests, setPTORequests,
-        employee, setEmployee, listOfUsers, setListOfUsers, loading,
-        clientFinance, setClientFinance
+        value = {{inventory, cart, appointments, 
+        setAppointments, purchases, estimates, 
+        user, PTORequests, employee, clientFinance, setClientFinance
         }}>
             <Suspense fallback = {<h1>Loading...</h1>}>
                 <BrowserRouter>
@@ -105,7 +59,7 @@ export default function App(){
                             <Route path = "/reservation" element = {<Reservation/>}/>
                         </Route>
                         <Route element = {<PrivateRoutes/>}>
-                            <Route path = "/clientFinance" element = {<ClientFinance/>}/>
+                            <Route path = "/clientFinance" element = {<Client/>}/>
                             <Route path = "/cart" element = {<Cart/>}/>
                             <Route path = "/inventory" element = {<Inventory/>}/>
                             <Route path = "/inventoryShop" element = {<InventoryShop/>}/>
