@@ -5,11 +5,12 @@ import {RenderEstimates} from "../../hooks/EstimatesHooks"
 import PaginatedButtons from "../../components/Graphs/PaginatedButtons"
 import {SearchBar} from "../../components/Search"
 import {APIContext} from "../../middleware/Context"
+import {Estimate} from "../../middleware/Interfaces"
 
 export default function Estimates(){
 
 
-    const {estimates} = useContext(APIContext);
+    const {estimates, setEstimates} = useContext(APIContext);
 
     const [price, setPrice] = useState<string>("");
     const [estimateFormDisplay, setEstimateFormDisplay] = useState<boolean>()

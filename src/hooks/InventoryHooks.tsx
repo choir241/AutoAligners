@@ -150,7 +150,7 @@ function renderQuantityOptions(setItemQuantity:(e:number)=>void){
 export function DefaultInventory(props: DefaultInventoryDisplay){
 
     //iterate through static data in api/inventory
-    return items.map((inventoryItem: DisplayInventory, i:number)=>{
+    return items.map((inventoryItem: any, i:number)=>{
 
         //find item in static data currently in inventory database
         const findItem: InventoryItem[] = props.inventory.filter((value:InventoryItem) => value.name === inventoryItem.itemName);

@@ -280,8 +280,6 @@ export interface Login{
   email: string,
   name: string,
   password: string,
-  employeeId: string,
-  listOfUsers: User[]
 }
 
 export interface InventoryItem{
@@ -379,7 +377,7 @@ export interface FinanceDisplay{
     cardInfo: CardInfo | undefined, 
     setCardInfo: (e:CardInfo)=>void,
     email: string,
-    setEmail: (e:string) => void,
+    setEmail: (e:string) => void
 }
 
 export interface ClientFinance{

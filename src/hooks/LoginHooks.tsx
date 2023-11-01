@@ -19,17 +19,6 @@ export function Input(props: InputTypes):React.JSX.Element{
       )
   }
   
-
-  
-export async function handleDelete(userId: string){
-    try{
-      console.log(userId)
-        await axios.delete(`https://car-app-backend-0ejb.onrender.com/deleteUser/${userId}`);
-    }catch(err){
-      console.error(err)
-    }
-        
-  }
   
 export function DisplayUsers(listOfUsers: User[], currentUser: User, startIndex: number, endIndex: number){
   try{
@@ -50,7 +39,7 @@ export function DisplayUsers(listOfUsers: User[], currentUser: User, startIndex:
                   <li>Employee Email: {user.email}</li>
                   <li>Created At: {createdAtDate}  {createdAtTimeHours > 12 ? createdAtTimeHours -= 12 : createdAtTimeHours}{":" + createdAtTimeMinutes}{createdAtTimeHours > 12 ? "PM" : "AM"}</li>
                   <li>Updated At: {updatedAtDate} {updatedAtTimeHours > 12 ? updatedAtTimeHours -=12 : updatedAtTimeHours}{":" + updatedAtTimeMinutes}{updatedAtTimeHours > 12 ? "PM" : "AM"}</li>
-                  { user.$id === "64e51b2e84f09ed015ec" || user.$id === "64bb01ec8a97c4136079" ? "" :<li className = "fa-solid fa-trash button" onClick = {()=>handleDelete(user.$id)}></li>}
+                  { user.$id === "64e51b2e84f09ed015ec" || user.$id === "64bb01ec8a97c4136079" ? "" :<li className = "fa-solid fa-trash button" onClick = {()=>handleDeleteAccount(user.$id)}></li>}
                 </ul> 
               )
             })
@@ -116,7 +105,6 @@ export async function handleSignUp(props: SignUp):Promise<void>{
 
 export async function handleLogin(props: Login): Promise<void>{
     try{
-      if(props.listOfUsers.length){
 
         if(!props.email){
           toast.error("Please input an email address");
@@ -127,15 +115,8 @@ export async function handleLogin(props: Login): Promise<void>{
         }else if(!props.password){
           toast.error("Please input a password");
           return;
-        }else if(!props.employeeId){
-          toast.error("Please input an employee Id");
-          return;
         }
 
-      const checkEmployee = props?.listOfUsers?.filter((user: User)=>{
-        return user.$id === props.employeeId
-      })
-    
       const fullName = /^[A-Za-z\s]+$/;
       const mail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     
@@ -145,11 +126,7 @@ export async function handleLogin(props: Login): Promise<void>{
       }else if(!mail.test(props.email)){
         toast.error("Please input a valid password");
         return;
-      }else if(!checkEmployee.length){
-        toast.error("Please input a valid employee ID");
-        return;
       }
-
 
       await api.createSession(props.email, props.password);
       const response = await api.getAccount();
@@ -158,7 +135,6 @@ export async function handleLogin(props: Login): Promise<void>{
         SetCacheEmail(props.email)
         window.location.reload()
       }
-    }
 
     }catch(err){
       console.error(err);
@@ -270,12 +246,14 @@ export async function updateAccountEmail(email: string, password: string){
   }
 }
 
-export async function handleDeleteAccount(user: User | undefined){
+export async function handleDeleteAccount(userId: string){
   try{
-    await axios.delete(`https://car-app-backend-0ejb.onrender.com/deleteUser/${user?.$id}`)
+    await api.deleteSessions();
     SetCacheEmail("");
+    await axios.delete(`https://car-app-backend-0ejb.onrender.com/deleteUser/${userId}`);
     window.location.reload();
   }catch(err){
-    console.error(err);
+    console.error(err)
   }
+      
 }

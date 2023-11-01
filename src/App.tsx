@@ -4,11 +4,11 @@ import {PrivateRoutes, PublicRoutes, PurchaseRoutes} from "./middleware/Routes.j
 import {Suspense, useEffect, useState} from "react"
 import {ToastContainer} from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
-import {EmployeeHub} from "./pages/employee/Employee.tsx"
-import {APIContext} from "./middleware/Context.tsx"
-import {cacheEmail} from "./middleware/Cache.tsx"
-import {ClientFinance, Profile, PTO, InventoryItem, CartItem, Appointment, PurchasedItem, Estimate, User} from "./middleware/Interfaces.tsx"
-import {GetClientFinance, GetEmployee, GetPTORequests, GetInventory, GetCart, GetAppointmentData, GetPurchases, GetEstimates, GetAccount } from "./hooks/ApiCalls.tsx"
+import {EmployeeHub} from "./pages/employee/Employee"
+import {APIContext} from "./middleware/Context"
+import {cacheEmail} from "./middleware/Cache"
+import {ClientFinance, Profile, PTO, InventoryItem, CartItem, Appointment, PurchasedItem, Estimate, User} from "./middleware/Interfaces"
+import {GetClientFinance, GetEmployee, GetPTORequests, GetInventory, GetCart, GetAppointmentData, GetPurchases, GetEstimates, GetAccount } from "./hooks/ApiCalls"
 import {defaultEmployee, defaultUser, Home, Employee, Finance, ServiceEstimate, Demo, AdminDemo, Reservation, Cart, Inventory, InventoryShop, EmployeeSettings, ManageAppointments, EditAppointment, Estimates, Purchases, Client} from "./Pages"
 
 export default function App(){
@@ -42,7 +42,7 @@ export default function App(){
     return(
         <APIContext.Provider 
         value = {{inventory, cart, appointments, 
-        setAppointments, purchases, estimates, 
+        setAppointments, purchases, estimates, setEstimates, 
         user, PTORequests, employee, clientFinance, setClientFinance
         }}>
             <Suspense fallback = {<h1>Loading...</h1>}>

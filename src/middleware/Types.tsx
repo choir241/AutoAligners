@@ -1,10 +1,16 @@
-import {ClientFinance, Profile, PTO, InventoryItem, CartItem, Appointment, PurchasedItem, Estimate, User} from "./Interfaces.tsx"
-
-type CarState = {
-}
-
-type CarAction = {
-}
+import {CardInfo} from "./Interfaces"
 
 export type State = {
+    cardInfo: CardInfo
+}  
+
+export type Action = {
+    setCardInfo: (e:CardInfo) =>void
+}
+
+export const defaultCardInfo = {
+    cardNumber: 0,
+    securityNumber: "",
+    expirationDate: "",
+    type: ""
 }

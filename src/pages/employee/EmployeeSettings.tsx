@@ -54,7 +54,7 @@ export default function EmployeeSettings():React.JSX.Element{
             </div>
             
             <div className="flex justifyAround">
-            {Button({classNames: "deleteButton", text: "Delete Account", handleButtonClick: ()=>handleDeleteAccount(user)})}
+            {Button({classNames: "deleteButton", text: "Delete Account", handleButtonClick: ()=>handleDeleteAccount(user.$id)})}
             {Button({text: "Go Back", handleButtonClick: ()=>setDisplayDelete(!displayDelete)})}
             </div>
 
