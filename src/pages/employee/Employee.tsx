@@ -20,7 +20,6 @@ export function EmployeeHub(){
     const [loading, setLoading] = useState<boolean>(false);
     const [email, setEmail] = useState<string>("");
     const [generatedPassword, setGeneratedPassword] = useState<string>("");
-    const [employeeId, setEmployeeId] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [name, setName] = useState<string>("");
     const [showPurchases, setShowPurchases] = useState<boolean>(false);
@@ -65,7 +64,6 @@ export function EmployeeHub(){
     const currentDay = currentDate.getDate();
     const currentYear = currentDate.getFullYear();
 
-
     return(
       <main id = "auth">
           <Nav pageHeading = {user ? `Welcome ${user.name}` : "Login"}/>
@@ -73,24 +71,21 @@ export function EmployeeHub(){
 
           <section className = "flex flex-col alignCenter justifyBetween">
 
-          {user ? 
+          {user.$id ? 
             ""
           :
           <form className = "flex flex-col alignCenter">        
             {Input({type: "email",  name: "email", onChange: (e)=>setEmail(e), placeholder: "Your Email"})}
-            {Input({type: "text", name: "employeeId",  onChange: (e)=>setEmployeeId(e), placeholder: "Your EmployeeId"})}
             {Input({type: "text", name: "name",  onChange: (e)=>setName(e), placeholder: "Your Full Name"})}
             {Input({type: "password", name: "password",  onChange: (e)=>setPassword(e), placeholder: "Your Password"})}
   
-            {loading? 
-            ButtonSubmit({handleButtonClick: ()=>handleLogin({email:email, name: name, password: password, employeeId: employeeId, listOfUsers: listOfUsers}), text: "Login"})
-            : <h1>Loading...</h1>
+            {
+            ButtonSubmit({handleButtonClick: ()=>handleLogin({email:email, name: name, password: password}), text: "Login"})
             }
           </form>
           }
   
-  
-        {user ? 
+        {user.$id ? 
         user?.$id === "649c8a408d41d5c02f5c" || user?.$id === "64e51b2e84f09ed015ec" ? 
           <section className = "admin flex justifyCenter alignCenter">
 
