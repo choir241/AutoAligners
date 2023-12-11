@@ -6,7 +6,7 @@ import Footer from "../../components/Footer";
 export default function Demo() {
   const name = "Helena Blavatsky";
   const email = "helena24@gmail.com";
-  const password = "isKri8!3";
+  const password = "dKiif87|5";
 
   return (
     <main id="auth">
