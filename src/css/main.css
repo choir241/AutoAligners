@@ -1,949 +1,960 @@
 /* Table
    ========================================================================== */
-table{
-    width: 100%;
-    border-collapse: collapse;
-    border-spacing: 0;
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 
-*, *:before, *:after{
-    box-sizing: inherit;
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
 }
 
-table thead{
-    border-bottom: 2px solid black;
+table thead {
+  border-bottom: 2px solid black;
 }
 
-table .odd{
-    background: #eeeeee;
+table .odd {
+  background: #eeeeee;
 }
 
-table th{
-    color: #212931;
-    font-family: "Source Sans Pro", Helvetica, sans-serif;
-    font-size: 2rem;
-    font-weight: 900;
-    letter-spacing: 0.075rem;
-    line-height: 1.5;
-    padding: 0 0.75rem 0.75rem 0.75rem;
-    text-align: left;
-    text-transform: uppercase;
-    margin: 0;
-    border: 0;
-    vertical-align: baseline;
+table th {
+  color: #212931;
+  font-family: "Source Sans Pro", Helvetica, sans-serif;
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 0.075rem;
+  line-height: 1.5;
+  padding: 0 0.75rem 0.75rem 0.75rem;
+  text-align: left;
+  text-transform: uppercase;
+  margin: 0;
+  border: 0;
+  vertical-align: baseline;
 }
 
-table td{
-    padding: 0.75rem 0.75rem;
-    margin: 0;
-    border: 0;
-    vertical-align: baseline;
-    font-size: 2rem;
+table td {
+  padding: 0.75rem 0.75rem;
+  margin: 0;
+  border: 0;
+  vertical-align: baseline;
+  font-size: 2rem;
 }
-
-
 
 /* Estimate
    ========================================================================== */
-#estimate .estimate{
+#estimate .estimate {
   padding: 2rem;
   width: 80%;
 }
 
-#estimate .estimate h2{
-    padding: .5rem;
+#estimate .estimate h2 {
+  padding: 0.5rem;
 }
 
-.submitEstimateButton{
-    background: grey;
-    padding: 1rem 2rem;
-    box-shadow: 2px 2px 2px black;
-    font-size: 2rem;
+.submitEstimateButton {
+  background: grey;
+  padding: 1rem 2rem;
+  box-shadow: 2px 2px 2px black;
+  font-size: 2rem;
 }
 
-.submitEstimateButton:hover{
-    cursor: pointer;
-    color: white;
-    box-shadow: 0px 0px 0px black;
+.submitEstimateButton:hover {
+  cursor: pointer;
+  color: white;
+  box-shadow: 0px 0px 0px black;
 }
 
-#estimate .estimate:hover{
-    background: none;
-    color: black;
+#estimate .estimate:hover {
+  background: none;
+  color: black;
 }
 
-#estimate form{
-    padding: 4rem;
+#estimate form {
+  padding: 4rem;
 }
-
 
 /* Purchase
    ========================================================================== */
-#purchase .purchaseItem{
-    margin-bottom: 4rem;
-    width: 50%;
-    padding-bottom: 2rem;
-    border-bottom: 2px solid black;
+#purchase .purchaseItem {
+  margin-bottom: 4rem;
+  width: 50%;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid black;
 }
 
-#purchase .graphBar{
-    height: 20px;
-    width: 20px;
-    background: red;
-    border: 2px solid black;
+#purchase .graphBar {
+  height: 20px;
+  width: 20px;
+  background: red;
+  border: 2px solid black;
 }
 
-#purchase .buttons{
-   width: 20%;
+#purchase .buttons {
+  width: 20%;
 }
 
-#purchase .graph{
-    width: 100%;
-    margin-top: 1rem;
+#purchase .graph {
+  width: 100%;
+  margin-top: 1rem;
 }
 
-#purchase .clearButton{
-    margin: 2rem 2rem 4rem 2rem;
+#purchase .clearButton {
+  margin: 2rem 2rem 4rem 2rem;
 }
 
-#purchase tr{
-    width: 100%;
+#purchase tr {
+  width: 100%;
 }
 
-#purchase table{
-    margin: 2rem 0rem;
+#purchase table {
+  margin: 2rem 0rem;
 }
 
 /* Cart
    ========================================================================== */
-   #cart .cartContainer{
-    padding: 2rem;
-    width: 100%;
-   }
+#cart .cartContainer {
+  padding: 2rem;
+  width: 100%;
+}
 
-   #cart .payment form{
-    margin-top: 2rem;
-    width: 50%;
-   }
+#cart .payment form {
+  margin-top: 2rem;
+  width: 50%;
+}
 
-   #cart .payment section{
-    width: 60%;
-   }
+#cart .payment section {
+  width: 60%;
+}
 
-   #cart .cartContainer section{
-    padding: 2rem;
-   }
+#cart .cartContainer section {
+  padding: 2rem;
+}
 
-   #cart .cartTotal{
-    margin: 4rem;
-    width: 50%;
-   }
+#cart .cartTotal {
+  margin: 4rem;
+  width: 50%;
+}
 
-   #cart .cartContainer .button{
-    width: 30%;
-   }
+#cart .cartContainer .button {
+  width: 30%;
+}
 
-   #cart .fa-xmark.button.fa-solid{
-    margin-right: 4rem;
-   }
+#cart .fa-xmark.button.fa-solid {
+  margin-right: 4rem;
+}
 
-   
-   #cart .imageContainer{
-    width: 45%;
-    padding: 1rem;
-   }
+#cart .imageContainer {
+  width: 45%;
+  padding: 1rem;
+}
 
-   #cart .payment .imageContainer img{
-    width: 100%;
-   }
+#cart .payment .imageContainer img {
+  width: 100%;
+}
 
-   #cart .payment{
-    width: 45%;    
-    align-self: flex-start;
-   }
+#cart .payment {
+  width: 45%;
+  align-self: flex-start;
+}
 
-   #cart .imageContainer{
-    display: flex;
-    align-items: center;
-   }
+#cart .imageContainer {
+  display: flex;
+  align-items: center;
+}
 
-   #cart .imageContainer img:hover{
-    cursor: pointer;
-    opacity: 80%;
-   }
+#cart .imageContainer img:hover {
+  cursor: pointer;
+  opacity: 80%;
+}
 
-   #cart select{
-    margin-left: 2rem;
-   }
-   
+#cart select {
+  margin-left: 2rem;
+}
 
 /* Inventory
    ========================================================================== */
 
-   #inventory .item{
-    width: 25%;
-    margin: 4rem 6rem;
-   }
+#inventory .item {
+  width: 25%;
+  margin: 4rem 6rem;
+}
 
-   #inventory .itemContainer{
-    flex-wrap: wrap;
-   }
+#inventory .itemContainer {
+  flex-wrap: wrap;
+}
 
-   #inventory .itemHeading{
-    margin-bottom: 1rem;
-   }
+#inventory .itemHeading {
+  margin-bottom: 1rem;
+}
 
-   #inventory header + .button{
-    width: 10%;
-   }
-   
-   #inventory select{
-    padding: 1rem;
-    margin-top: 1rem;
-   }
+#inventory header + .button {
+  width: 10%;
+}
 
-   .borderSeperation{
-    border-bottom: 2px solid black;
-    padding-bottom: 2rem;
-   }
+#inventory select {
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.borderSeperation {
+  border-bottom: 2px solid black;
+  padding-bottom: 2rem;
+}
 
 /* Service Estimate
    ========================================================================== */
 
-#serviceEstimate form, #serviceEstimate section, #serviceEstimate form div{
-    width: 100%;
+#serviceEstimate form,
+#serviceEstimate section,
+#serviceEstimate form div {
+  width: 100%;
 }
 
-#serviceEstimate header{
-    margin-bottom: 4rem;
+#serviceEstimate header {
+  margin-bottom: 4rem;
 }
 
-
-select{
-    padding: 2rem 4rem;
-    font-size: 2rem;
-    margin-bottom: 2rem;
-    background: transparent;
+select {
+  padding: 2rem 4rem;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  background: transparent;
 }
 
-label{
-    font-size: 4rem;
-    margin: 2rem;
+label {
+  font-size: 4rem;
+  margin: 2rem;
 }
 
-.radioButtons label{
-    margin-right: 8rem;
+.radioButtons label {
+  margin-right: 8rem;
 }
 
-#serviceEstimate .radioButtons section{
-    width:50%;
+#serviceEstimate .radioButtons section {
+  width: 50%;
 }
 
-#serviceEstimate .contact{
-    width: 95%;
+#serviceEstimate .contact {
+  width: 95%;
 }
 
-#serviceEstimate .section-1{
-    padding: 0rem;
-    margin: 0rem;
+#serviceEstimate .section-1 {
+  padding: 0rem;
+  margin: 0rem;
 }
 
-#serviceEstimate form .button{
-    width: 20%;
+#serviceEstimate form .button {
+  width: 20%;
 }
 
-#serviceEstimate .submit{
-    margin-top: 4rem;
+#serviceEstimate .submit {
+  margin-top: 4rem;
 }
 
-#serviceEstimate form{
-    margin-bottom: 3rem;
+#serviceEstimate form {
+  margin-bottom: 3rem;
 }
 
 /* Home
    ========================================================================== */
 
-#home .hero section, #finance section section{
-    line-height: 5rem;
-    padding: 1rem;
+#home .hero section,
+#finance section section {
+  line-height: 5rem;
+  padding: 1rem;
 }
 
-#home .hero section{
-    width: 60%;
+#home .hero section {
+  width: 60%;
 }
 
-#home .hero .button{
-    margin-top: 4rem;
+#home .hero .button {
+  margin-top: 4rem;
 }
 
-#home .hero p{
-    margin-top: 1rem;
-    line-height: 2.5rem;
+#home .hero p {
+  margin-top: 1rem;
+  line-height: 2.5rem;
 }
 
-#home .imageContainer{
-    width: 80%;
+#home .imageContainer {
+  width: 80%;
 }
 
-#home .imageContainer img{
-    width: 100%;
-    border-radius: 5px; 
+#home .imageContainer img {
+  width: 100%;
+  border-radius: 5px;
 }
 
 /* Finance
    ========================================================================== */
 
-#finance header{
-    margin-bottom: 4rem;
+#finance header {
+  margin-bottom: 4rem;
 }
 
-#finance section section{
-    margin-bottom: 2rem;
+#finance section section {
+  margin-bottom: 2rem;
 }
 
-#finance .buttonContainer{
-    width: 30%;
+#finance .buttonContainer {
+  width: 30%;
 }
 
-#finance .blueCard{
-    transform: rotate(3deg);
+#finance .blueCard {
+  transform: rotate(3deg);
 }
 
-#finance .imageContainer{
-    width: 20%;
-    position: relative;
+#finance .imageContainer {
+  width: 20%;
+  position: relative;
 }
 
-#finance .imageContainer p{
-    position: absolute;
-    padding: 2rem;
-    width: 100%;
-    background: white;
+#finance .imageContainer p {
+  position: absolute;
+  padding: 2rem;
+  width: 100%;
+  background: white;
 }
 
-#finance p:hover{
-    color: black;
+#finance p:hover {
+  color: black;
 }
 
-#finance .imageContainer i{
-    margin-bottom: 1rem;
+#finance .imageContainer i {
+  margin-bottom: 1rem;
 }
 
-#finance .goldCardContainer{
-    width: 18%;
+#finance .goldCardContainer {
+  width: 18%;
 }
 
-
-#finance .blueCardContainer{
-    width: 21.5%;
+#finance .blueCardContainer {
+  width: 21.5%;
 }
 
-#finance .imageContainer img{
-    width: 100%;
+#finance .imageContainer img {
+  width: 100%;
 }
 
-#finance .imageContainer img:hover{
-    cursor: pointer;
+#finance .imageContainer img:hover {
+  cursor: pointer;
 }
 
-#finance .payment{
-    flex-direction: column;
-    align-items: center;
+#finance .payment {
+  flex-direction: column;
+  align-items: center;
 }
 
-#finance .payment section, #finance .payment{
-    margin-bottom: 0rem;
-    padding: 0rem;
+#finance .payment section,
+#finance .payment {
+  margin-bottom: 0rem;
+  padding: 0rem;
 }
 
-#finance .payment .imageContainer{
-    width: 30%;
+#finance .payment .imageContainer {
+  width: 30%;
 }
 
-#finance .payment section, #finance .payment{
-    width: 50%;
+#finance .payment section,
+#finance .payment {
+  width: 50%;
 }
 
-#finance .purchase h1, #finance .purchase p{
-    padding: 1rem;
+#finance .purchase h1,
+#finance .purchase p {
+  padding: 1rem;
 }
 
-#finance .purchase div{
-    width: 23%;
+#finance .purchase div {
+  width: 23%;
 }
 
 /* Auth
    ========================================================================== */
 
-#auth .PTODisplay{
-    margin-top: 1rem;
+#auth .PTODisplay {
+  margin-top: 1rem;
 }
 
-#auth .PTO span, #auth .PTO .button{
-    margin-right: 1rem;
+#auth .PTO span,
+#auth .PTO .button {
+  margin-right: 1rem;
 }
 
-#auth .PTO .userDisplays{
-    margin-bottom: 0rem;
-    padding-bottom: 1rem;
+#auth .PTO .userDisplays {
+  margin-bottom: 0rem;
+  padding-bottom: 1rem;
 }
 
-
-#auth .profile{
-    padding: 2rem;
-    width: 50%;
-    margin-left: 1rem;
+#auth .profile {
+  padding: 2rem;
+  width: 50%;
+  margin-left: 1rem;
 }
 
-#auth .profileImg{
-    width: 100%;
+#auth .profileImg {
+  width: 100%;
 }
 
-#auth .imgContainer{
-    width: 10%;
+#auth .imgContainer {
+  width: 10%;
 }
 
-#auth .profile h2{
-    float: right;
+#auth .profile h2 {
+  float: right;
 }
 
-#auth .profile .email{
-    text-transform: none;
+#auth .profile .email {
+  text-transform: none;
 }
 
-input{
-    font-size: 2rem;
-    padding: 1rem 4rem;
-    margin-bottom: 2rem;
+input {
+  font-size: 2rem;
+  padding: 1rem 4rem;
+  margin-bottom: 2rem;
 }
 
-#auth .employee{
-    max-height: 40vh;
+#auth .employee {
+  max-height: 40vh;
 }
 
-#auth section form .button{
-    padding: 2rem 4rem;
-    margin: 3rem;
+#auth section form .button {
+  padding: 2rem 4rem;
+  margin: 3rem;
 }
 
-#auth .purchases{
-    margin-top: 2rem;
-    flex-wrap: wrap;
+#auth .purchases {
+  margin-top: 2rem;
+  flex-wrap: wrap;
 }
 
-#auth .buttons .button{
-    margin: 2rem;
-    padding: 2rem 4rem;
+#auth .buttons .button {
+  margin: 2rem;
+  padding: 2rem 4rem;
 }
 
-#auth .heading{
-    margin-bottom: 5rem;
+#auth .heading {
+  margin-bottom: 5rem;
 }
 
-#auth .buttons, #auth .PTO{
-    width: 50%;
+#auth .buttons,
+#auth .PTO {
+  width: 50%;
 }
 
-#auth .purchases .cartItem{
-    padding: 2.5rem;
+#auth .purchases .cartItem {
+  padding: 2.5rem;
 }
 
-#auth .purchases .cartItem h2{
-    padding: 0rem 2rem;
+#auth .purchases .cartItem h2 {
+  padding: 0rem 2rem;
 }
 
-#auth .widget{
-    margin-top: 2rem;
+#auth .widget {
+  margin-top: 2rem;
 }
 
-#auth section .hide{
-    margin: 2rem 0rem;
+#auth section .hide {
+  margin: 2rem 0rem;
 }
 
-#auth .profile h2{
-    padding: .5rem;
+#auth .profile h2 {
+  padding: 0.5rem;
 }
 
-#auth .admin{
-    width: 100%;
+#auth .admin {
+  width: 100%;
 }
 
-#auth .admin h3{
-    padding: 2rem;
+#auth .admin h3 {
+  padding: 2rem;
 }
 
-#auth .userDisplays li{
-    font-size: 2rem;
-    padding: .5rem;
+#auth .userDisplays li {
+  font-size: 2rem;
+  padding: 0.5rem;
 }
 
-#auth .userDisplays .name{
-    text-transform: capitalize;
+#auth .userDisplays .name {
+  text-transform: capitalize;
 }
 
-#auth .userDisplays{
-    padding-bottom: 2rem;
-    margin-bottom: 4rem;
-    border-bottom: 2px dotted black;
+#auth .userDisplays {
+  padding-bottom: 2rem;
+  margin-bottom: 4rem;
+  border-bottom: 2px dotted black;
 }
 
-#auth .userDisplays .fa-trash{
-    width: 10%;
-    margin: 0rem;
-    margin-top: 2rem;
+#auth .userDisplays .fa-trash {
+  width: 10%;
+  margin: 0rem;
+  margin-top: 2rem;
 }
 
-#auth .rightContainer{
-    width: 40%;
+#auth .rightContainer {
+  width: 40%;
 }
 
-#auth .leftContainer{
-    width: 40%;
+#auth .leftContainer {
+  width: 40%;
 }
 
 /* Main
    ========================================================================== */
 
-main{
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+main {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 /* Nav
    ========================================================================== */
-nav ul li{
-    margin: 0 4rem;
+nav ul li {
+  margin: 0 4rem;
 }
 
-nav li a{
-    font-size: 2rem;
+nav li a {
+  font-size: 2rem;
 }
 
-nav span{
-    font-weight: bold;
-    font-size: 1.5rem;
-    background: red;
-    border-radius: 50%;
-    padding: .5rem 1rem;
-    position: absolute;
-    left: 5rem;
-    bottom: 2rem;
+nav span {
+  font-weight: bold;
+  font-size: 1.5rem;
+  background: red;
+  border-radius: 50%;
+  padding: 0.5rem 1rem;
+  position: absolute;
+  left: 5rem;
+  bottom: 2rem;
 }
 
-nav .cart{
-    position: relative;
+nav .cart {
+  position: relative;
 }
 
-.employeeNav, .employeeNav .button{
-    margin-top: 1.5rem;
+.employeeNav,
+.employeeNav .button {
+  margin-top: 1.5rem;
 }
 
-.arrow .clearButton{
-    margin-left: 2rem;
+.arrow .clearButton {
+  margin-left: 2rem;
 }
 
-.employeeNav i{
-    margin-left: 2rem;
+.employeeNav i {
+  margin-left: 2rem;
 }
 
-.employeeNav{
-    z-index: 1;
-    background: white;
-    padding:2rem;
-    border-radius: 5px;
-    position: absolute;
+.employeeNav {
+  z-index: 1;
+  background: white;
+  padding: 2rem;
+  border-radius: 5px;
+  position: absolute;
 }
 
-.arrow h3:hover{
-    cursor: pointer;
-    transition: .5s;
-    color: rgb(163, 149, 149);
+.arrow h3:hover {
+  cursor: pointer;
+  transition: 0.5s;
+  color: rgb(163, 149, 149);
 }
 
 /* Header
    ========================================================================== */
 
-header h2{
-    margin-top: 2rem;
+header h2 {
+  margin-top: 2rem;
 }
 
 /* Footer
    ========================================================================== */
 
-footer, footer nav{
-    width: 100%;
+footer,
+footer nav {
+  width: 100%;
 }
 
-footer li a{
-    font-size: 3rem;
+footer li a {
+  font-size: 3rem;
 }
 
 /* Font
    ========================================================================== */
 
-.textAlignCenter{
-    text-align: center;
+.textAlignCenter {
+  text-align: center;
 }
 
-.textAlignRight{
-    text-align: right;
+.textAlignRight {
+  text-align: right;
 }
 
-html{
-    font-size: 62.5%;
+html {
+  font-size: 62.5%;
 }
 
-h1{
-    font-size: 6rem;
+h1 {
+  font-size: 6rem;
 }
 
-h2{
-    font-size: 4rem;
+h2 {
+  font-size: 4rem;
 }
 
-h3{
-    font-size: 2.5rem;
+h3 {
+  font-size: 2.5rem;
 }
 
-h1, h2, h3{
-    text-transform: capitalize;
+h1,
+h2,
+h3 {
+  text-transform: capitalize;
 }
 
-p{
-    font-size: 1.5rem;
+p {
+  font-size: 1.5rem;
 }
 
-body{
-    padding: 2rem;
+body {
+  padding: 2rem;
 }
 
-i,svg{
-    color: black;
-    font-size: 4rem;
+i,
+svg {
+  color: black;
+  font-size: 4rem;
 }
 
-small{
-    font-size: 1.5rem;
+small {
+  font-size: 1.5rem;
 }
 
-i:hover, svg:hover{
-    cursor: pointer;
-    transition: 1s;
-    background: rgb(224, 216, 216);
+i:hover,
+svg:hover {
+  cursor: pointer;
+  transition: 1s;
+  background: rgb(224, 216, 216);
 }
 
-a{
-    text-decoration: none;
-    color: black;
+a {
+  text-decoration: none;
+  color: black;
 }
 
-a:hover{
-    transition: .5s;
-    color: rgb(163, 149, 149);
+a:hover {
+  transition: 0.5s;
+  color: rgb(163, 149, 149);
 }
 /* Button
    ========================================================================== */
 
-.button{
-    letter-spacing: normal;
-    word-spacing: normal;
-    line-height: normal;
-    text-transform: capitalize;
-    text-indent: 0px;
-    text-shadow: none;
-    display: inline-block;
-    text-align: center;
-    text-decoration: none;
-    border-radius: 5px;
-    background: black;
-    border: none;
-    color: white;
-    font-size: 2rem;
-    padding: .8rem 2rem;
-    cursor: pointer;
+.button {
+  letter-spacing: normal;
+  word-spacing: normal;
+  line-height: normal;
+  text-transform: capitalize;
+  text-indent: 0px;
+  text-shadow: none;
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 5px;
+  background: black;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  padding: 0.8rem 2rem;
+  cursor: pointer;
 }
 
-.button:hover{
-    background: rgb(73, 69, 69);
-    transition: .3s;
+.button:hover {
+  background: rgb(73, 69, 69);
+  transition: 0.3s;
 }
 
-.clearButton{
-    letter-spacing: normal;
-    word-spacing: normal;
-    line-height: normal;
-    text-transform: none;
-    text-indent: 0px;
-    text-shadow: none;
-    display: inline-block;
-    text-align: center;
-    text-decoration: none;
-    background: none;
-    box-shadow: 2px 2px 2px black;
-    border: none;
-    color: black;
-    font-size: 2rem;
-    padding: .8rem 2rem;
-    margin: 1rem;
-    cursor: pointer;
+.clearButton {
+  letter-spacing: normal;
+  word-spacing: normal;
+  line-height: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  background: none;
+  box-shadow: 2px 2px 2px black;
+  border: none;
+  color: black;
+  font-size: 2rem;
+  padding: 0.8rem 2rem;
+  margin: 1rem;
+  cursor: pointer;
 }
 
-.clearButton:hover{
-    background: black;
-    color: white;
-    transition: .5s;
+.clearButton:hover {
+  background: black;
+  color: white;
+  transition: 0.5s;
 }
 
-.clicked, .clicked button{
-    background: black;
-    color: white;
+.clicked,
+.clicked button {
+  background: black;
+  color: white;
 }
 
 /* Flex
    ========================================================================== */
 
-.flex{
-    display: flex;
+.flex {
+  display: flex;
 }
 
-.appointmentTimes{
-    flex-wrap: wrap;
+.appointmentTimes {
+  flex-wrap: wrap;
 }
 
-.flex-col{
-    flex-direction: column;
+.flex-col {
+  flex-direction: column;
 }
 
-.alignCenter{
-    align-items: center;
+.alignCenter {
+  align-items: center;
 }
 
-
-.justifyAround{
-    justify-content: space-around;
+.justifyAround {
+  justify-content: space-around;
 }
 
-.justifyBetween{
-    justify-content: space-between;
+.justifyBetween {
+  justify-content: space-between;
 }
 
-.justifyCenter{
-    justify-content: center;
+.justifyCenter {
+  justify-content: center;
 }
 
-.justifyEvenly{
-    justify-content: space-evenly;
+.justifyEvenly {
+  justify-content: space-evenly;
 }
 
-.justifyStart{
-    justify-content: flex-start;
+.justifyStart {
+  justify-content: flex-start;
 }
 
-.justifyEnd{
-    justify-content: flex-end;
+.justifyEnd {
+  justify-content: flex-end;
 }
 
-.alignStart{
-    align-items: flex-start;
+.alignStart {
+  align-items: flex-start;
 }
 
 /* Form
    ========================================================================== */
 
-input, select, option, label{
-    cursor: pointer;
+input,
+select,
+option,
+label {
+  cursor: pointer;
 }
 
-textarea{
-    resize: none;
+textarea {
+  resize: none;
 }
 
 /* Employee
    ========================================================================== */
 
-
-#employee h1{
-    margin-bottom: 6rem;
+#employee h1 {
+  margin-bottom: 6rem;
 }
 
-#employee .button{
-    width: 50%;
-    padding: 2rem 4rem;
+#employee .button {
+  width: 50%;
+  padding: 2rem 4rem;
 }
 
-#employee nav, #employee ul, #employee{
-    width: 100%;
+#employee nav,
+#employee ul,
+#employee {
+  width: 100%;
 }
 
-#employee ul, #employee nav{
-    height: 20rem;
+#employee ul,
+#employee nav {
+  height: 20rem;
 }
 
-
-#employeeSettings section{
-    margin-bottom: 5rem;
+#employeeSettings section {
+  margin-bottom: 5rem;
 }
 
-#employeeSettings .goBack{
-    margin-bottom: 2rem;
+#employeeSettings .goBack {
+  margin-bottom: 2rem;
 }
 
-#employeeSettings .settings{
-    margin-top: 6rem;
+#employeeSettings .settings {
+  margin-top: 6rem;
 }
 
 /* Calendar
    ========================================================================== */
 
-.calendar{
-    margin: 0rem 2rem;
-    padding: 2rem;
+.calendar {
+  margin: 0rem 2rem;
+  padding: 2rem;
 }
 
-.calendarHub h3{
-    margin-bottom: 1rem;
-    font-size: 2rem;
+.calendarHub h3 {
+  margin-bottom: 1rem;
+  font-size: 2rem;
 }
 
-.calendarHub{
-    padding: 2rem;
-    /* overflow-y: scroll; */
+.calendarHub {
+  padding: 2rem;
+  /* overflow-y: scroll; */
 }
 
-.appointmentHub{
-   margin: 2rem 0rem 4rem 0rem;
+.appointmentHub {
+  margin: 2rem 0rem 4rem 0rem;
 }
 
-#reservation .submit{
-    margin-top: 4rem;
+#reservation .submit {
+  margin-top: 4rem;
 }
 
-#reservation div.flex.justifyCenter .button{
-    margin: 4rem;
-    padding: 3rem;
+#reservation div.flex.justifyCenter .button {
+  margin: 4rem;
+  padding: 3rem;
 }
 
 /* Appointment
    ========================================================================== */
 
-.appointmentContainer{
-    border-radius: 5px;
-    background: none;
-    border: none;
-    box-shadow: .5px .5px 2px .7px rgb(161, 158, 158);
-    margin: 12px;
-    padding: 10px;
+.appointmentContainer {
+  border-radius: 5px;
+  background: none;
+  border: none;
+  box-shadow: 0.5px 0.5px 2px 0.7px rgb(161, 158, 158);
+  margin: 12px;
+  padding: 10px;
 }
 
-.appointmentContainer section{
-    padding: .5rem;  
+.appointmentContainer section {
+  padding: 0.5rem;
 }
 
-.appointments div h1, .appointments div h2, .appointments div h3{
-    margin: 0rem 2rem 1rem 2rem;
+.appointments div h1,
+.appointments div h2,
+.appointments div h3 {
+  margin: 0rem 2rem 1rem 2rem;
 }
 
-.search{
-    width: 100%;
-    padding: 2rem;
-    position: relative;
-    z-index: 0;
+.search {
+  width: 100%;
+  padding: 2rem;
+  position: relative;
+  z-index: 0;
 }
 
-.search div{
-    width: 60%;
-    margin-bottom: 2rem;
+.search div {
+  width: 60%;
+  margin-bottom: 2rem;
 }
 
-.search .filters{
-    background: white;
-    border-radius: 5px;
-    padding: 2rem;
-    position: fixed;
-    align-self: flex-end;
+.search .filters {
+  background: white;
+  border-radius: 5px;
+  padding: 2rem;
+  position: fixed;
+  align-self: flex-end;
 }
 
-.search .filters #button{
-    align-self: flex-start;
-    margin-bottom: 1rem;
+.search .filters #button {
+  align-self: flex-start;
+  margin-bottom: 1rem;
 }
 
-.search select{
-    padding: 1rem;
-    margin: 0rem;
-
+.search select {
+  padding: 1rem;
+  margin: 0rem;
 }
 
-.search input{
-    margin: 0rem;
+.search input {
+  margin: 0rem;
 }
 
-.listAppointmentContainer{
-    width: 100%;
-    border-bottom: 3px solid black;
-    padding-bottom: 2rem;
-    margin-bottom: 4rem;
+.listAppointmentContainer {
+  width: 100%;
+  border-bottom: 3px solid black;
+  padding-bottom: 2rem;
+  margin-bottom: 4rem;
 }
 
-.appointments{
-    flex-wrap: wrap;
-    justify-content: space-evenly;
+.appointments {
+  flex-wrap: wrap;
+  justify-content: space-evenly;
 }
 
-
-div .expired{
-    background: red;
+div .expired {
+  background: red;
 }
 
-h1.expired{
-    font-weight: bold;
+h1.expired {
+  font-weight: bold;
 }
 
-.selectedPage{
-    color: white;
-    background: black;
+.selectedPage {
+  color: white;
+  background: black;
 }
-
 
 /* Account
    ========================================================================== */
 
-.deleteAccount{
-    width: 50%;
-    border-radius: 5px;
-    padding: 2rem;
-    transition: 1s;
+.deleteAccount {
+  width: 50%;
+  border-radius: 5px;
+  padding: 2rem;
+  transition: 1s;
 }
 
-.deleteAccount div.justifyCenter h3{
-    margin-right: 2rem;
+.deleteAccount div.justifyCenter h3 {
+  margin-right: 2rem;
 }
 
-.deleteAccount div.justifyCenter{
-    margin-bottom: 2rem;
+.deleteAccount div.justifyCenter {
+  margin-bottom: 2rem;
 }
 
-.deleteAccount:hover{
-    background: none;
-    color: black;
+.deleteAccount:hover {
+  background: none;
+  color: black;
 }
 
-.deleteButton{
-    background-color: rgb(221, 46, 46);
+.deleteButton {
+  background-color: rgb(221, 46, 46);
 }
 
 /* Display
    ========================================================================== */
-.hidden{
-    opacity: 0;
+.hidden {
+  opacity: 0;
 }
 
-.show{
-    opacity: 100;
+.show {
+  opacity: 100;
 }
 
-.displayNone{
-    display: none;
+.displayNone {
+  display: none;
 }

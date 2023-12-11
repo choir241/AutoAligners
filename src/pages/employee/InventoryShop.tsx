@@ -1,26 +1,28 @@
-import {useState, useContext} from "react"
-import Nav from "../../components/Nav"
-import Footer from "../../components/Footer"
-import {DefaultInventory} from "../../hooks/InventoryHooks"
-import {APIContext} from "../../middleware/Context"
+import { useState, useContext } from "react";
+import Nav from "../../components/Nav";
+import Footer from "../../components/Footer";
+import { DefaultInventory } from "../../hooks/InventoryHooks";
+import { APIContext } from "../../middleware/Context";
 
-export default function InventoryShop(){
+export default function InventoryShop() {
+  const [itemQuantity, setItemQuantity] = useState<number>();
 
-    const [itemQuantity, setItemQuantity]= useState<number>();
- 
-    const {inventory} = useContext(APIContext);
+  const { inventory } = useContext(APIContext);
 
-    return(
-        <main id = "inventory">
-            <Nav pageHeading = {"Inventory Shop"}/>
+  return (
+    <main id="inventory">
+      <Nav pageHeading={"Inventory Shop"} />
 
-            <div className="flex justifyCenter">
-            </div>
+      <div className="flex justifyCenter"></div>
 
-                <section className = "itemContainer flex">
-                    {DefaultInventory({itemQuantity: itemQuantity, setItemQuantity: (e:number)=>setItemQuantity(e), inventory: inventory})}
-                </section>
-            <Footer/>
-        </main>
-    )
+      <section className="itemContainer flex">
+        {DefaultInventory({
+          itemQuantity: itemQuantity,
+          setItemQuantity: (e: number) => setItemQuantity(e),
+          inventory: inventory,
+        })}
+      </section>
+      <Footer />
+    </main>
+  );
 }

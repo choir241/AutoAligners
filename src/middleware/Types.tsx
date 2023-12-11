@@ -1,16 +1,16 @@
-import {CardInfo} from "./Interfaces"
+import { CardInfo } from "./Interfaces";
 
 export type State = {
-    cardInfo: CardInfo
-}  
+  cardInfo: CardInfo;
+};
 
 export type Action = {
-    setCardInfo: (e:CardInfo) =>void
-}
+  setCardInfo: (e: CardInfo) => void;
+};
 
 export const defaultCardInfo = {
-    cardNumber: 0,
-    securityNumber: "",
-    expirationDate: "",
-    type: ""
-}
+  cardNumber: 0,
+  securityNumber: "",
+  expirationDate: "",
+  type: "",
+};
