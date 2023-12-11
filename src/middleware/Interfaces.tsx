@@ -151,6 +151,7 @@ export interface Estimate {
 
 //interface type for appointments
 export interface Appointment {
+  $createdAt: string;
   $id?: string;
   date: string;
   time: string;

@@ -194,7 +194,13 @@ export async function GetAppointmentData(
     );
 
     if (data.documents.length) {
-      setAppointments(data.documents);
+      setAppointments(
+        data.documents.sort((a: Appointment, b: Appointment) => {
+          return (
+            new Date(b.$createdAt).getTime() - new Date(a.$createdAt).getTime()
+          );
+        }),
+      );
     }
   } catch (err) {
     console.error(err);

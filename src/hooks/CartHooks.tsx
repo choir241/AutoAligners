@@ -198,11 +198,11 @@ export function RenderCartQuantity(props: renderCartQuantity) {
     cartQuantity.push(<option key={`k-${i}`}>{i}</option>);
   }
 
-  if(props.quantity){
+  if (props.quantity) {
     return (
       <select
         defaultValue={
-          props.cartItemQuantity ? props.cartItemQuantity : props?.quantity
+          props.cartItemQuantity ? props.cartItemQuantity : props.quantity
         }
         onChange={(e) => props.setCartItemQuantity(e.target.value)}
       >
@@ -318,8 +318,8 @@ async function handleMakeCartPurchase(props: CartPurchase) {
 
       console.log(response);
 
-      if(data && response){
-          window.location.reload();
+      if (data && response) {
+        window.location.reload();
       }
     } else {
       toast.error(
