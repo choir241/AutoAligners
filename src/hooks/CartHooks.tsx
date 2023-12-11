@@ -198,16 +198,18 @@ export function RenderCartQuantity(props: renderCartQuantity) {
     cartQuantity.push(<option key={`k-${i}`}>{i}</option>);
   }
 
-  return (
-    <select
-      defaultValue={
-        props.cartItemQuantity ? props.cartItemQuantity : props?.quantity
-      }
-      onChange={(e) => props.setCartItemQuantity(e.target.value)}
-    >
-      {cartQuantity}
-    </select>
-  );
+  if(props.quantity){
+    return (
+      <select
+        defaultValue={
+          props.cartItemQuantity ? props.cartItemQuantity : props?.quantity
+        }
+        onChange={(e) => props.setCartItemQuantity(e.target.value)}
+      >
+        {cartQuantity}
+      </select>
+    );
+  }
 }
 
 //when the user removes an item from the cart
@@ -316,9 +318,9 @@ async function handleMakeCartPurchase(props: CartPurchase) {
 
       console.log(response);
 
-      // if(data && response){
-      //     window.location.reload();
-      // }
+      if(data && response){
+          window.location.reload();
+      }
     } else {
       toast.error(
         "An error has occured, please ensure that all fields are filled out before continuing.",
