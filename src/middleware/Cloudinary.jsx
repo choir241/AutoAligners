@@ -57,6 +57,7 @@ const ImageUpload = ({ user }) => {
           const image = result.info.secure_url;
           const fileName = result.info.original_filename;
           handleEmployeeInfo(image, fileName);
+          window.location.reload();
         } else if (result.event === "abort") {
           window.location.reload();
         }
