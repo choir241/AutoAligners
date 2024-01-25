@@ -1,7 +1,12 @@
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+
 export default function Employee() {
   return (
     <main>
-      <h1>Employee</h1>
+      <Header pageHeading={"Employee Page"} />
+
+      <Footer />
     </main>
   );
 }
