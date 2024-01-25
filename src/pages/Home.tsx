@@ -1,13 +1,12 @@
-import Nav from "../components/Nav";
+import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { ButtonLink } from "../components/Button";
 import Assets from "../components/Assets.jsx";
-import { getEmail } from "../middleware/Sessions";
 
 export default function Home() {
   return (
     <main id="home">
-      <Nav pageHeading="" />
+      <Header />
       <section className="flex hero">
         <section className="flex flex-col justifyCenter alignStart">
           <h2>Say Goodbye to Car Repair Hassles</h2>
@@ -20,12 +19,11 @@ export default function Home() {
             legacy with your support.
           </p>
 
-          {getEmail
-            ? ButtonLink({ domain: "/employee", text: "Employee Hub" })
-            : ButtonLink({
-                domain: "/reservation",
-                text: "Make Reservation",
-              })}
+          {ButtonLink({
+            domain: "/reservation",
+            text: "Make Reservation",
+            classNames: "button",
+          })}
         </section>
 
         <div className="imageContainer">

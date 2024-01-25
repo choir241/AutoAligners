@@ -1,15 +1,18 @@
-import { ButtonLink } from "./Button";
+import { ButtonLink, Button } from "./Button";
 import { Link } from "react-router-dom";
-import { getEmail } from "../middleware/Sessions";
+import { getEmail } from "../middleware/variables/Sessions";
 import EmployeeNav from "./EmployeeNav";
+import { HeaderInterface } from "../middleware/variables/Interfaces";
+import { Logout } from "../hooks/Auth";
 
-export default function Nav() {
+export default function Header(header: HeaderInterface) {
   return (
     <header>
       <nav className="flex justifyBetween alignCenter">
         <Link to="/">
           <h1>AutoAligners</h1>
         </Link>
+
         <ul className="flex alignCenter">
           <li>
             {ButtonLink({
@@ -17,6 +20,7 @@ export default function Nav() {
               domain: "/",
             })}
           </li>
+
           {getEmail ? (
             ""
           ) : (
@@ -39,7 +43,7 @@ export default function Nav() {
               <EmployeeNav />
             </li>
           ) : (
-            <li>{ButtonLink({ text: "Login/Demo", domain: "/employee" })}</li>
+            <li>{ButtonLink({ text: "Login/Demo", domain: "/auth" })}</li>
           )}
 
           {getEmail ? (
@@ -65,27 +69,32 @@ export default function Nav() {
           )} */}
         </ul>
 
-        {/* {cacheEmail ? (
+        {getEmail ? (
           <div>
-            {ButtonSubmit({
-              handleButtonClick: () => handleLogout(),
+            {Button({
+              onClick: () => Logout(),
               text: "Logout",
+              classNames: "button",
             })}
           </div>
         ) : (
           ""
-        )} */}
+        )}
 
         {getEmail ? (
           ""
         ) : (
           <div>
-            {ButtonLink({ domain: "/reservation", text: "Make Reservation" })}
+            {ButtonLink({
+              domain: "/reservation",
+              text: "Make Reservation",
+              classNames: "button",
+            })}
           </div>
         )}
       </nav>
 
-      {/* <h2>{props.pageHeading}</h2> */}
+      {header.pageHeading ? <h2>{header.pageHeading}</h2> : ""}
     </header>
   );
 }
