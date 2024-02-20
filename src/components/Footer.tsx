@@ -1,55 +1,51 @@
+import { ButtonLinkInterface } from "../middleware/variables/Interfaces";
+import { getYear } from "./Dates";
+
 const Footer = () => {
+  const socialMedias = [
+    {
+      domain: "https://twitter.com/choir241",
+      classNames: "fa-brands fa-twitter",
+      text: "Twitter",
+    },
+    {
+      domain: "https://www.linkedin.com/in/richard-choir/",
+      classNames: "fa-brands fa-linkedin",
+      text: "LinkedIn",
+    },
+    {
+      domain: "https://www.instagram.com/225kh_drw/?hl=en",
+      classNames: "fa-brands fa-instagram",
+      text: "Instagram",
+    },
+    {
+      domain: "https://github.com/choir27",
+      classNames: "fa-brands fa-github",
+      text: "Github",
+    },
+  ];
+
   return (
-    <footer className="flex justifyCenter">
+    <footer className="flex alignEnd">
       <nav className="flex justifyBetween">
         <ul className="flex justifyAround">
-          <li>
-            <a
-              rel="noreferrer"
-              target="_blank"
-              href="https://twitter.com/choir241"
-              className="fa-brands fa-twitter"
-            >
-              <p className="displayNone">Twitter</p>
-            </a>
-          </li>
-
-          <li>
-            <a
-              rel="noreferrer"
-              target="_blank"
-              href="https://www.linkedin.com/in/richard-choir/"
-              className="fa-brands fa-linkedin"
-            >
-              <p className="displayNone">LinkedIn</p>
-            </a>
-          </li>
-
-          <li>
-            <a
-              rel="noreferrer"
-              target="_blank"
-              href="https://www.instagram.com/225kh_drw/?hl=en"
-              className="fa-brands fa-instagram"
-            >
-              <p className="displayNone">Instagram</p>
-            </a>
-          </li>
-
-          <li>
-            <a
-              rel="noreferrer"
-              target="_blank"
-              href="https://github.com/choir27"
-              className="fa-brands fa-github"
-            >
-              <p className="displayNone">Github</p>
-            </a>
-          </li>
+          {socialMedias.map((social: ButtonLinkInterface) => {
+            return (
+              <li key={social.domain}>
+                <a
+                  rel="noreferrer"
+                  target="_blank"
+                  href={social.domain}
+                  className={social.classNames}
+                >
+                  <p className="displayNone">{social.text}</p>
+                </a>
+              </li>
+            );
+          })}
         </ul>
-
-        <small>AutoAligners &copy; 2023. All rights are reserved</small>
       </nav>
+      <small>AutoAligners &copy; {getYear()}. All rights are reserved</small>
     </footer>
   );
 };

@@ -24,3 +24,17 @@ export interface InputInterface {
   min?: string;
   max?: string;
 }
+
+export interface LogoutInterface {
+  setEmailCookie: (e: string) => void;
+}
+
+export interface AuthInterface extends LogoutInterface {
+  email: string;
+  name: string;
+  password: string;
+}
+
+export interface EmployeeNavInterface extends ButtonLinkInterface {
+  condition: boolean;
+}

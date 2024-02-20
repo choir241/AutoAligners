@@ -375,6 +375,9 @@ label {
 
 /* Auth
    ========================================================================== */
+#auth form {
+  width: 100%;
+}
 
 #auth .PTODisplay {
   margin-top: 1rem;
@@ -441,7 +444,10 @@ input {
   margin-bottom: 5rem;
 }
 
-#auth .buttons,
+#auth .buttons {
+  width: 30%;
+}
+
 #auth .PTO {
   width: 50%;
 }
@@ -632,6 +638,7 @@ svg {
 }
 
 small {
+  width: 23%;
   font-size: 1.5rem;
 }
 
@@ -755,6 +762,10 @@ a:hover {
 
 .alignStart {
   align-items: flex-start;
+}
+
+.alignEnd {
+  align-items: flex-end;
 }
 
 /* Form

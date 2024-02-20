@@ -1,11 +1,51 @@
 import { ButtonLink, Button } from "./Button";
 import { Link } from "react-router-dom";
 import { getEmail } from "../middleware/variables/Sessions";
-import EmployeeNav from "./EmployeeNav";
-import { HeaderInterface } from "../middleware/variables/Interfaces";
-import { Logout } from "../hooks/Auth";
+import EmployeeNav from "./Employee-Nav";
+import {
+  HeaderInterface,
+  EmployeeNavInterface,
+} from "../middleware/variables/Interfaces";
+import { Logout } from "../hooks/Auth/Logout";
+import { useStore } from "../middleware/states/Zustand";
+import { Action } from "../middleware/states/Zustand-Types";
 
 export default function Header(header: HeaderInterface) {
+  const setEmailCookie = useStore((action: Action) => action.setEmailCookie);
+
+  const headerNav = [
+    {
+      text: "Employee Hub",
+      domain: "/",
+      condition: true,
+    },
+    {
+      text: "Home",
+      domain: "/",
+      condition: false,
+    },
+    {
+      text: "Estimate Car Service",
+      domain: "/estimate",
+      condition: false,
+    },
+    {
+      text: "Finance",
+      domain: "/finance",
+      condition: false,
+    },
+    {
+      text: "Login/Demo",
+      domain: "/login",
+      condition: false,
+    },
+    {
+      text: "Manage Appoinments",
+      domain: "/manageAppointments",
+      condition: true,
+    },
+  ];
+
   return (
     <header>
       <nav className="flex justifyBetween alignCenter">
@@ -14,7 +54,39 @@ export default function Header(header: HeaderInterface) {
         </Link>
 
         <ul className="flex alignCenter">
-          <li>
+          {headerNav.map((navLinks: EmployeeNavInterface) => {
+            const text = navLinks.text;
+            const domain = navLinks.domain;
+            if (navLinks.condition && getEmail) {
+              return (
+                <li>
+                  {ButtonLink({
+                    text: text,
+                    domain: domain,
+                  })}
+                </li>
+              );
+            } else if (!navLinks.condition && !getEmail) {
+              return (
+                <li>
+                  {ButtonLink({
+                    text: text,
+                    domain: domain,
+                  })}
+                </li>
+              );
+            }
+          })}
+
+          {getEmail ? (
+            <li>
+              <EmployeeNav />
+            </li>
+          ) : (
+            ""
+          )}
+
+          {/* <li>
             {ButtonLink({
               text: getEmail ? "Employee Hub" : "Home",
               domain: "/",
@@ -55,7 +127,7 @@ export default function Header(header: HeaderInterface) {
             </li>
           ) : (
             ""
-          )}
+          )} */}
 
           {/* {cacheEmail ? (
             <li className="cart">
@@ -72,7 +144,8 @@ export default function Header(header: HeaderInterface) {
         {getEmail ? (
           <div>
             {Button({
-              onClick: () => Logout(),
+              onClick: () =>
+                Logout({ setEmailCookie: (e: string) => setEmailCookie(e) }),
               text: "Logout",
               classNames: "button",
             })}
