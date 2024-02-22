@@ -8,7 +8,6 @@ export async function Logout(props: LogoutInterface) {
     await api.deleteCurrentSession();
     setEmail("");
     props.setEmailCookie("");
-
     window.location.reload();
   } catch (err) {
     console.error(err);

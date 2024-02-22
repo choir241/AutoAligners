@@ -3,6 +3,7 @@ import { InputInterface } from "../middleware/variables/Interfaces";
 export function Input(props: InputInterface) {
   return (
     <input
+      key={props.key}
       type={props.type}
       name={props.name}
       disabled={props.disabled}

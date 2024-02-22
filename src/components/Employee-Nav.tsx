@@ -60,27 +60,29 @@ export default function EmployeeNav() {
           hidden ? "flex" : "displayNone"
         }`}
       >
-        {employeeNav.map((nav: EmployeeNavInterface) => {
+        {employeeNav.map((nav: EmployeeNavInterface,i:number) => {
           const text = nav.text;
           const domain = nav.domain;
           if (nav.condition) {
             return (
-              <ButtonLink
-                classNames="button goBack"
-                text={text}
-                domain={domain}
-              />
+              ButtonLink({
+                classNames:"button goBack",
+                text:text,
+                domain: domain,
+                key:`${domain}${text}`
+              })
             );
           } else if (
             !nav.condition &&
-            getEmail?.toLowerCase() === "bobthebuilder@gmail.com"
+            getEmail()?.toLowerCase() === "bobthebuilder@gmail.com"
           ) {
             return (
-              <ButtonLink
-                classNames="button goBack"
-                text={text}
-                domain={domain}
-              />
+                ButtonLink({
+                  classNames:"button goBack",
+                  text:text,
+                  domain: domain,
+                  key:`${domain}${text}`
+                })
             );
           }
         })}
