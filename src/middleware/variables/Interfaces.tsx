@@ -60,3 +60,60 @@ export interface FinanceInterface {
   email: string;
   setEmail: (e: string) => void;
 }
+
+//interface type for appointments
+export interface Appointment {
+  $id?: string;
+  date: string;
+  time: string;
+  carModel: string;
+  carMake: string;
+  carYear: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  zipCode: string;
+  contact: string;
+  comment: string;
+  stayLeave: string;
+  service: string;
+}
+
+export interface CarSelectDataInterface {
+  onMakeSelect: (e: React.JSX.Element[]) => void;
+  onModelSelect: (e: React.JSX.Element[]) => void;
+  onYearSelect: (e: React.JSX.Element[]) => void;
+  carMake: string;
+  carModel: string;
+}
+
+export interface Car {
+  id_: number;
+  manufacturer: string;
+  model: string;
+  year: number;
+  vin: string;
+}
+
+export interface FetchAppointmentInterface {
+  setAppointmentData: (e: Appointment[]) => void;
+}
+
+export interface SelectYearOptions {
+  defaultValue: string;
+  options: React.JSX.Element[];
+  onChange: (e: string) => void;
+  carYear: string;
+}
+
+export interface SelectModelOptions extends SelectYearOptions {
+  resetYear: (e: string) => void;
+  resetModel: (e: string) => void;
+  carModel: string;
+}
+
+export interface SelectMakeOptions extends SelectModelOptions {
+  resetMake: (e: string) => void;
+  carMake: string;
+}

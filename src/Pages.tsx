@@ -9,4 +9,5 @@ export const AuthPaths = {
 export const MainPaths = {
   Home: lazy(() => import("./pages/Home")),
   Employee: lazy(() => import("./pages/Employee/Employee")),
+  Reservation: lazy(() => import("./pages/Appointment/Reservation")),
 };
