@@ -1,17 +1,15 @@
 import Header from "../../components/Header";
-import {HandleLogin} from "../../hooks/Auth/Login";
+import { HandleLogin } from "../../hooks/Auth/Login";
 import { Button } from "../../components/Button";
 import Footer from "../../components/Footer";
 import { useState } from "react";
 import { Input } from "../../components/Input";
 import Auth from "./Auth";
 import { renderInputs } from "./Demo-Variables";
-import {
-  InputInterface
-} from "../../middleware/variables/Interfaces";
-import {useNavigate} from "react-router-dom"
-import {Action} from "../../middleware/states/Zustand-Types"
-import {useStore} from "../../middleware/states/Zustand"
+import { InputInterface } from "../../middleware/variables/Interfaces";
+import { useNavigate } from "react-router-dom";
+import { Action } from "../../middleware/states/Zustand-Types";
+import { useStore } from "../../middleware/states/Zustand";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -20,7 +18,7 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-  const setEmailCookie = useStore((action: Action)=>action.setEmailCookie);
+  const setEmailCookie = useStore((action: Action) => action.setEmailCookie);
 
   return (
     <main id="auth">
@@ -29,7 +27,12 @@ export default function Login() {
       <section className="flex flex-row alignCenter justifyBetween">
         <form className="flex flex-col alignCenter">
           {renderInputs(
-            { name: "Your Full Name", email: "Your Email Address", password: "Your Password", setEmailCookie: () => "" },
+            {
+              name: "Your Full Name",
+              email: "Your Email Address",
+              password: "Your Password",
+              setEmailCookie: () => "",
+            },
             {
               setEmail: (e: string) => setEmail(e),
               setName: (e: string) => setName(e),
@@ -44,14 +47,19 @@ export default function Login() {
               placeholder: input.placeholder,
             });
           })}
-        
 
           {Button({
-                    onClick: () =>
-                      HandleLogin({email: email, name: name, password: password, setEmailCookie: (e:string)=>setEmailCookie(e),navigate: navigate("/")}),
-                    text: "Login",
-                    classNames: "button",
-                  })}
+            onClick: () =>
+              HandleLogin({
+                email: email,
+                name: name,
+                password: password,
+                setEmailCookie: (e: string) => setEmailCookie(e),
+                navigate: navigate("/employee"),
+              }),
+            text: "Login",
+            classNames: "button",
+          })}
         </form>
 
         <Auth />

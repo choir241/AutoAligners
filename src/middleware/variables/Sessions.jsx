@@ -1,4 +1,4 @@
-export function getEmail(){
+export function getEmail() {
   return sessionStorage.getItem("email");
 }
 

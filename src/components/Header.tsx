@@ -12,7 +12,7 @@ import { Action, State } from "../middleware/states/Zustand-Types";
 
 export default function Header(header: HeaderInterface) {
   const setEmailCookie = useStore((action: Action) => action.setEmailCookie);
-  const emailCookie = useStore((state: State)=>state.emailCookie);
+  const emailCookie = useStore((state: State) => state.emailCookie);
 
   const headerNav = [
     {
@@ -20,26 +20,26 @@ export default function Header(header: HeaderInterface) {
       domain: "/",
       condition: true,
     },
-      {
-        text: "Home",
-        domain: "/",
-        condition: false,
-      },
-      {
-        text: "Estimate Car Service",
-        domain: "/estimate",
-        condition: false,
-      },
-      {
-        text: "Finance",
-        domain: "/finance",
-        condition: false,
-      },
-      {
-        text: "Login/Demo",
-        domain: "/login",
-        condition: false,
-      },
+    {
+      text: "Home",
+      domain: "/",
+      condition: false,
+    },
+    {
+      text: "Estimate Car Service",
+      domain: "/estimate",
+      condition: false,
+    },
+    {
+      text: "Finance",
+      domain: "/finance",
+      condition: false,
+    },
+    {
+      text: "Login/Demo",
+      domain: "/login",
+      condition: false,
+    },
     {
       text: "Manage Appoinments",
       domain: "/manageAppointments",
@@ -58,23 +58,22 @@ export default function Header(header: HeaderInterface) {
           {headerNav.map((navLinks: EmployeeNavInterface) => {
             const text = navLinks.text;
             const domain = navLinks.domain;
-            if (!navLinks.condition && (!getEmail() && !emailCookie)) {
+            if (!navLinks.condition && !getEmail() && !emailCookie) {
               return (
-                <li key = {`${text}${domain}`}>
+                <li key={`${text}${domain}`}>
                   {ButtonLink({
                     text: text,
                     domain: domain,
                   })}
                 </li>
               );
-            }
-             else if(navLinks.condition && (getEmail() || emailCookie)){
+            } else if (navLinks.condition && (getEmail() || emailCookie)) {
               return (
-                <li key = {`${text}${domain}`}>
+                <li key={`${text}${domain}`}>
                   {ButtonLink({
                     text: text,
                     domain: domain,
-                    key: `${text}${domain}`
+                    key: `${text}${domain}`,
                   })}
                 </li>
               );

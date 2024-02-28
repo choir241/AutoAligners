@@ -7,7 +7,11 @@ import {
 
 export function ButtonLink(button: ButtonLinkInterface): React.JSX.Element {
   return (
-    <Link key ={button.key} className={`${button.classNames}`} to={`${button.domain}`}>
+    <Link
+      key={button.key}
+      className={`${button.classNames}`}
+      to={`${button.domain}`}
+    >
       {button.text}
     </Link>
   );

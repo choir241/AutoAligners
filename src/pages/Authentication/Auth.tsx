@@ -8,7 +8,7 @@ export default function Auth() {
       <ul className="flex justifyBetween flex-col">
         {buttons.map((button: ButtonLinkInterface) => {
           return (
-            <li className="textAlignCenter" key= {button.domain}>
+            <li className="textAlignCenter" key={button.domain}>
               {ButtonLink({
                 domain: button.domain,
                 text: button.text,

@@ -15,8 +15,8 @@ let api = {
     }
     let appwrite = new Appwrite();
     appwrite
-      .setEndpoint(import.meta.env.VITE_REACT_APP_ENDPOINT)
-      .setProject(import.meta.env.VITE_REACT_APP_PROJECT);
+      .setEndpoint(import.meta.env.VITE_ENDPOINT)
+      .setProject(import.meta.env.VITE_PROJECT);
     const account = new Account(appwrite);
     const database = new Databases(appwrite);
     const client = new Client(appwrite);
@@ -91,11 +91,7 @@ let api = {
   createImage: (ID, file) => {
     return api
       .provider()
-      .storage.createFile(
-        import.meta.env.VITE_REACT_APP_PROFILE_IMAGE,
-        ID,
-        file[0],
-      );
+      .storage.createFile(import.meta.env.VITE_PROFILE_IMAGE, ID, file[0]);
   },
 };
 

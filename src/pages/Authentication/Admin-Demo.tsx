@@ -1,20 +1,19 @@
 import Header from "../../components/Header";
-import {HandleLogin} from "../../hooks/Auth/Login"
+import { HandleLogin } from "../../hooks/Auth/Login";
 import { Button } from "../../components/Button";
 import Footer from "../../components/Footer";
 import { renderInputs, adminAccount } from "./Demo-Variables";
 import { Input } from "../../components/Input";
 import Auth from "./Auth";
 import { InputInterface } from "../../middleware/variables/Interfaces";
-import {useNavigate} from "react-router-dom"
-import {useStore} from "../../middleware/states/Zustand"
-import {Action} from "../../middleware/states/Zustand-Types"
+import { useNavigate } from "react-router-dom";
+import { useStore } from "../../middleware/states/Zustand";
+import { Action } from "../../middleware/states/Zustand-Types";
 
 export default function AdminDemo() {
-
   const navigate = useNavigate();
 
-  const setEmailCookie = useStore((action: Action)=>action.setEmailCookie);
+  const setEmailCookie = useStore((action: Action) => action.setEmailCookie);
 
   return (
     <main id="auth">
@@ -36,12 +35,18 @@ export default function AdminDemo() {
             });
           })}
 
-            {Button({
-                    onClick: () =>
-                      HandleLogin({email: adminAccount.email, name: adminAccount.name, password: adminAccount.password, setEmailCookie: (e:string)=>setEmailCookie(e), navigate: navigate("/")}),
-                    text: "Login",
-                    classNames: "button"
-                  })}
+          {Button({
+            onClick: () =>
+              HandleLogin({
+                email: adminAccount.email,
+                name: adminAccount.name,
+                password: adminAccount.password,
+                setEmailCookie: (e: string) => setEmailCookie(e),
+                navigate: navigate("/employee"),
+              }),
+            text: "Login",
+            classNames: "button",
+          })}
         </form>
 
         <Auth />

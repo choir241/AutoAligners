@@ -21,7 +21,7 @@
 //         <main id = "finance">
 //             <Header pageHeading = {"Financial Options for Car Services"}/>
 
-//             {bronzeFinanceDisplay || silverFinanceDisplay || goldFinanceDisplay ? 
+//             {bronzeFinanceDisplay || silverFinanceDisplay || goldFinanceDisplay ?
 
 //                 <section>
 //                     {bronzeFinanceDisplay ? renderFinanceDisplay({text: "bronze", display: bronzeFinanceDisplay, setDisplay: (e:boolean)=>setBronzeFinanceDisplay(e), cardInfo: cardInfo, setCardInfo: (e:CardInfo)=>setCardInfo(e), email: email, setEmail: (e:string)=>setEmail(e)}) : ""}
@@ -30,7 +30,7 @@
 
 //                 </section>
 //             :
-            
+
 //             <section>
 
 //             <section className = "flex flex-col">
@@ -56,14 +56,11 @@
 //                     <p className = {`${goldDisplay? "": "displayNone"} clearButton flex flex-col alignStart`}><i className = "fa-solid fa-xmark button" onClick = {()=>toggleDisplay((e:boolean)=>setGoldDisplay(e), goldDisplay)}></i>$199/month includes 12 services/year (Gold + Air Conditioning Service, Wheel Alignment)</p>
 //                 </div>
 //         </section>
-            
 
 //             </section>
 
-
 //             <section>
 //                 <h2>Pay Later</h2>
-        
 
 //                 <div className="flex justifyBetween alignCenter">
 //                     <h3>Book now and pay later! Schedule your appointment and pay within 30 days after service completion.</h3>
@@ -71,25 +68,21 @@
 //                     {ButtonLink({domain: "/reservation", text: "Make Reservation"})}
 //                 </div>
 
-              
 //             </section>
-         
 
 //          <section className = "textAlignRight">
-            
+
 //             <h2>Deferred Payments:</h2>
 
 //             <div className = "flex justifyBetween alignCenter">
 
 //                 {ButtonLink({domain: "/estimate", text: "Estimate Car Service"})}
-                
+
 //                 <h3>Get your car serviced today and defer payments for up to 45 days.</h3>
 
 //             </div>
 
-
 //          </section>
-
 
 //         <section>
 
@@ -99,18 +92,15 @@
 //                         <p>Please note that the above numbers and content are entirely fictional and should not be used as financial advice.</p>
 //                      <p> They are provided for illustrative purposes only to demonstrate how the financial options could be presented within the car appointment booking application.</p>
 //                 </div>
-          
+
 //                 <div className = "buttonContainer flex justifyBetween alignCenter">
 //                     {ButtonLink({domain: "/reservation", text: "Make Reservation"})}
 //                     {ButtonLink({domain: "/estimate", text: "Estimate Car Service"})}
 //                 </div>
- 
 
 //             </div>
-           
-//            <div>
-            
 
+//            <div>
 
 //            </div>
 //         </section>

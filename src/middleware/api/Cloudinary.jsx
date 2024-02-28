@@ -18,8 +18,8 @@ const ImageUpload = ({ user }) => {
         };
 
         const employeeList = await api.listDocuments(
-          import.meta.env.VITE_REACT_APP_DATABASE_ID,
-          import.meta.env.VITE_REACT_APP_PROFILE_COLLECTION_ID,
+          import.meta.env.VITE_DATABASE_ID,
+          import.meta.env.VITE_PROFILE_COLLECTION_ID,
         );
 
         const findEmployee = employeeList.documents.filter(
@@ -28,15 +28,15 @@ const ImageUpload = ({ user }) => {
 
         if (findEmployee.length) {
           await api.updateDocument(
-            import.meta.env.VITE_REACT_APP_DATABASE_ID,
-            import.meta.env.VITE_REACT_APP_PROFILE_COLLECTION_ID,
+            import.meta.env.VITE_DATABASE_ID,
+            import.meta.env.VITE_PROFILE_COLLECTION_ID,
             findEmployee[0].$id,
             data,
           );
         } else {
           await api.createDocument(
-            import.meta.env.VITE_REACT_APP_DATABASE_ID,
-            import.meta.env.VITE_REACT_APP_PROFILE_COLLECTION_ID,
+            import.meta.env.VITE_DATABASE_ID,
+            import.meta.env.VITE_PROFILE_COLLECTION_ID,
             data,
             [Permission.read(Role.any())],
           );

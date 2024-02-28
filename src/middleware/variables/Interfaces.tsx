@@ -35,7 +35,7 @@ export interface AuthInterface extends LogoutInterface {
   email: string;
   name: string;
   password: string;
-  navigate?: void
+  navigate?: void;
 }
 
 export interface Auth {
@@ -48,15 +48,15 @@ export interface EmployeeNavInterface extends ButtonLinkInterface {
   condition: boolean;
 }
 
-export interface FinanceInterface{
-  bronzeFinanceDisplay?: boolean,
-  silverFinanceDisplay?: boolean,
-  goldFinanceDisplay?: boolean,
-  setBronzeFinanceDisplay?: (e:boolean)=>void,
-  setSilverFinanceDisplay?: (e:boolean)=>void,
-  setGoldFinanceDisplay?: (e:boolean)=>void,
-  display: boolean,
-  setDisplay: (e: boolean) => void,
-  email: string,
-  setEmail: (e:string) => void
+export interface FinanceInterface {
+  bronzeFinanceDisplay?: boolean;
+  silverFinanceDisplay?: boolean;
+  goldFinanceDisplay?: boolean;
+  setBronzeFinanceDisplay?: (e: boolean) => void;
+  setSilverFinanceDisplay?: (e: boolean) => void;
+  setGoldFinanceDisplay?: (e: boolean) => void;
+  display: boolean;
+  setDisplay: (e: boolean) => void;
+  email: string;
+  setEmail: (e: string) => void;
 }
