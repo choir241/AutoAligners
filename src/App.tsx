@@ -10,7 +10,6 @@ import { State } from "./middleware/states/Zustand-Types";
 import { GetAppointmentData } from "./hooks/Appointment/GetAppointmentData";
 import { Appointment } from "./middleware/variables/Interfaces";
 import { AppointmentContext } from "./middleware/states/Context";
-import Header from "./components/Header";
 
 export default function App() {
   const emailCookie = useStore((state: State) => state.emailCookie);

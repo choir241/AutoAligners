@@ -11,3 +11,11 @@ export function getYear() {
 export function getDay() {
   return date.getDate();
 }
+
+export function getDayOfWeek() {
+  return date.getDay();
+}
+
+export function getFullDate() {
+  return `${getMonth()}/${getDay()}/${getYear()}`;
+}

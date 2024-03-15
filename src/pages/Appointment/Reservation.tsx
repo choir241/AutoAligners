@@ -4,6 +4,7 @@ import { GetCarData } from "../../hooks/Appointment/GetCarData";
 import { SelectCarMakeInput } from "../../components/Reservation/SelectCarMakeInput";
 import { SelectCarModelInput } from "../../components/Reservation/SelectCarModelInput";
 import { SelectCarYearInput } from "../../components/Reservation/SelectCarYearInput";
+import DisplayTimeAppointments from "../../components/Reservation/Calendar/DisplayAppointments";
 
 export default function Reservation() {
   const appointmentData = useContext(AppointmentContext);
@@ -56,6 +57,8 @@ export default function Reservation() {
         onChange: (e: string) => setCarYear(e),
         carYear: carYear,
       })}
+
+      {DisplayTimeAppointments()}
     </main>
   );
 }

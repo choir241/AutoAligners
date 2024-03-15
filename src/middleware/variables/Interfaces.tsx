@@ -117,3 +117,33 @@ export interface SelectMakeOptions extends SelectModelOptions {
   resetMake: (e: string) => void;
   carMake: string;
 }
+
+export interface TimeDateAppointmentsInterface {
+  appointments: Appointment[];
+  setDate: (e: string) => void;
+  date?: string;
+}
+
+export interface RenderCalendarInterface {
+  currentMonth: number;
+  currentDay: number;
+  currentYear: number;
+  daysOfWeek: string[];
+  currentDayOfWeek: number;
+  setDate: (e: string) => void;
+  i: number;
+}
+
+export interface ApptTimeInterface {
+  appointments: Appointment[];
+  time?: string;
+  setTime: (e: string) => void;
+  selectedDate: string;
+}
+
+export interface ChangeTime {
+  i: number;
+  e: React.MouseEvent<HTMLButtonElement, MouseEvent>;
+  time: string;
+  setTime: (e: string) => void;
+}
