@@ -37,14 +37,14 @@ export function Calendar(props: TimeDateAppointmentsInterface) {
     "Saturday",
   ];
 
-  const appt: React.JSX.Element[] = [];
+  const dates: React.JSX.Element[] = [];
+
+  let month = getMonth();
+  let day = getDay();
+  let year = getYear();
+  let dayOfWeek = getDayOfWeek();
 
   for (let i = 0; i < 8; i++) {
-    let month = getMonth();
-    let day = getDay();
-    let year = getYear();
-    let dayOfWeek = getDayOfWeek();
-
     switch (month) {
       case 1:
       case 3:
@@ -89,16 +89,24 @@ export function Calendar(props: TimeDateAppointmentsInterface) {
     if (dayOfWeek > 6) {
       dayOfWeek = 0;
     }
+    const date = `${month}/${day}/${year}`;
 
     if (props.date?.split("D")[0] === `${month}/${day}/${year}`) {
-      appt.push(
+      dates.push(
         <div
           className={`calendar clearButton c-${i} clicked`}
           key={`c-${i}`}
           onClick={() => {
-            const date = `${month}/${day}/${year}`;
             setSelectedDate(date);
-            // handleRenderCalendar({currentMonth: month, currentDay: day, currentYear: year, daysOfWeek: daysOfWeek, daysOfWeek, setDate: (e:string)=> props.setDate(e), i: i})
+            handleRenderCalendar({
+              currentMonth: month,
+              currentDay: day,
+              currentYear: year,
+              daysOfWeek: daysOfWeek,
+              currentDayOfWeek: dayOfWeek,
+              setDate: (e: string) => props.setDate(e),
+              i: i,
+            });
           }}
         >
           <h3>{daysOfWeek[dayOfWeek]}</h3>
@@ -106,14 +114,21 @@ export function Calendar(props: TimeDateAppointmentsInterface) {
         </div>,
       );
     } else {
-      appt.push(
+      dates.push(
         <div
           className={`calendar clearButton c-${i}`}
           key={`c-${i}`}
           onClick={() => {
-            const date = `${month}/${day}/${year}`;
             setSelectedDate(date);
-            // handleRenderCalendar({currentMonth: month, currentDay: day, currentYear: year, daysOfWeek: daysOfWeek, setDate: (e:string)=> props.setDate(e), i: i})
+            handleRenderCalendar({
+              currentMonth: month,
+              currentDay: day,
+              currentYear: year,
+              daysOfWeek: daysOfWeek,
+              currentDayOfWeek: dayOfWeek,
+              setDate: (e: string) => props.setDate(e),
+              i: i,
+            });
           }}
         >
           <h3>{daysOfWeek[dayOfWeek]}</h3>
@@ -126,5 +141,5 @@ export function Calendar(props: TimeDateAppointmentsInterface) {
     dayOfWeek++;
   }
 
-  return appt;
+  return dates;
 }

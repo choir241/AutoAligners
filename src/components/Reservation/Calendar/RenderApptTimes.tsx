@@ -16,7 +16,7 @@ function handleChangeTime(props: ChangeTime) {
   document.querySelector(`.t-${props.i}`)?.classList.add("clicked");
 }
 
-export default function RenderAppointmentTimes(props: ApptTimeInterface) {
+export function RenderAppointmentTimes(props: ApptTimeInterface) {
   const filterAppointmentTimes = props.appointments.filter(
     (appointment: Appointment) =>
       appointment.date.split("D")[0] === props.selectedDate,
@@ -27,17 +27,17 @@ export default function RenderAppointmentTimes(props: ApptTimeInterface) {
   );
   const [time, setTime] = useState("");
 
-  let jsx = [];
+  let timeSlots = [];
 
   //times at :00 mark
   for (let time = 7; time <= 17; time++) {
     const timeDisplay = time.toString() + ":00";
     if (!appointmentTimes.includes(timeDisplay)) {
-      jsx[time - 7] = timeDisplay;
+      timeSlots[time - 7] = timeDisplay;
     }
   }
 
-  const miliaryTimeConversion = jsx.map((time: string) => {
+  const miliaryTimeConversion = timeSlots.map((time: string) => {
     const hours = parseInt(time.split(":")[0]);
 
     if (parseInt(time) > 12) {
@@ -53,8 +53,8 @@ export default function RenderAppointmentTimes(props: ApptTimeInterface) {
   });
 
   //render clear buttons of appointment dates
-  return miliaryTimeConversion.map((jsx, i) => {
-    if (jsx[1] === props.time) {
+  return miliaryTimeConversion.map((time, i) => {
+    if (time[1] === props.time) {
       return (
         <button
           className={`clearButton t-${i} time clicked`}
@@ -63,12 +63,12 @@ export default function RenderAppointmentTimes(props: ApptTimeInterface) {
             handleChangeTime({
               i: i,
               e: e,
-              time: jsx[1],
+              time: time[1],
               setTime: (e: string) => setTime(e),
             })
           }
         >
-          {jsx[0]}
+          {time[0]}
         </button>
       );
     } else {
@@ -80,12 +80,12 @@ export default function RenderAppointmentTimes(props: ApptTimeInterface) {
             handleChangeTime({
               i: i,
               e: e,
-              time: jsx[1],
+              time: time[1],
               setTime: (e: string) => setTime(e),
             })
           }
         >
-          {jsx[0]}
+          {time[0]}
         </button>
       );
     }
