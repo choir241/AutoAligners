@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import {
   ButtonLinkInterface,
   ButtonInterface,
-} from "../middleware/variables/Interfaces";
+} from "../middleware/interfaces/component";
 
 export function ButtonLink(button: ButtonLinkInterface): React.JSX.Element {
   return (

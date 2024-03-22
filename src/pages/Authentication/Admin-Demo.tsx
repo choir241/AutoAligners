@@ -3,9 +3,9 @@ import { HandleLogin } from "../../hooks/Auth/Login";
 import { Button } from "../../components/Button";
 import Footer from "../../components/Footer";
 import { renderInputs, adminAccount } from "./Demo-Variables";
-import { Input } from "../../components/Input";
+import { GeneralInput } from "../../components/InputForms/Inputs";
 import Auth from "./Auth";
-import { InputInterface } from "../../middleware/variables/Interfaces";
+import { GeneralInputInterface } from "../../middleware/interfaces/component";
 import { useNavigate } from "react-router-dom";
 import { useStore } from "../../middleware/states/Zustand";
 import { Action } from "../../middleware/states/Zustand-Types";
@@ -24,8 +24,8 @@ export default function AdminDemo() {
           {renderInputs(
             { ...adminAccount, setEmailCookie: () => "" },
             { setEmail: () => "", setName: () => "", setPassword: () => "" },
-          ).map((input: InputInterface) => {
-            return Input({
+          ).map((input: GeneralInputInterface) => {
+            return GeneralInput({
               key: input.placeholder,
               type: input.type,
               onChange: input.onChange,

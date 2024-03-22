@@ -1,0 +1,20 @@
+//list of all available car services
+export const services = [
+  "Oil Change",
+  "Brakes",
+  "Tire Purchase/Installation",
+  "Tire Services",
+  "Vehicle Inspection",
+  "Check Engine Light",
+  "Air Conditioning",
+  "Batteries Starting & Charging",
+  "Belts & Hoses",
+  "Engine",
+  "Exhaust",
+  "Fuel Systems",
+  "Heating & Cooling",
+  "Routine Maintenance",
+  "Steering Suspension Alignment",
+  "Transmission",
+  "Other",
+];

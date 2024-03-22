@@ -1,7 +1,6 @@
 import { Calendar } from "./RenderApptCalendar";
 import { useState, useContext } from "react";
 import { AppointmentContext } from "../../../middleware/states/Context";
-import { Appointment } from "../../../middleware/variables/Interfaces";
 import { RenderAppointmentTimes } from "./RenderApptTimes";
 
 export default function DisplayTimeAppointments() {

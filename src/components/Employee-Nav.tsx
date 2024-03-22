@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ButtonLink } from "./Button";
 import { getEmail } from "../middleware/variables/Sessions";
-import { EmployeeNavInterface } from "../middleware/variables/Interfaces";
+import { EmployeeNavInterface } from "../middleware/interfaces/component";
 
 export default function EmployeeNav() {
   const [hidden, setHidden] = useState(false);

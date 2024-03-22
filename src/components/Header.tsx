@@ -5,7 +5,7 @@ import EmployeeNav from "./Employee-Nav";
 import {
   HeaderInterface,
   EmployeeNavInterface,
-} from "../middleware/variables/Interfaces";
+} from "../middleware/interfaces/component";
 import { Logout } from "../hooks/Auth/Logout";
 import { useStore } from "../middleware/states/Zustand";
 import { Action, State } from "../middleware/states/Zustand-Types";

@@ -1,4 +1,4 @@
-import { ButtonLinkInterface } from "../middleware/variables/Interfaces";
+import { ButtonLinkInterface } from "../middleware/interfaces/component";
 import { getYear } from "./Dates";
 
 const Footer = () => {
