@@ -14,6 +14,7 @@ import {
 } from "../../components/InputForms/Inputs";
 import { HandleCreateAppointment } from "../../hooks/Appointment/HandleCreateAppointment";
 import Header from "../../components/Header";
+import CarInput from "./CarInput";
 
 export default function Reservation() {
   const [date, setDate] = useState<string>("");
@@ -55,48 +56,24 @@ export default function Reservation() {
 
       <section className="flex flex-col">
         <div className="flex justifyBetween">
-          <section className="section-1 flex flex-col alignCenter">
-            <section className="flex flex-col alignCenter">
-              {SelectCarMakeInput({
-                defaultValue: "Car Make",
-                options: carMakeOptions,
-                onChange: (e: string) => setCarMake(e),
-                carMake: carMake,
-                carYear: carYear,
-                carModel: carModel,
-                resetModel: (e: string) => setCarModel(e),
-                resetYear: (e: string) => setCarYear(e),
-                resetMake: (e: string) => setCarMake(e),
-              })}
-
-              {SelectCarModelInput({
-                defaultValue: "Car Model",
-                options: carModelOptions,
-                onChange: (e: string) => setCarModel(e),
-                carModel: carModel,
-                carYear: carYear,
-                resetModel: (e: string) => setCarModel(e),
-                resetYear: (e: string) => setCarYear(e),
-              })}
-
-              {SelectCarYearInput({
-                defaultValue: "Car Year",
-                options: carYearOptions,
-                onChange: (e: string) => setCarYear(e),
-                carYear: carYear,
-              })}
-            </section>
-
-            {ChooseTwoInput({
-              text1: "Drop off car",
-              text2: "Wait for car",
-              name: "stayLeave",
-              onChange: (e: string) => setStay_Leave(e),
-            })}
-
-            {RenderCarServices((e: string) => setCarService(e))}
-          </section>
-
+          <div className="flex justifyBetween">
+            <CarInput
+              carService={carService}
+              carModel={carModel}
+              carYear={carYear}
+              carYearOptions={carYearOptions}
+              carModelOptions={carModelOptions}
+              setCarService={setCarService}
+              setCarMake={setCarMake}
+              setCarYear={setCarYear}
+              setCarMakeOptions={setCarMakeOptions}
+              setCarModel={setCarModel}
+              carMake={carMake}
+              carMakeOptions={carMakeOptions}
+              setCarModelOptions={setCarModelOptions}
+              setStay_Leave={setStay_Leave}
+            />
+          </div>
           <section className="section-1 flex flex-col alignCenter">
             <section className="flex justifyBetween contact">
               {GeneralInput({
