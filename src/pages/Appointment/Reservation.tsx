@@ -2,19 +2,11 @@ import { useContext, useEffect, useState } from "react";
 import { Button } from "../../components/Button";
 import { AppointmentContext } from "../../middleware/states/Context";
 import { GetCarData } from "../../hooks/Appointment/GetCarData";
-import { SelectCarMakeInput } from "../../components/Reservation/SelectCar/SelectCarMakeInput";
-import { SelectCarModelInput } from "../../components/Reservation/SelectCar/SelectCarModelInput";
-import { SelectCarYearInput } from "../../components/Reservation/SelectCar/SelectCarYearInput";
 import DisplayTimeAppointments from "../../components/Reservation/Calendar/DisplayAppointments";
-import { RenderCarServices } from "../../components/InputForms/RenderCarServices";
-import {
-  GeneralInput,
-  ChooseTwoInput,
-  TextBoxInput,
-} from "../../components/InputForms/Inputs";
 import { HandleCreateAppointment } from "../../hooks/Appointment/HandleCreateAppointment";
 import Header from "../../components/Header";
 import CarInput from "./CarInput";
+import UserInput from "./UserInput";
 
 export default function Reservation() {
   const [date, setDate] = useState<string>("");
@@ -52,7 +44,12 @@ export default function Reservation() {
   return (
     <main id="reservation">
       <Header />
-      {DisplayTimeAppointments()}
+      {DisplayTimeAppointments({
+        date: date,
+        setDate: (e: string) => setDate(e),
+        setTime: (e: string) => setTime(e),
+        time: time,
+      })}
 
       <section className="flex flex-col">
         <div className="flex justifyBetween">
@@ -73,61 +70,17 @@ export default function Reservation() {
               setCarModelOptions={setCarModelOptions}
               setStay_Leave={setStay_Leave}
             />
+
+            <UserInput
+              setFirstName={setFirstName}
+              setLastName={setLastName}
+              setEmail={setEmail}
+              setPhone={setPhone}
+              setZipCode={setZipCode}
+              setComment={setComment}
+              setContact={setContact}
+            />
           </div>
-          <section className="section-1 flex flex-col alignCenter">
-            <section className="flex justifyBetween contact">
-              {GeneralInput({
-                type: "text",
-                onChange: (e: string) => setFirstName(e),
-                placeholder: "First Name",
-              })}
-              {GeneralInput({
-                type: "text",
-                onChange: (e: string) => setLastName(e),
-                placeholder: "Last Name",
-              })}
-            </section>
-
-            <section className="flex justifyBetween contact">
-              {GeneralInput({
-                type: "text",
-                onChange: (e: string) => setEmail(e),
-                placeholder: "Email Address",
-              })}
-              {GeneralInput({
-                type: "tel",
-                onChange: (e: string) => setPhone(e),
-                placeholder: "###-###-####",
-                minLength: 10,
-                maxLength: 10,
-              })}
-            </section>
-
-            {GeneralInput({
-              type: "text",
-              onChange: (e: string) => setZipCode(e),
-              placeholder: "Postal/Zip Code",
-              minLength: 5,
-              maxLength: 5,
-            })}
-
-            <section className="flex flex-col alignCenter contact">
-              <h2>Preferred Contact Method</h2>
-
-              {ChooseTwoInput({
-                text1: "Email",
-                text2: "Phone",
-                name: "contact",
-                onChange: (e: string) => setContact(e),
-              })}
-              {TextBoxInput({
-                width: 50,
-                height: 10,
-                onChange: (e: string) => setComment(e),
-                placeholder: "Additional Comments",
-              })}
-            </section>
-          </section>
         </div>
       </section>
 

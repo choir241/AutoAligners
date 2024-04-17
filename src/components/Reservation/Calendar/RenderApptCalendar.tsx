@@ -12,10 +12,6 @@ import {
 } from "../../../middleware/variables/Interfaces";
 
 function handleRenderCalendar(props: RenderCalendarInterface) {
-  const date = `${props.currentMonth}/${props.currentDay}/${
-    props.currentYear
-  }D${props.daysOfWeek[props.currentDayOfWeek]}`;
-  props.setDate(date);
   document.querySelectorAll(".calendar").forEach((ele) => {
     ele.classList.remove("clicked");
   });
@@ -24,8 +20,6 @@ function handleRenderCalendar(props: RenderCalendarInterface) {
 }
 
 export function Calendar(props: TimeDateAppointmentsInterface) {
-  const [selectedDate, setSelectedDate] = useState<string>(getFullDate());
-
   //list of days in a week
   const daysOfWeek = [
     "Sunday",
@@ -97,14 +91,13 @@ export function Calendar(props: TimeDateAppointmentsInterface) {
           className={`calendar clearButton c-${i} clicked`}
           key={`c-${i}`}
           onClick={() => {
-            setSelectedDate(date);
+            props.setDate(date);
             handleRenderCalendar({
               currentMonth: month,
               currentDay: day,
               currentYear: year,
               daysOfWeek: daysOfWeek,
               currentDayOfWeek: dayOfWeek,
-              setDate: (e: string) => props.setDate(e),
               i: i,
             });
           }}
@@ -119,14 +112,13 @@ export function Calendar(props: TimeDateAppointmentsInterface) {
           className={`calendar clearButton c-${i}`}
           key={`c-${i}`}
           onClick={() => {
-            setSelectedDate(date);
+            props.setDate(date);
             handleRenderCalendar({
               currentMonth: month,
               currentDay: day,
               currentYear: year,
               daysOfWeek: daysOfWeek,
               currentDayOfWeek: dayOfWeek,
-              setDate: (e: string) => props.setDate(e),
               i: i,
             });
           }}

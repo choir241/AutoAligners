@@ -97,7 +97,6 @@ export interface RenderCalendarInterface {
   currentYear: number;
   daysOfWeek: string[];
   currentDayOfWeek: number;
-  setDate: (e: string) => void;
   i: number;
 }
 
@@ -112,5 +111,4 @@ export interface ChangeTime {
   i: number;
   e: React.MouseEvent<HTMLButtonElement, MouseEvent>;
   time: string;
-  setTime: (e: string) => void;
 }

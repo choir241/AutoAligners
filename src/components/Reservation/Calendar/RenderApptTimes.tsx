@@ -7,7 +7,6 @@ import { useState } from "react";
 
 function handleChangeTime(props: ChangeTime) {
   props.e.preventDefault();
-  props.setTime(props.time);
 
   document.querySelectorAll(".time").forEach((ele) => {
     ele.classList.remove("clicked");
@@ -25,7 +24,6 @@ export function RenderAppointmentTimes(props: ApptTimeInterface) {
   const appointmentTimes = filterAppointmentTimes.map(
     (appointment: Appointment) => appointment.time,
   );
-  const [time, setTime] = useState("");
 
   let timeSlots = [];
 
@@ -59,14 +57,14 @@ export function RenderAppointmentTimes(props: ApptTimeInterface) {
         <button
           className={`clearButton t-${i} time clicked`}
           key={i}
-          onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
+          onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+            props.setTime(time[0]);
             handleChangeTime({
               i: i,
               e: e,
               time: time[1],
-              setTime: (e: string) => setTime(e),
-            })
-          }
+            });
+          }}
         >
           {time[0]}
         </button>
@@ -76,14 +74,14 @@ export function RenderAppointmentTimes(props: ApptTimeInterface) {
         <button
           className={`clearButton t-${i} time`}
           key={i}
-          onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
+          onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+            props.setTime(time[0]);
             handleChangeTime({
               i: i,
               e: e,
               time: time[1],
-              setTime: (e: string) => setTime(e),
-            })
-          }
+            });
+          }}
         >
           {time[0]}
         </button>
