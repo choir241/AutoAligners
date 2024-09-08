@@ -5,10 +5,11 @@ export interface ButtonLinkInterface {
   key?: string;
 }
 
-export interface ButtonInterface {
-  classNames?: string;
+export interface ButtonInterface extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  className?: string;
   text: string;
   onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  variant: string;
 }
 
 export interface HeaderInterface {
