@@ -134,7 +134,6 @@ export function SearchBar(props: Search) {
               ? removeDuplicates.push(value)
               : "",
           );
-          console.log(props.searchValue)
 
           let i = 0;
           const list = removeDuplicates.map((value: string) => {
@@ -196,10 +195,11 @@ export function SearchBar(props: Search) {
           a.carModel.localeCompare(b.carModel),
         );
         props.setData(sortData);
-      } else if (filter === "year") {
+      } else if (filter === "carYear") {
         const sortData = data.documents.sort(
           (a: any, b: any) => parseInt(a.carYear) - parseInt(b.carYear),
         );
+        console.log(sortData)
         props.setData(sortData);
       } else if (filter === "service") {
         const sortData = data.documents.sort((a: any, b: any) =>
@@ -221,9 +221,11 @@ export function SearchBar(props: Search) {
         });
         props.setData(sortData);
       } else if (filter === "firstName") {
+        props.setData([]);
         const sortData = data.documents.sort((a: any, b: any) =>
-          a.firstName.localeCompare(b.firstName),
+          a.firstName.toLowerCase() < b.firstName.toLowerCase(),
         );
+        console.log(sortData)
         props.setData(sortData);
       } else if (filter === "lastName") {
         const sortData = data.documents.sort((a: any, b: any) =>
@@ -263,7 +265,6 @@ export function SearchBar(props: Search) {
       props.collection,
     );
     props.setData(appointments.documents);
-    console.log(props.data);
   }
 
   return (

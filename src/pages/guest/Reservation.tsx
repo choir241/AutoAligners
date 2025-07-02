@@ -43,7 +43,6 @@ export default function Reservation() {
   const [service, setService] = useState<string>("");
   const { toggleDarkMode } = useContext(DarkModeContext);
   const [currPage, setCurrPage] = useState<number>(1);
-
   useEffect(() => {
     GetCarData({
       onMakeSelect: setCarMakeOptions,

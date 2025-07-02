@@ -8,7 +8,6 @@ export function RenderEmployeeAppointments(
 ) {
   return purchases
     .map((cart: PurchasedItem, i: number) => {
-      console.log(cart)
       let cartTotal = 0;
 
       for (let i = 0; i < cart.cartItems.length; i++) {

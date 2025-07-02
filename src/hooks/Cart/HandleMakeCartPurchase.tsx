@@ -1,68 +1,68 @@
 import api from "../../api/api";
 import { Permission, Role } from "appwrite";
 import { toast } from "react-toastify";
-import {
-  CartItem,
-  CartPurchase,
-} from "../../middleware/Interfaces/Cart";
-import {  InventoryItem,} from "../../middleware/Interfaces/Inventory"
+import { CartItem, CartPurchase } from "../../middleware/Interfaces/Cart";
+import { InventoryItem } from "../../middleware/Interfaces/Inventory";
+
+async function updateInventory(props: CartPurchase) {
+  // Create a cart lookup map by name for faster access
+  const cartMap = new Map();
+  props.cart.forEach((cartItem) => {
+    cartMap.set(cartItem.name, cartItem);
+  });
+
+  // Prepare an array of update promises for concurrent execution
+  const updatePromises = props.inventory.map(async (inventoryItem) => {
+    const cartItem = cartMap.get(inventoryItem.name);
+    if (!cartItem) return; // Skip if no matching item in cart
+
+    const quantity = Number(inventoryItem.quantity) - Number(cartItem.quantity);
+    const inventoryID = inventoryItem.$id;
+
+    // Update inventory quantity
+    const cartUpdate = { quantity: quantity };
+    await api.updateDocument(
+      import.meta.env.VITE_REACT_APP_DATABASE_ID,
+      import.meta.env.VITE_REACT_APP_INVENTORY_COLLECTION_ID,
+      inventoryID,
+      cartUpdate,
+    );
+
+    // If quantity reaches or is below reorder level, update cart item quantity
+    if (Number(inventoryItem.reOrderLV) >= quantity) {
+      const updateCartItem = {
+        name: inventoryItem.name,
+        price: inventoryItem.price,
+        manufacturer: inventoryItem.manufacturer,
+        description: inventoryItem.description,
+        category: inventoryItem.category,
+        quantity: quantity + Number(inventoryItem.reOrderLV),
+      };
+
+      await api.updateDocument(
+        import.meta.env.VITE_REACT_APP_DATABASE_ID,
+        import.meta.env.VITE_REACT_APP_INVENTORY_COLLECTION_ID,
+        inventoryID,
+        updateCartItem,
+      );
+    }
+  });
+
+  // Wait for all inventory updates to complete
+  await Promise.all(updatePromises);
+}
 
 //When the user sells the items in the cart
 export async function handleMakeCartPurchase(props: CartPurchase) {
   try {
-    if (props.cart && props.cardInfo?.cardNumber) {
+    if (props.cart) {
       //returns an array that converts all objects within the cart as a string
-      const cartAsString = props.cart.map((item: CartItem) =>
-        JSON.stringify(item),
-      );
-
       const cartItems = {
-        cartItems: cartAsString,
+        cartItems: props.cart.map((item: CartItem) => JSON.stringify(item)),
       };
 
       //go through each item in cart and each item in the inventory, and if they match names (because there are no duplicate items in the inventory), update that inventory items' quantity based on the purchase made from the cart
-      props.inventory.forEach(async (inventoryItem: InventoryItem) => {
-        for (let i = 0; i < props.cart.length; i++) {
-          if (props.cart[i].name === inventoryItem.name) {
-            const quantity =
-              Number(inventoryItem.quantity) - Number(props.cart[i].quantity);
-            const inventoryID = inventoryItem.$id;
-
-            const cartItem = {
-              quantity: quantity,
-            };
-
-            const data = await api.updateDocument(
-              import.meta.env.VITE_REACT_APP_DATABASE_ID,
-              import.meta.env.VITE_REACT_APP_INVENTORY_COLLECTION_ID,
-              inventoryID,
-              cartItem,
-            );
-
-            //Upon purchase, if an items' quantity reaches the reOrderLV, or is below the reOrderLV value, update the appropriate cart items' quantity
-            // if(inventoryItem.reOrderLV >= quantity){
-
-            //     const updateCartItem = {
-            //         name: inventoryItem.name,
-            //         price: inventoryItem.price,
-            //         manufacturer: inventoryItem.manufacturer,
-            //         description: inventoryItem.description,
-            //         category: inventoryItem.category,
-            //         quantity: quantity + inventoryItem.reOrderLV
-            //     }
-
-            //     await api.updateDocument(import.meta.env.VITE_REACT_APP_DATABASE_ID, import.meta.env.VITE_REACT_APP_INVENTORY_COLLECTION_ID, inventoryID, updateCartItem)
-            // }
-          }
-        }
-      });
-
-      const data = await api.createDocument(
-        import.meta.env.VITE_REACT_APP_DATABASE_ID,
-        import.meta.env.VITE_REACT_APP_PURCHASES_COLLECTION_ID,
-        cartItems,
-        [Permission.read(Role.any())],
-      );
+      updateInventory(props);
 
       // remove all currently purchased items from the cart database
       for (let i = 0; i < props.cart.length; i++) {
@@ -72,6 +72,13 @@ export async function handleMakeCartPurchase(props: CartPurchase) {
           props.cart[i].$id,
         );
       }
+
+      const data = await api.createDocument(
+        import.meta.env.VITE_REACT_APP_DATABASE_ID,
+        import.meta.env.VITE_REACT_APP_PURCHASES_COLLECTION_ID,
+        cartItems,
+        [Permission.read(Role.any())],
+      );
 
       if (data) {
         window.location.reload();

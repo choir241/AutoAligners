@@ -50,7 +50,6 @@ export function DisplayTimeDateAppointments(
     //if a different date is selected, change the selected date as the current value of setSelectedDate
     //use the selectedDate value to show the different appointment times that are avaiable for the respective date
     const apptDate = props.date.toString().split("D")[0];
-    CheckHolidays({ month: 10, day: 13, dayOfWeek: 1, year: 2025 });
 
     if (currentDayOfWeek > 6) {
       currentDayOfWeek = 0;
@@ -105,14 +104,13 @@ export function DisplayTimeDateAppointments(
         CalendarCard({
           i,
           currentMonth: newMonth,
-          currentDay: newDay,
+          currentDay: newDay+1,
           currentYear: newYear,
-          setSelectedDate: () => "",
+          setSelectedDate,
           daysOfWeek,
           currentDayOfWeek,
           props,
           clickedClassName: "",
-          disabled: "disabled",
         }),
       );
     }
@@ -156,17 +154,19 @@ export function DisplayTimeDateAppointments(
         <section className="timeContainer grid">{renderTimeButtons}</section>
       </section>
     );
-  }else if(!props.edit && props.time && props.date){
+  }else if(!props.edit && !appointmentTimes.length){
     let properTimeDisplay = [];
 
     //times at :00 mark
     for (let time = 7; time <= 18; time++) {
       const timeDisplay = time.toString() + ":00";
-      if (!appointmentTimes[0].time.includes(timeDisplay)) {
-        properTimeDisplay[time - 7] = timeDisplay;
-      }else if(props.edit && appointmentTimes[0].time.includes(timeDisplay)){
+      
+      if(props.edit && props.appointments.time.includes(timeDisplay)){
         properTimeDisplay[time - 7] = timeDisplay;
       }
+
+      properTimeDisplay[time - 7] = timeDisplay;
+
     }
 
     const miliaryTimes = militaryTimeConversion(properTimeDisplay);

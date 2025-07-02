@@ -111,6 +111,10 @@ label {
   width: 100%;
 }
 
+.px-2{
+  padding: 0 2rem;
+}
+
 .p-2 {
   padding: 2rem;
 }

@@ -12,7 +12,7 @@ export function RenderPaymentForm(
   }
 ) {
   return (
-    <section className="flex items-start flex-col w-40">
+    <section className="px-2 flex items-start flex-col w-40">
       <form className="flex flex-col items-start justify-between">
         <label className="my-1">Card Number</label>
         <input

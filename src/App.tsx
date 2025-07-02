@@ -41,6 +41,7 @@ import {
   Purchases,
   EditAppointment
 } from "./Pages";
+import { checkExpired } from "./hooks/ManageAppointments/DisplayAppointments.js";
 
 export default function App() {
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
@@ -55,23 +56,20 @@ export default function App() {
     const aDate = new Date(a.date.split("D")[0]);
     const bDate = new Date(b.date.split("D")[0]);
 
-    if (aDate < bDate) {
+    if ((aDate < bDate)) {
       return -1;
-    } else if (aDate > bDate) {
-      return 1;
     } else {
-      return 0;
+      return 1;
     }
   })
 
+
   useEffect(() => {
-    if (cacheEmail) {
       GetInventory((e: InventoryItem[]) => setInventory(e));
       GetCart((e: CartItem[]) => setCart(e));
       GetAppointmentData((e: Appointment[]) => setAppointments(e));
       GetPurchases((e: PurchasedItem[]) => setPurchases(e));
       GetAccount((e: User) => setUser(e));
-    }
   }, []);
 
   return (

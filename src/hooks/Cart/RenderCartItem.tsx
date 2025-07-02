@@ -41,7 +41,7 @@ export default function RenderMultipleCartItems({
       </div>
 
       <div className="flex items-end justify-between w-full">
-        <div className="flex items-center w-60 justify-between">
+        <div className="flex items-center justify-between">
           <h2>Quantity: </h2>
           {RenderCartQuantity({
             name: item.name,

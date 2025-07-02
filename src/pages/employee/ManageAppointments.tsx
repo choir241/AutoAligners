@@ -28,8 +28,8 @@ export default function ManageAppointments() {
   const endIndex = startIndex + rowsPerPage;
 
   const filterArray = [
-    "carMake",
-    "carModel",
+    "make",
+    "model",
     "carYear",
     "service",
     "firstName",

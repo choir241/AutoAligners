@@ -12,6 +12,26 @@ import {
 import { Button } from "../../components/Button";
 import {Appointment} from "../../middleware/Interfaces/Reservation";
 
+export function checkExpired({appointmentDate}:{appointmentDate: string}) {
+  const currentMonth = getMonth();
+  const currentDay = getDay();
+  const currentYear = getYear();
+
+  const apptMonth = parseInt(appointmentDate.split("/")[0]);
+  const apptDate = parseInt(appointmentDate.split("/")[1]);
+  const apptYear = parseInt(appointmentDate.split("/")[2]);
+
+  if (apptYear < currentYear) {
+    return false;
+  } else if ((apptYear >= currentYear) && (apptMonth < currentMonth)) {
+    return false;
+  } else if ((apptYear >= currentYear) && (apptMonth === currentMonth) && (apptDate < currentDay)) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 
 export function displayAppointments({
   appointments,
@@ -30,35 +50,12 @@ export function displayAppointments({
   setToggleDetails: (e: boolean) => void;
   toggleDarkMode: string;
 }): React.JSX.Element[] {
-  const currentMonth = getMonth();
-  const currentDay = getDay();
-  const currentYear = getYear();
 
   return appointments
     .map((appointment: Appointment, i: number) => {
       const appointmentDate = appointment.date.split("D")[0];
       const appointmentDayoFWeek = appointment.date.split("D")[1];
       const appointmentTime = parseInt(appointment.time);
-
-      const apptMonth = parseInt(appointmentDate.split("/")[0]);
-      const apptDate = parseInt(appointmentDate.split("/")[1]);
-      const apptYear = parseInt(appointmentDate.split("/")[2]);
-
-      function checkExpired() {
-        if (apptYear < currentYear) {
-          return false;
-        } else if (apptMonth < currentMonth) {
-          return false;
-        } else if (apptDate < currentDay) {
-          return false;
-        } else if (
-          apptYear >= currentYear &&
-          apptMonth >= currentMonth &&
-          apptDate >= currentDay
-        ) {
-          return true;
-        }
-      }
 
       return (
         <div
@@ -67,7 +64,7 @@ export function displayAppointments({
             apptCard
             ${toggleDarkMode === "dark" ? "lightBtn shadow-2xs" : "darkNav shadow-2xs"}
             ${classNameContainer} ${
-              checkExpired() ? "" : "expired"
+              checkExpired({appointmentDate}) ? "" : "expired"
             }`}
         >
           <section className="flex items-start justify-between">
@@ -131,7 +128,7 @@ export function displayAppointments({
           </section>
 
           <div className="flex alignCenter mt-2">
-            {checkExpired() ? (
+            {checkExpired({appointmentDate}) ? (
               <button
                 className={`button ${toggleDarkMode === "light" ? "lightBtn" : "darkBtn"}`}
                 onClick={() =>
