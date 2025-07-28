@@ -1,31 +1,32 @@
 import { useState, useEffect, useContext } from "react";
-import { ButtonLink, ButtonSubmit } from "../components/Button";
-import { handleLogout } from "../hooks/hooks/AuthHooks";
+import ButtonLink from "../components/Buttons/ButtonLink";
+import ButtonSubmit from "../components/Buttons/ButtonSubmit";
+import { handleLogout } from "../hooks/Auth/Logout";
 import { Link } from "react-router-dom";
 import EmployeeNav from "./EmployeeNav";
-import { CartItem } from "../middleware/Interfaces/Cart";
-import { nav } from "../middleware/Interfaces/General";
+// import { CartItem } from "../middleware/Interfaces/Cart";
+import { INav } from "../interfaces/General";
 import { cacheEmail } from "../middleware/Cache";
-import { APIContext, DarkModeContext } from "../middleware/Context";
-import { DarkMode } from "../hooks/hooks/DarkMode";
-import { FaShoppingCart } from "react-icons/fa";
+import { DarkModeContext } from "../middleware/Context";
+import DarkMode from "./DarkMode"
+// import { FaShoppingCart } from "react-icons/fa";
 
-export default function Nav(props: nav) {
-  const [cartQuantity, setCartQuantity] = useState<number>();
-  const { cart } = useContext(APIContext);
+export default function Nav({props}:{props: INav}) {
+//   const [cartQuantity, setCartQuantity] = useState<number>();
+//   const { cart } = useContext(APIContext);
   const { toggleDarkMode } = useContext(DarkModeContext);
 
-  useEffect(() => {
-    if (cacheEmail && cart?.length) {
-      let sum: number = 0;
+//   useEffect(() => {
+//     if (cacheEmail && cart?.length) {
+//       let sum: number = 0;
 
-      cart.forEach((item: CartItem) =>
-        item.email === cacheEmail ? (sum += parseInt(item.quantity)) : "",
-      );
+//       cart.forEach((item: CartItem) =>
+//         item.email === cacheEmail ? (sum += parseInt(item.quantity)) : "",
+//       );
 
-      setCartQuantity(sum);
-    }
-  }, [cart]);
+//       setCartQuantity(sum);
+//     }
+//   }, [cart]);
 
   const url = window.location.href;
   const splitUrl = url.split("/");
@@ -56,7 +57,7 @@ export default function Nav(props: nav) {
             </li>
           )}
 
-          {cacheEmail ? (
+          {/* {cacheEmail ? (
             <li className="cart flex items-center">
               {cart?.length && cartQuantity ? <span className="cartQuantity">{cartQuantity}</span> : ""}
               <Link to="/cart" className={`${currentUrl === "cart" ? "current-link" : "" }`}>
@@ -65,7 +66,7 @@ export default function Nav(props: nav) {
             </li>
           ) : (
             ""
-          )}
+          )} */}
 
           {cacheEmail ? (
             <div className="items-center flex p-2">

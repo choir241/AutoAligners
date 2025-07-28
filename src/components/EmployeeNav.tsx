@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { ButtonLink } from "./Button";
+import ButtonLink from "./Buttons/ButtonLink";
 import { cacheEmail } from "../middleware/Cache";
-import { DarkModeContext } from "../middleware/Context";
-import { useContext } from "react";
 
 export default function EmployeeNav() {
   const [hidden, setHidden] = useState(false);
