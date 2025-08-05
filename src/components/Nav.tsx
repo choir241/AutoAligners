@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import ButtonLink from "../components/Buttons/ButtonLink";
 import ButtonSubmit from "../components/Buttons/ButtonSubmit";
-import { handleLogout } from "../hooks/Auth/Logout";
+import { handleLogout } from "../hooks/Auth/handleLogout";
 import { Link } from "react-router-dom";
 import EmployeeNav from "./EmployeeNav";
 // import { CartItem } from "../middleware/Interfaces/Cart";
@@ -53,7 +53,7 @@ export default function Nav({props}:{props: INav}) {
             </li>
           ) : (
             <li className="items-center flex">
-              <Link to="/employee" className={`${currentUrl === "employee" ? "current-link" : "" }`}>Login/Demo</Link>
+              <Link to="/login" className={`${currentUrl === "login" || currentUrl === "register" ? "current-link" : "" }`}>Login/Demo</Link>
             </li>
           )}
 

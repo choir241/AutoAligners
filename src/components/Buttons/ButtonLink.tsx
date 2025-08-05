@@ -10,8 +10,6 @@ export default function ButtonLink(props: IButtonLink): React.JSX.Element {
     <Link
       className={`button ${props.classNames} ${toggleDarkMode === "light" ? "lightBtn" : "darkBtn"}`}
       to={`${props.domain}`}
-    >
-      {props.text}
-    </Link>
+    />
   );
 }
