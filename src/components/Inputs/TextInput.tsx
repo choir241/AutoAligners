@@ -3,7 +3,7 @@ import type { ITextInput } from "../../interfaces/Inputs";
 export function TextInput(props: ITextInput): React.JSX.Element {
   return (
     <input
-      className= "mb-4"
+      className="mb-4"
       name={props.name}
       disabled={props.isDisabled}
       type={props.type}

@@ -111,7 +111,7 @@ label {
   width: 100%;
 }
 
-.px-2{
+.px-2 {
   padding: 0 2rem;
 }
 
@@ -215,8 +215,7 @@ label {
   width: 40%;
 }
 
-
-.w-50{
+.w-50 {
   width: 50%;
 }
 
@@ -304,7 +303,7 @@ label {
 /****************/
 /**** Components ****/
 /****************/
-.cartSelect{
+.cartSelect {
   width: 20%;
 }
 
@@ -355,7 +354,7 @@ label {
   grid-template-columns: 1fr 1fr 1fr;
 }
 
-.cart:hover{
+.cart:hover {
   opacity: 60%;
   cursor: pointer;
 }
@@ -388,7 +387,8 @@ label {
   right: 6rem;
 }
 
-.imageContainer, select {
+.imageContainer,
+select {
   cursor: pointer;
 }
 
@@ -508,20 +508,20 @@ nav .lightBtn * {
   color: white;
 }
 
-table{
+table {
   border-collapse: collapse;
 }
 
-.even-row{
+.even-row {
   background: #b0b7df;
 }
 
-.even-dark{
+.even-dark {
   background: #141937;
   color: white;
 }
 
-.dark-btn{
+.dark-btn {
   background: #2c2f41;
   color: white;
 }

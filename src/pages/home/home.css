@@ -1,44 +1,48 @@
-.hero-paragraph{
-    line-height: 3rem;
-    width: 85%;
+.hero-paragraph {
+  line-height: 3rem;
+  width: 85%;
 }
 
-@media (max-width: 1000px){
-    #hero section div{
-        margin-bottom: 4rem;
-    }
+@media (max-width: 1000px) {
+  #hero section div {
+    margin-bottom: 4rem;
+  }
 
-    #hero footer nav ul{
-        width: 20%;
-    }
+  #hero footer nav ul {
+    width: 20%;
+  }
 }
 
-@media (max-width: 920px){
-    #hero header nav ul{
-        display: none;
-    }
+@media (max-width: 920px) {
+  #hero header nav ul {
+    display: none;
+  }
 
-    #hero > section, #hero section div, #hero section > section{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
+  #hero > section,
+  #hero section div,
+  #hero section > section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
 
-    #hero nav a h1, #hero section div h2, #hero section div p{
-        text-align: center;
-    }
+  #hero nav a h1,
+  #hero section div h2,
+  #hero section div p {
+    text-align: center;
+  }
 
-    #hero section > section{
-        width: 100%;
-    }
+  #hero section > section {
+    width: 100%;
+  }
 
-    #hero .button{
-        margin-top: 4rem;
-        margin-bottom: 2rem;
-    }
+  #hero .button {
+    margin-top: 4rem;
+    margin-bottom: 2rem;
+  }
 
-    #hero footer nav ul{
-        width: 20%;
-    }
+  #hero footer nav ul {
+    width: 20%;
+  }
 }

@@ -1,3 +1,3 @@
-  export interface INav {
-    pageHeading: string;
-  }
+export interface INav {
+  pageHeading: string;
+}

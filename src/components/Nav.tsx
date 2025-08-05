@@ -8,44 +8,50 @@ import EmployeeNav from "./EmployeeNav";
 import { INav } from "../interfaces/General";
 import { cacheEmail } from "../middleware/Cache";
 import { DarkModeContext } from "../middleware/Context";
-import DarkMode from "./DarkMode"
+import DarkMode from "./DarkMode";
 // import { FaShoppingCart } from "react-icons/fa";
 
-export default function Nav({props}:{props: INav}) {
-//   const [cartQuantity, setCartQuantity] = useState<number>();
-//   const { cart } = useContext(APIContext);
+export default function Nav({ props }: { props: INav }) {
+  //   const [cartQuantity, setCartQuantity] = useState<number>();
+  //   const { cart } = useContext(APIContext);
   const { toggleDarkMode } = useContext(DarkModeContext);
 
-//   useEffect(() => {
-//     if (cacheEmail && cart?.length) {
-//       let sum: number = 0;
+  //   useEffect(() => {
+  //     if (cacheEmail && cart?.length) {
+  //       let sum: number = 0;
 
-//       cart.forEach((item: CartItem) =>
-//         item.email === cacheEmail ? (sum += parseInt(item.quantity)) : "",
-//       );
+  //       cart.forEach((item: CartItem) =>
+  //         item.email === cacheEmail ? (sum += parseInt(item.quantity)) : "",
+  //       );
 
-//       setCartQuantity(sum);
-//     }
-//   }, [cart]);
+  //       setCartQuantity(sum);
+  //     }
+  //   }, [cart]);
 
   const url = window.location.href;
   const splitUrl = url.split("/");
-  const currentUrl = splitUrl[splitUrl.length-1]
+  const currentUrl = splitUrl[splitUrl.length - 1];
 
   return (
     <header className="w-full">
-      <nav className={`${toggleDarkMode === "dark" ? "bg-nav" : "darkNav"} bg-nav flex w-full justify-between`}>
+      <nav
+        className={`${toggleDarkMode === "dark" ? "bg-nav" : "darkNav"} bg-nav flex w-full justify-between`}
+      >
         <div className="flex items-center">
-        <Link to="/" className = "p-2">
-          <h1>AutoAligners</h1>
-        </Link>
-        {DarkMode()}
+          <Link to="/" className="p-2">
+            <h1>AutoAligners</h1>
+          </Link>
+          {DarkMode()}
         </div>
- 
 
         <ul className="flex w-40 justify-between">
           <li className="items-center flex">
-            <Link to="/" className={`${currentUrl === "" ? "current-link" : "" }`}>Home</Link>
+            <Link
+              to="/"
+              className={`${currentUrl === "" ? "current-link" : ""}`}
+            >
+              Home
+            </Link>
           </li>
           {cacheEmail ? (
             <li className="items-center flex">
@@ -53,7 +59,12 @@ export default function Nav({props}:{props: INav}) {
             </li>
           ) : (
             <li className="items-center flex">
-              <Link to="/login" className={`${currentUrl === "login" || currentUrl === "register" ? "current-link" : "" }`}>Login/Demo</Link>
+              <Link
+                to="/login"
+                className={`${currentUrl === "login" || currentUrl === "register" ? "current-link" : ""}`}
+              >
+                Login/Demo
+              </Link>
             </li>
           )}
 
@@ -78,12 +89,16 @@ export default function Nav({props}:{props: INav}) {
           ) : (
             ""
           )}
-          
+
           {cacheEmail ? (
             ""
           ) : (
             <div className="items-center flex p-2">
-              {ButtonLink({ classNames: `${currentUrl === "reservation" ? "current-link" : "" }` ,domain: "/reservation", text: "Make Reservation" })}
+              {ButtonLink({
+                classNames: `${currentUrl === "reservation" ? "current-link" : ""}`,
+                domain: "/reservation",
+                text: "Make Reservation",
+              })}
             </div>
           )}
         </ul>

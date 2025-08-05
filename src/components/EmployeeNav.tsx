@@ -7,7 +7,10 @@ export default function EmployeeNav() {
 
   return (
     <section>
-      <h3 className="cursor-pointer employeeLink" onClick={() => setHidden(!hidden)}>
+      <h3
+        className="cursor-pointer employeeLink"
+        onClick={() => setHidden(!hidden)}
+      >
         Employee Nav
       </h3>
 

@@ -22,9 +22,9 @@ export interface IButtonLink {
 }
 
 export interface ITextInput {
-  type: string
-  name: string
-  isDisabled?: boolean,
-  onChange: (e: React.ChangeEvent<HTMLInputElement>)=>void,
-  placeholder: string
+  type: string;
+  name: string;
+  isDisabled?: boolean;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  placeholder: string;
 }

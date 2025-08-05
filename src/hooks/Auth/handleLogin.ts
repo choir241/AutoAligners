@@ -7,6 +7,7 @@ export async function handleLogin(props: ILogin): Promise<void> {
   try {
     await api.createSession(props.email, props.password);
     const response = await api.getAccount();
+    
     if (response) {
       SetCacheEmail(props.email);
       window.location.reload();
