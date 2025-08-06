@@ -5,7 +5,6 @@ import { handleLogin } from "./handleLogin";
 
 export async function handleSignUp(props: ISignUp): Promise<void> {
   try {
-
     const client = new Client()
       .setEndpoint("https://cloud.appwrite.io/v1") // Your API Endpoint
       .setProject(import.meta.env.VITE_REACT_APP_PROJECT); // Your project ID
@@ -20,8 +19,11 @@ export async function handleSignUp(props: ISignUp): Promise<void> {
       props.name,
     );
 
-    handleLogin({email: props.email, password: props.password, name: props.name});
-
+    handleLogin({
+      email: props.email,
+      password: props.password,
+      name: props.name,
+    });
   } catch (err) {
     toast.error(`${err}`);
     console.error(err);

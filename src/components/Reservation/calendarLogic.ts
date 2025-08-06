@@ -1,4 +1,4 @@
-import { IAptTimeAndDay } from "./DisplayTimeDateAppointments";
+import { IAptTimeAndDay } from "./calendar";
 
 function isLeapYear(year: number) {
   if ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) {
@@ -39,10 +39,10 @@ export function calendarLogic({
     case 8:
     case 10:
       if (currDay >= 31) {
-        console.log('test')
+        console.log("test");
         newMonth += 1;
         newDay = 1;
-      }else{
+      } else {
         newDay += 1;
       }
       break;
@@ -53,7 +53,7 @@ export function calendarLogic({
       if (currDay >= 30) {
         newMonth += 1;
         newDay = 1;
-      }else{
+      } else {
         newDay += 1;
       }
       break;
@@ -64,7 +64,7 @@ export function calendarLogic({
       ) {
         newMonth += 1;
         newDay = 1;
-      }else{
+      } else {
         newDay += 1;
       }
       break;
@@ -73,7 +73,7 @@ export function calendarLogic({
         newMonth = 1;
         newDay = 1;
         newYear += 1;
-      }else{
+      } else {
         newDay += 1;
       }
       break;

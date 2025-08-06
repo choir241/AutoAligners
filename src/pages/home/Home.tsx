@@ -18,8 +18,7 @@ export default function Home() {
         <section
           className={`mx-2 p-4 flex justify-between shadow-2xs ${toggleDarkMode === labels.mode.light ? labels.mode.light : labels.mode.dark}`}
         >
-          <Reservation/>
-
+          <Reservation />
         </section>
       </main>
     </Layout>

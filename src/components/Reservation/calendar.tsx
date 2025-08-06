@@ -1,20 +1,6 @@
-import React, { useState } from "react";
-// import {
-//   Appointment,
-//   TimeDateAppointments,
-// } from "../../middleware/Interfaces/Reservation";
-import {
-  daysOfWeek,
-  getMonth,
-  getDay,
-  getYear,
-  getDayOfWeek,
-} from "../../api/dates";
+import { getMonth, getDay, getYear, getDayOfWeek } from "../../api/dates";
 import { calendarLogic } from "./calendarLogic";
 import { isHoliday } from "./isHoliday";
-// import CalendarCard from "./RenderCalendarCard";
-// import { militaryTimeConversion } from "./MilitaryTime";
-// import RenderTimeCard from "./RenderTimeCard";
 
 export interface IAptTimeAndDay {
   month: number;
@@ -23,15 +9,11 @@ export interface IAptTimeAndDay {
   dayOfWeek: number;
 }
 
-export function DisplayTimeDateAppointments() {
-  const [aptTime, setAptTime] = useState();
-  const [aptDate, setAptDate] = useState();
-
-  const dayOfWeeks = daysOfWeek;
+export function calendar() {
   let currMonth = getMonth();
   let currDay = getDay();
   let currYear = getYear();
-  let currDayOfWeek:number = getDayOfWeek();
+  let currDayOfWeek: number = getDayOfWeek();
 
   const calendar: IAptTimeAndDay[] = [
     {
@@ -42,7 +24,7 @@ export function DisplayTimeDateAppointments() {
     },
   ];
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 34; i++) {
     const { newDay, newDayOfWeek, newMonth, newYear } = calendarLogic({
       currDay,
       currDayOfWeek,
@@ -55,7 +37,9 @@ export function DisplayTimeDateAppointments() {
     currDayOfWeek = newDayOfWeek;
     currYear = newYear;
     if (
-      isHoliday({ month: currMonth, day: currDay, dayOfWeek: currDayOfWeek }) && (currDayOfWeek !== 0) &&(currDayOfWeek !== 6)
+      isHoliday({ month: currMonth, day: currDay, dayOfWeek: currDayOfWeek }) &&
+      currDayOfWeek !== 0 &&
+      currDayOfWeek !== 6
     ) {
       calendar.push({
         month: currMonth,
@@ -65,5 +49,5 @@ export function DisplayTimeDateAppointments() {
       });
     }
   }
-  console.log(calendar);
+  return calendar;
 }

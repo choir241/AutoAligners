@@ -15,25 +15,30 @@
   margin-bottom: 1rem;
 }
 
-.time {
+.day {
   margin: 1rem;
-  border-radius: 25px;
+  border-radius: 10px;
   border: none;
   color: #141a38;
   background: #a3b1ff;
-  padding: 1rem 2rem;
   font-size: 2rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.time:hover,
+.time {
+  width: 100%;
+  margin-top: 1rem;
+  border-radius: 10px;
+  padding: 1rem;
+  background-color: #d0d5f3;
+}
+
 .button:hover,
 .calendar:hover {
   cursor: pointer;
-}
-
-.time:hover {
-  background: #5461ab;
-  color: white;
 }
 
 .calendar:hover {
@@ -55,7 +60,7 @@
   opacity: 20%;
 }
 
-.disabled:hover{
+.disabled:hover {
   background: #d0d5f3;
   cursor: auto;
 }

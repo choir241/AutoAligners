@@ -1,13 +1,12 @@
 import { useContext } from "react";
-import {DisplayTimeDateAppointments} from "./DisplayTimeDateAppointments"
 import { DarkModeContext } from "../../middleware/Context";
 import "./reservation.css";
 import Layout from "../../pages/Layout";
+import RenderReservation from "./RenderReservation";
+import { calendar } from "./calendar";
 
 export default function Reservation() {
-
   const { toggleDarkMode } = useContext(DarkModeContext);
-            {DisplayTimeDateAppointments()}
 
   return (
     <main id="reservation">
@@ -17,9 +16,8 @@ export default function Reservation() {
             toggleDarkMode === "dark" ? "light" : "dark"
           }`}
         >
-          <section
-            className="flex items-center flex-col w-full"
-          >
+          <section className="flex items-center flex-col w-full">
+            {RenderReservation({ calendar: calendar() })}
           </section>
         </section>
       </Layout>

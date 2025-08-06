@@ -43,11 +43,11 @@ export default function Register() {
             })}
 
             {ButtonSubmit({
-            handleButtonClick: () =>
-              handleSignUp({ email: email, name: name, password: password }),
-            text: "Register",
-            className: "mt-2",
-          })}
+              handleButtonClick: () =>
+                handleSignUp({ email: email, name: name, password: password }),
+              text: "Register",
+              className: "mt-2",
+            })}
 
             {ButtonSubmit({
               handleButtonClick: () => {

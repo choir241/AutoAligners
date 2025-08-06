@@ -4,4 +4,4 @@ export interface ILogin {
   password: string;
 }
 
-export interface ISignUp extends ILogin{}
+export interface ISignUp extends ILogin {}

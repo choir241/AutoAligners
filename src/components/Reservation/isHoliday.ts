@@ -21,13 +21,13 @@ export function isHoliday({
     return false;
   } else if (month === 5 && day + 7 > 31 && dayOfWeek === 1) {
     // Memorial Day: The last Monday in May
-      return false;
+    return false;
   } else if (month === 9 && day >= 1 && day <= 7 && dayOfWeek === 1) {
     // Labor Day: The first Monday in September
-      return false;
-  } else if (month === 10 && dayOfWeek === 1 && day >= 8 && day < 15 ) {
+    return false;
+  } else if (month === 10 && dayOfWeek === 1 && day >= 8 && day < 15) {
     // Columbus Day: The second Monday in October
-      return false;
+    return false;
   }
   return true;
 }
