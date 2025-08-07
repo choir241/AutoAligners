@@ -1,8 +1,8 @@
-import { getMonth, getDay, getYear, getDayOfWeek } from "../../api/dates";
+import { getMonth, getDay, getYear, getDayOfWeek } from "../../../api/dates";
 import { calendarLogic } from "./calendarLogic";
 import { isHoliday } from "./isHoliday";
 
-export interface IAptTimeAndDay {
+export interface IAptDay {
   month: number;
   day: number;
   year: number;
@@ -15,7 +15,7 @@ export function calendar() {
   let currYear = getYear();
   let currDayOfWeek: number = getDayOfWeek();
 
-  const calendar: IAptTimeAndDay[] = [
+  const calendar: IAptDay[] = [
     {
       month: currMonth,
       day: currDay,
@@ -24,7 +24,7 @@ export function calendar() {
     },
   ];
 
-  for (let i = 0; i < 34; i++) {
+  for (let i = 0; i < 60; i++) {
     const { newDay, newDayOfWeek, newMonth, newYear } = calendarLogic({
       currDay,
       currDayOfWeek,

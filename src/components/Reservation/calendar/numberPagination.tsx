@@ -1,4 +1,4 @@
-import ButtonText from "../Buttons/ButtonText";
+import ButtonText from "../../Buttons/ButtonText";
 
 export default function NumberPaignation({
   maxNumOfElements,
@@ -11,13 +11,14 @@ export default function NumberPaignation({
 }) {
   const numbers = [];
 
-  for (let i = 0; i <= maxNumOfElements; i += 4) {
+  for (let i = 0; i <= maxNumOfElements; i += 6) {
     numbers.push(i);
   }
 
-  return numbers.map((number) => {
+  return numbers.map((number, i) => {
     return (
       <ButtonText
+        key={i}
         label={`${number + 1}`}
         className={number + 1 === currentPage + 1 ? "clicked" : ""}
         onClickEventHandler={() => setCurrentPage(number)}

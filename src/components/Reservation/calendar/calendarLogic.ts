@@ -1,4 +1,4 @@
-import { IAptTimeAndDay } from "./calendar";
+import { type IAptDay } from "./calendar";
 
 function isLeapYear(year: number) {
   if ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) {
@@ -8,7 +8,6 @@ function isLeapYear(year: number) {
 }
 
 export function calendarLogic({
-  calendar,
   currMonth,
   currDay,
   currYear,
@@ -18,7 +17,7 @@ export function calendarLogic({
   currDay: number;
   currYear: number;
   currDayOfWeek: number;
-  calendar: IAptTimeAndDay[];
+  calendar: IAptDay[];
 }) {
   let newDay = currDay;
   let newMonth = currMonth;
@@ -39,7 +38,6 @@ export function calendarLogic({
     case 8:
     case 10:
       if (currDay >= 31) {
-        console.log("test");
         newMonth += 1;
         newDay = 1;
       } else {
