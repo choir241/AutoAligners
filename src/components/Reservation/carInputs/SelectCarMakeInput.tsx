@@ -1,24 +1,14 @@
-import { useState } from "react";
-
-interface ICarData {
-  id_: number;
-  manufacturer: string;
-  model: string;
-  year: number;
-  vin: string;
-}
+import { carData } from "../../../api/carData";
+import { removeDuplicates } from "./removeDuplicates";
 
 interface ISelectCarMake {
   carMake: string;
   handleUpdateCarMake: (e: string) => void;
   handleUpdateCarModel: (e: string) => void;
   handleUpdateCarYear: (e: string) => void;
-  options: ICarData[];
-  previousCarMake: string;
-  setPreviousCarMake: (e: string) => void
 }
 
-export function SelectCarMakeInput(props: ISelectCarMake): React.JSX.Element {
+export function SelectCarMakeInput(props: ISelectCarMake) {
   //sets value for previously selected car make
 
 
@@ -27,29 +17,28 @@ export function SelectCarMakeInput(props: ISelectCarMake): React.JSX.Element {
       className="mb-2"
       defaultValue="Car Make"
       onChange={(e) => {
-        props.handleUpdateCarMake(e.target.value);
 
         //checks for empty string value for previousCarMake state
-        if (!props.previousCarMake) {
-          props.setPreviousCarMake(e.target.value);
+        if (!props.carMake) {
+          props.handleUpdateCarMake(e.target.value);
         }
 
         //checks if the previousCarMake value is not the same as the current value selected (checks if user changes carMake value)
-        if (props.previousCarMake !== e.target.value) {
+        if (props.carMake !== e.target.value) {
           //resets model and year values to account for changed carMake value
           //we don't want to reset make, as that would defeat the purpose of selecting new values
           props.handleUpdateCarYear("");
           props.handleUpdateCarModel("");
 
           //set previous previousCarMake value to the new current value selected
-          props.setPreviousCarMake(e.target.value);
+          props.handleUpdateCarMake(e.target.value);
         }
       }}
     >
       <option value="default">Select Car Make</option>
-      {props.options.map((option)=>{
+      {removeDuplicates(carData, "manufacturer").map((option, i)=>{
         return(
-            <option>
+            <option key = {i}>
                 {option.manufacturer}
             </option>
         )

@@ -8,6 +8,8 @@ import { calendar } from "../../components/Reservation/calendar/calendar";
 import "../../components/Reservation/calendar/reservation.css";
 import { IAptDateAndTime } from "../../components/Reservation/calendar/RenderTimeandDates";
 import Reservation from "../../components/Reservation/calendar/Reservation";
+import UserForm from "../../components/Reservation/userInputs/UserForm";
+import RenderCarInputs from "../../components/Reservation/carInputs/RenderCarInputs";
 
 export interface ICarData {
   carMake: string;
@@ -27,6 +29,9 @@ export default function Home() {
   const [carMake, setCarMake] = useState("");
   const [carYear, setCarYear] = useState("");
   const [carModel, setCarModel] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [preferredContact, setPreferredContact] = useState("");
 
   const handleUpdateService = (service: string) => {
     setService(service);
@@ -47,29 +52,51 @@ export default function Home() {
     setCarYear(carYear);
   };
 
+  const handleUpdateFirstName = (firstName: string) => {
+    setFirstName(firstName);
+  };
+
+  const handleUpdateLastName = (lastName: string) => {
+    setLastName(lastName);
+  };
+
+  const handleUpdatePreferredContact = (contact: string) => {
+    setPreferredContact(contact);
+  };
+
   return (
     <div id="reservation">
       <Layout pageHeading="">
         <main
           id="hero"
-          className={`flex flex-col items-center justify-center h-36vh mx-2 bg-white p-4 shadow-2xs ${toggleDarkMode === labels.mode.light ? labels.mode.light : labels.mode.dark}`}
+          className={`flex flex-col items-center justify-center h-36vh mx-2 bg-black p-4 shadow-2xs ${toggleDarkMode === labels.mode.light ? labels.mode.dark : labels.mode.light}`}
         >
-          <section className="flex flex-col items-center justify-between">
-            {RenderTimeAndDates({
-              calendar: calendar(),
-              apptDateAndTime: apptDateAndTime,
-              setApptDateAndTime: handleUpdateApptDateAndTime,
-            })}
+          {RenderTimeAndDates({
+            calendar: calendar(),
+            apptDateAndTime: apptDateAndTime,
+            setApptDateAndTime: handleUpdateApptDateAndTime,
+          })}
 
-            <Reservation
+          <div className="flex justify-between w-full mt-6">
+
+            <RenderCarInputs
+              carModel={carModel}
               carMake={carMake}
-              setService={handleUpdateService}
-              apptDateAndTime={apptDateAndTime}
+              handleUpdateService={handleUpdateService}
               handleUpdateCarMake={handleUpdateCarMake}
               handleUpdateCarModel={handleUpdateCarModel}
               handleUpdateCarYear={handleUpdateCarYear}
             />
-          </section>
+            <Reservation apptDateAndTime={apptDateAndTime} />
+
+          <UserForm
+            props={{
+              handleUpdatePreferredContact,
+              handleUpdateFirstName,
+              handleUpdateLastName,
+            }}
+          />
+          </div>
         </main>
       </Layout>
     </div>
