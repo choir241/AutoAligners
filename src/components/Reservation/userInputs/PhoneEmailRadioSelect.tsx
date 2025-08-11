@@ -1,4 +1,5 @@
 interface IPhoneEmailRadioSelect {
+  preferredContact: string;
   handleUpdatePreferredContact: (e: string) => void;
 }
 
@@ -14,6 +15,7 @@ export default function PhoneEmailRadioSelect({
       <input
         id="email"
         type="radio"
+        checked={props.preferredContact === 'email'}
         className="radio"
         defaultValue="email"
         name="contact"

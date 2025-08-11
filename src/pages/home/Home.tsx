@@ -31,11 +31,14 @@ export default function Home() {
   const [carModel, setCarModel] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [preferredContact, setPreferredContact] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [preferredContact, setPreferredContact] = useState("email");
 
   const handleUpdateService = (service: string) => {
     setService(service);
   };
+
   const handleUpdateApptDateAndTime = (aptDateAndTime: IAptDateAndTime) => {
     setApptDateAndTime(aptDateAndTime);
   };
@@ -64,6 +67,14 @@ export default function Home() {
     setPreferredContact(contact);
   };
 
+  const handleUpdatePhone = (phone: string) => {
+    setPhone(phone);
+  }
+
+  const handleUpdateEmail = (email: string) => {
+    setEmail(email);
+  }
+
   return (
     <div id="reservation">
       <Layout pageHeading="">
@@ -71,13 +82,24 @@ export default function Home() {
           id="hero"
           className={`flex flex-col items-center justify-center h-36vh mx-2 bg-black p-4 shadow-2xs ${toggleDarkMode === labels.mode.light ? labels.mode.dark : labels.mode.light}`}
         >
-          {RenderTimeAndDates({
+          {/* {RenderTimeAndDates({
             calendar: calendar(),
             apptDateAndTime: apptDateAndTime,
             setApptDateAndTime: handleUpdateApptDateAndTime,
-          })}
+          })} */}
 
-          <div className="flex justify-between w-full mt-6">
+          <section className="flex flex-start w-full mb-10">
+            <UserForm
+              props={{
+                handleUpdateEmail,
+                preferredContact,
+                handleUpdatePreferredContact,
+                handleUpdateFirstName,
+                handleUpdateLastName,
+                handleUpdatePhone,
+              }}
+            />
+          </section>
 
             <RenderCarInputs
               carModel={carModel}
@@ -87,16 +109,7 @@ export default function Home() {
               handleUpdateCarModel={handleUpdateCarModel}
               handleUpdateCarYear={handleUpdateCarYear}
             />
-            <Reservation apptDateAndTime={apptDateAndTime} />
-
-          <UserForm
-            props={{
-              handleUpdatePreferredContact,
-              handleUpdateFirstName,
-              handleUpdateLastName,
-            }}
-          />
-          </div>
+            {/* <Reservation apptDateAndTime={apptDateAndTime} /> */}
         </main>
       </Layout>
     </div>

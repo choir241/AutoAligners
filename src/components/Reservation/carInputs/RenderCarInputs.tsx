@@ -19,12 +19,10 @@ export default function RenderCarInputs({
   handleUpdateCarYear: (e: string) => void;
 }) {
   return (
-    <div className="flex flex-col items-start mb-4">
-      <label className="my-1 text-left">Choose Service For Your Car</label>
-      {ChooseCarService({
-        onChange: (e: string) => handleUpdateService(e),
-        className: "mb-2",
-      })}
+    <div className="flex flex-col items-start mb-4 w-full">
+      <label className="my-1 text-left">Select Service(s)</label>
+      <p className="mb-2">Choose the services you need. Our technicians will provide a detailed estimate before starting work.</p>
+      <section className="flex justify-between w-60">
       {SelectCarMakeInput({
         carMake,
         handleUpdateCarMake,
@@ -44,6 +42,12 @@ export default function RenderCarInputs({
         carModel,
         handleUpdateCarYear,
       })}
+      </section>
+      {/* {ChooseCarService({
+        onChange: (e: string) => handleUpdateService(e),
+        className: "mb-2",
+      })} */}
+
     </div>
   );
 }

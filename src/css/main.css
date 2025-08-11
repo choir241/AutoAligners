@@ -171,6 +171,10 @@ label {
   margin-bottom: 6rem;
 }
 
+.mb-10{
+  margin-bottom: 10rem;
+}
+
 .mt-2 {
   margin-top: 2rem;
 }
@@ -258,6 +262,10 @@ label {
 
 .flex-col {
   flex-direction: column;
+}
+
+.justify-start{
+  justify-content: start;
 }
 
 .justify-center {
@@ -451,6 +459,11 @@ select {
 .radio {
   margin-right: 2rem;
   font-size: 5rem;
+}
+
+.radio:hover{
+  cursor: pointer;
+  opacity: 70%;
 }
 
 textarea {
