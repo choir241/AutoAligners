@@ -80,15 +80,17 @@ export default function Home() {
       <Layout pageHeading="">
         <main
           id="hero"
-          className={`flex flex-col items-center justify-center h-36vh mx-2 bg-black p-4 shadow-2xs ${toggleDarkMode === labels.mode.light ? labels.mode.dark : labels.mode.light}`}
         >
-          {/* {RenderTimeAndDates({
+          <div className="flex items-center justify-center">
+          {RenderTimeAndDates({
             calendar: calendar(),
             apptDateAndTime: apptDateAndTime,
             setApptDateAndTime: handleUpdateApptDateAndTime,
-          })} */}
+          })}
+          </div>
 
-          <section className="flex flex-start w-full mb-10">
+
+          <section className="flex flex-start mb-10">
             <UserForm
               props={{
                 handleUpdateEmail,
@@ -100,6 +102,7 @@ export default function Home() {
               }}
             />
           </section>
+          <section className="flex flex-start mb-10">
 
             <RenderCarInputs
               carModel={carModel}
@@ -109,6 +112,7 @@ export default function Home() {
               handleUpdateCarModel={handleUpdateCarModel}
               handleUpdateCarYear={handleUpdateCarYear}
             />
+            </section>
             {/* <Reservation apptDateAndTime={apptDateAndTime} /> */}
         </main>
       </Layout>

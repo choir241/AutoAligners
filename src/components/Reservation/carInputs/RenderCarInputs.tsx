@@ -2,6 +2,9 @@ import { ChooseCarService } from "../carInputs/ChooseCarService";
 import { SelectCarMakeInput } from "../carInputs/SelectCarMakeInput";
 import SelectCarModelInput from "../carInputs/SelectCarModelInput";
 import { SelectCarYearInput } from "../carInputs/SelectCarYearInput";
+import { useContext } from "react";
+import { DarkModeContext } from "../../../middleware/Context";
+import { labels } from "../../../api/labels";
 
 export default function RenderCarInputs({
   handleUpdateService,
@@ -18,11 +21,14 @@ export default function RenderCarInputs({
   handleUpdateCarModel: (e: string) => void;
   handleUpdateCarYear: (e: string) => void;
 }) {
+
+  const {toggleDarkMode} = useContext(DarkModeContext);
+
   return (
-    <div className="flex flex-col items-start mb-4 w-full">
+    <div className={`flex flex-col items-start mb-4 justify-center mx-2 bg-black p-4 shadow-2xs ${toggleDarkMode === labels.mode.light ? labels.mode.dark : labels.mode.light}`}>
       <label className="my-1 text-left">Select Service(s)</label>
-      <p className="mb-2">Choose the services you need. Our technicians will provide a detailed estimate before starting work.</p>
-      <section className="flex justify-between w-60">
+      <p className="mb-2 flex flex-wrap">Choose the services you need. Our technicians will provide a detailed estimate before starting work.</p>
+      <section className="flex flex-col items-start">
       {SelectCarMakeInput({
         carMake,
         handleUpdateCarMake,

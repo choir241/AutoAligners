@@ -24,7 +24,7 @@ export function calendar() {
     },
   ];
 
-  for (let i = 0; i < 60; i++) {
+  for (let i = 0; i < 58; i++) {
     const { newDay, newDayOfWeek, newMonth, newYear } = calendarLogic({
       currDay,
       currDayOfWeek,

@@ -2,6 +2,9 @@ import NameTextInput from "./NameTextInput";
 import PhoneEmailRadioSelect from "./PhoneEmailRadioSelect";
 import PhoneInput from "./PhoneInput";
 import EmailInput from "./EmailInput";
+import { labels } from "../../../api/labels";
+import { DarkModeContext } from "../../../middleware/Context";
+import { useContext } from "react";
 
 interface IUserForm {
   handleUpdateFirstName: (e: string) => void;
@@ -13,9 +16,13 @@ interface IUserForm {
 }
 
 export default function UserForm({ props }: { props: IUserForm }) {
+  const { toggleDarkMode } = useContext(DarkModeContext);
+
   return (
-    <form className="w-full">
-      <section className="flex items-start justify-between w-full">
+    <form
+      className={`flex flex-col items-start justify-center mx-2 bg-black p-4 shadow-2xs ${toggleDarkMode === labels.mode.light ? labels.mode.dark : labels.mode.light}`}
+    >
+      <section className="flex justify-between w-full">
         <NameTextInput
           props={{
             label: "First Name",
@@ -34,12 +41,14 @@ export default function UserForm({ props }: { props: IUserForm }) {
           }}
         />
       </section>
-      <PhoneEmailRadioSelect
-        props={{
-          preferredContact: props.preferredContact,
-          handleUpdatePreferredContact: props.handleUpdatePreferredContact,
-        }}
-      />
+      <div className="flex w-full items-end justify-end">
+        <PhoneEmailRadioSelect
+          props={{
+            preferredContact: props.preferredContact,
+            handleUpdatePreferredContact: props.handleUpdatePreferredContact,
+          }}
+        />
+
       {
         props.preferredContact === "phone" 
         ?
@@ -50,8 +59,9 @@ export default function UserForm({ props }: { props: IUserForm }) {
       <EmailInput
       handleUpdateEmail={props.handleUpdateEmail}
       />
-      }
+      } 
 
+      </div>
 
     </form>
   );
