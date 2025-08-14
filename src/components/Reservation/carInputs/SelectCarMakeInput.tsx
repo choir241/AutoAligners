@@ -14,7 +14,7 @@ export function SelectCarMakeInput(props: ISelectCarMake) {
 
   return (
     <select
-      className="mb-2"
+      className="mb-2 w-full"
       defaultValue="Car Make"
       onChange={(e) => {
 

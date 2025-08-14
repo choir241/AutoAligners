@@ -11,7 +11,7 @@ export default function PhoneEmailRadioSelect({
   return (
     <div className="flex flex-col items-start mt-6 w-full">
       <h3 className="mb-2">Preferred Contact Method</h3>
-      <div className="flex">
+      <div className="flex mb-2">
       <div className="flex w-full">
         <label htmlFor="email">Email</label>
         <input

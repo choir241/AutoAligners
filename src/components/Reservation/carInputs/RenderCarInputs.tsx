@@ -7,14 +7,12 @@ import { DarkModeContext } from "../../../middleware/Context";
 import { labels } from "../../../api/labels";
 
 export default function RenderCarInputs({
-  handleUpdateService,
   carMake,
   carModel,
   handleUpdateCarMake,
   handleUpdateCarModel,
   handleUpdateCarYear,
 }: {
-  handleUpdateService: (e: string) => void;
   carMake: string;
   carModel: string;
   handleUpdateCarMake: (e: string) => void;
@@ -27,8 +25,8 @@ export default function RenderCarInputs({
   return (
     <div className={`flex flex-col items-start mb-4 justify-center mx-2 bg-black p-4 shadow-2xs ${toggleDarkMode === labels.mode.light ? labels.mode.dark : labels.mode.light}`}>
       <label className="my-1 text-left">Select Service(s)</label>
-      <p className="mb-2 flex flex-wrap">Choose the services you need. Our technicians will provide a detailed estimate before starting work.</p>
-      <section className="flex flex-col items-start">
+      <p className="mb-2 flex flex-wrap">Choose the service(s) you need. Our technicians will provide a detailed estimate before starting work.</p>
+      <section className="flex flex-col items-start w-full">
       {SelectCarMakeInput({
         carMake,
         handleUpdateCarMake,
@@ -49,10 +47,7 @@ export default function RenderCarInputs({
         handleUpdateCarYear,
       })}
       </section>
-      {/* {ChooseCarService({
-        onChange: (e: string) => handleUpdateService(e),
-        className: "mb-2",
-      })} */}
+ 
 
     </div>
   );

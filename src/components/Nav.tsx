@@ -33,9 +33,9 @@ export default function Nav({ props }: { props: INav }) {
   const currentUrl = splitUrl[splitUrl.length - 1];
 
   return (
-    <header className="w-full">
+    <header>
       <nav
-        className={`${toggleDarkMode === "dark" ? "bg-nav" : "darkNav"} bg-nav flex w-full justify-between`}
+        className={`${toggleDarkMode === "dark" ? "bg-nav" : "darkNav"} bg-nav flex w-full justify-between items-center`}
       >
         <div className="flex items-center">
           <Link to="/" className="p-2">
@@ -44,8 +44,8 @@ export default function Nav({ props }: { props: INav }) {
           {DarkMode()}
         </div>
 
-        <ul className="flex w-40 justify-between">
-          <li className="items-center flex">
+        <ul className="flex w-20 justify-between p-2">
+          <li>
             <Link
               to="/"
               className={`${currentUrl === "" ? "current-link" : ""}`}
@@ -54,11 +54,11 @@ export default function Nav({ props }: { props: INav }) {
             </Link>
           </li>
           {cacheEmail ? (
-            <li className="items-center flex">
+            <li>
               <EmployeeNav />
             </li>
           ) : (
-            <li className="items-center flex">
+            <li>
               <Link
                 to="/login"
                 className={`${currentUrl === "login" || currentUrl === "register" ? "current-link" : ""}`}
@@ -80,7 +80,7 @@ export default function Nav({ props }: { props: INav }) {
           )} */}
 
           {cacheEmail ? (
-            <div className="items-center flex p-2">
+            <div>
               {ButtonSubmit({
                 handleButtonClick: () => handleLogout(),
                 text: "Logout",
@@ -90,17 +90,6 @@ export default function Nav({ props }: { props: INav }) {
             ""
           )}
 
-          {cacheEmail ? (
-            ""
-          ) : (
-            <div className="items-center flex p-2">
-              {ButtonLink({
-                classNames: `${currentUrl === "reservation" ? "current-link" : ""}`,
-                domain: "/reservation",
-                text: "Make Reservation",
-              })}
-            </div>
-          )}
         </ul>
       </nav>
 

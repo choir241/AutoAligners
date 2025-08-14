@@ -5,7 +5,7 @@ export function SelectCarYearInput({handleUpdateCarYear, carMake, carModel}:{han
   return (
     //changing year value does not directly effect carMake and/or carModel, so there is no need to check if value has changed
     <select
-      className="mb-2"
+      className="mb-2 w-full"
       defaultValue="Car Year"
       onChange={(e) => handleUpdateCarYear(e.target.value)}
     >

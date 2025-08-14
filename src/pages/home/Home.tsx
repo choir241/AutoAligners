@@ -10,6 +10,7 @@ import { IAptDateAndTime } from "../../components/Reservation/calendar/RenderTim
 import Reservation from "../../components/Reservation/calendar/Reservation";
 import UserForm from "../../components/Reservation/userInputs/UserForm";
 import RenderCarInputs from "../../components/Reservation/carInputs/RenderCarInputs";
+import RenderServices from "../../components/Reservation/service/RenderServices";
 
 export interface ICarData {
   carMake: string;
@@ -90,7 +91,7 @@ export default function Home() {
           </div>
 
 
-          <section className="flex flex-start mb-10">
+          <section className="flex items-start">
             <UserForm
               props={{
                 handleUpdateEmail,
@@ -101,18 +102,20 @@ export default function Home() {
                 handleUpdatePhone,
               }}
             />
-          </section>
-          <section className="flex flex-start mb-10">
 
             <RenderCarInputs
               carModel={carModel}
               carMake={carMake}
-              handleUpdateService={handleUpdateService}
               handleUpdateCarMake={handleUpdateCarMake}
               handleUpdateCarModel={handleUpdateCarModel}
               handleUpdateCarYear={handleUpdateCarYear}
             />
             </section>
+
+            <RenderServices
+            handleUpdateService={handleUpdateService}
+            service={service}
+            />
             {/* <Reservation apptDateAndTime={apptDateAndTime} /> */}
         </main>
       </Layout>

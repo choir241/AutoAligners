@@ -15,5 +15,4 @@ export const services = [
   "Routine Maintenance",
   "Steering Suspension Alignment",
   "Transmission",
-  "Other",
 ];

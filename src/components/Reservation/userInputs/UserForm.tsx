@@ -20,9 +20,9 @@ export default function UserForm({ props }: { props: IUserForm }) {
 
   return (
     <form
-      className={`flex flex-col items-start justify-center mx-2 bg-black p-4 shadow-2xs ${toggleDarkMode === labels.mode.light ? labels.mode.dark : labels.mode.light}`}
+      className={`mx-2 bg-black p-4 shadow-2xs ${toggleDarkMode === labels.mode.light ? labels.mode.dark : labels.mode.light}`}
     >
-      <section className="flex justify-between w-full">
+      <section className="grid">
         <NameTextInput
           props={{
             label: "First Name",
@@ -41,25 +41,21 @@ export default function UserForm({ props }: { props: IUserForm }) {
           }}
         />
       </section>
-      <div className="flex w-full items-end justify-end">
-        <PhoneEmailRadioSelect
+              <PhoneEmailRadioSelect
           props={{
             preferredContact: props.preferredContact,
             handleUpdatePreferredContact: props.handleUpdatePreferredContact,
           }}
         />
 
-      {
-        props.preferredContact === "phone" 
-        ?
+      <div className="grid">
+
       <PhoneInput
       handleUpdatePhone={props.handleUpdatePhone}
       />
-      :
       <EmailInput
       handleUpdateEmail={props.handleUpdateEmail}
       />
-      } 
 
       </div>
 

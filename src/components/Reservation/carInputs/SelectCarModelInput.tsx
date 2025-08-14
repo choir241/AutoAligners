@@ -13,7 +13,7 @@ export default function SelectCarModelInput(props: ISelectCarModel) {
 
   return (
     <select
-      className="mb-2"
+      className="mb-2 w-full"
       defaultValue="Car Model"
       onChange={(e) => {
         //checks for empty string value for previousCarModel state

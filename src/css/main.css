@@ -1,3 +1,4 @@
+/* @import "tailwindcss"; */
 /****************/
 /**** Font ****/
 /****************/
@@ -453,7 +454,7 @@ body {
 input,
 select {
   padding: 1rem 2rem;
-  border-radius: 25px;
+  border-radius: 10px;
 }
 
 .radio {
@@ -491,12 +492,12 @@ footer nav ul li:hover {
 /****************/
 
 .dark {
-  background-color: black;
+  background-color: #141937;
   color: white;
 }
 
 .light {
-  background-color: white;
+  background-color: #d0d5f3;
 }
 
 .lightNav {
@@ -537,4 +538,16 @@ table {
 .dark-btn {
   background: #2c2f41;
   color: white;
+}
+
+.grid{
+  display: grid;
+  grid-template-columns: 2fr 2fr;
+  gap: 1em;
+}
+
+.serviceRadio{
+  margin-right: 1rem;
+  height: 1.5rem;
+  width: 1.5rem;
 }

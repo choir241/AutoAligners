@@ -4,10 +4,6 @@ export default function PhoneInput({
   handleUpdatePhone: (phone: string) => void;
 }) {
   return (
-    <div className="flex flex-col items-start justify-start">
-      <label htmlFor="Phone" className="mb-1">
-        Phone
-      </label>
       <input
         type="tel"
         onChange={(e) => handleUpdatePhone(e.target.value)}
@@ -15,6 +11,5 @@ export default function PhoneInput({
         minLength={10}
         maxLength={10}
       />
-    </div>
   );
 }
